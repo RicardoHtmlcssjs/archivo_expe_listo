@@ -1,0 +1,35 @@
+function table_ana_emp_trans(){
+    let tab_usu_trans = "<div class='p-3' style='width: 100%;'>";
+        tab_usu_trans += "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0 cont_col_tab1' style='padding: 0px;'>";
+        tab_usu_trans += "<div id='cont_2_tbl'>";
+            tab_usu_trans += "</div>";
+                tab_usu_trans += "<table style='width: 100%;' id='table_reg'>";
+                    tab_usu_trans += "<thead class='thead_tab1'";
+                        tab_usu_trans += "<tr>";
+                            tab_usu_trans += "<th class='text-center tit_c_tab1'>Analista o empleado</th>";
+                         tab_usu_trans += "<th class='text-center tit_c_tab1'>Administrador</th>";
+                            tab_usu_trans += "<th class='text-center tit_c_tab1'>Fecha</th>";
+                            tab_usu_trans += "<th class='text-center tit_c_tab1'>Hora</th>";
+                            tab_usu_trans += "<th class='text-center tit_c_tab1'>Descripcion</th>";
+                            tab_usu_trans += "</tr>";
+                        // tab_usu_trans += "<tr class='tr_inp1'>";
+                        //     tab_usu_trans += "<th><input type='text' class='inp_bus_tab1 px-0' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 1)' id='inp_usuario'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_usuario)'>x</button></th>";
+                        //     tab_usu_trans += "<th><input type='text' class='inp_bus_tab1' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 2)' id='inp_nombres'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_nombres)'>x</button></th>";
+                        //     tab_usu_trans += "<th><input type='text' class='inp_bus_tab1' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 3)' id='inp_admin'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_admin)'>x</button></th>"; 
+                        //     tab_usu_trans += "<th><input type='text' class='inp_bus_tab1' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 4)' id='inp_fecha'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_fecha)'>x</button></th>";
+                        //     tab_usu_trans += "<th><input type='text' class='inp_bus_tab1' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 5)' id='inp_hora'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_hora)'>x</button></th>";
+                        //     // tab_usu_trans += "<th><input type='text' class='inp_bus_tab1' placeholder='Buscar...' onkeyup='usuario.buscar_usu_adm_au(this.value, 5)' id='inp_accion'><button type='button' class='btn_limpiar_inp' onclick='usuario.limpiar3(inp_accion)'>x</button></th>";
+                        //     // tab_usu_trans += "<th></th>";
+                        // tab_usu_trans += "</tr>";
+                    tab_usu_trans += "</thead>";
+                    tab_usu_trans += "<tbody class='tbody_tab1' id='tbody_r'>";
+                    tab_usu_trans += "</tbody>";
+                tab_usu_trans += "</table>";
+            tab_usu_trans += "</div>";
+    tab_usu_trans += "<div id='sin_fondo1'>";
+    tab_usu_trans += "</div>";
+    tab_usu_trans += "<div id='exp_soli'></div>";
+    tab_usu_trans += "</div>";
+
+    return tab_usu_trans;
+};

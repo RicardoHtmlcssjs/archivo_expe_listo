@@ -1,0 +1,66 @@
+/*contenedor nable*/
+.fondo_le{
+	margin: 0px 0px;
+	padding: 0px 0px;
+	width: 20%;
+	background: #fff;
+	height: 100vh;
+}
+.dsp_no{
+	display: none;
+}
+/*texto opcion navbar*/
+.txt_opc_nv{
+	margin-bottom:0px;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 1rem;
+}
+/*cont padre nabvar left*/
+.opcion_navbar div{
+	display: flex;
+	flex-direction: row;
+	transition: all ease 0.5s;
+}
+.cont_opc{
+	display: flex;
+	flex-direction: row;
+}
+.cont_opc div{
+	width: 100%;
+	background-color: blue;
+	color: red;
+}
+/*hover opcion nabvar left*/
+.opc_navleft:hover{
+	background-color: #ccc;
+	cursor: pointer;
+}
+/*hijos div administrador*/
+.opc_adm{
+	background-color: #ccc;
+}
+/*opc1 admi*/
+#opnb3_1, #opnb3_2{
+	display: none;
+	background-color: #000;
+	color: #fff;
+}
+/*opc narvarle administrador*/
+#opnb3_1:hover, #opnb3_2:hover{
+	color: #000;
+	background-color: #eee;
+	cursor: pointer;
+	margin-left: 2rem;
+}
+
+/*icono navbar le*/
+.icon_nble{
+	width: 30px;
+	height: 30px;
+}
+/*opcion selecionada navbar left*/
+.opnb{
+background-color: #ccc;
+color: #fff;
+}

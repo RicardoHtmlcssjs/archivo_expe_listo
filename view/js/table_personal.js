@@ -1,0 +1,54 @@
+function tabla_personal(){
+	let tab_perso = "<div class='p-3' style='width: 100%;'>";
+        // tab_perso += "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0 cont_col_tab1' style='padding: 0px;'>";
+            tab_perso += "<div id='cont_2_tbl'>";
+            tab_perso += "</div>";
+            tab_perso += "<table style='width: 100%;' id='datatable_users'>";
+                tab_perso += "<thead class='thead_tab1'";
+                    tab_perso += "<tr>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Cedula</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Nombres</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Archivo</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Archivo</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Fila</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Columna</th>";
+                        tab_perso +="<th class='text-center tit_c_tab1'>Status-nomina</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Tipo Nomina</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Accion</th>";
+                    tab_perso += "</tr>";
+                tab_perso += "</thead>";
+                tab_perso += "<tbody class='tbody_tab1' >";
+                tab_perso += "</tbody>";
+            tab_perso += "</table>";
+    tab_perso += "</div>";
+    tab_perso += "<div id='sin_fondo'>";
+    tab_perso += "</div>";
+    tab_perso += "<div id='exp_soli'></div>";
+    return tab_perso;
+}
+function tabla_expedientes_solicitados(){
+    let tab_perso = "<div class='p-3' style='width: 100%;'>";
+    // tab_perso += "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0 cont_col_tab1' style='padding: 0px;'>";
+    tab_perso += "<div id='cont_2_tbl'>";
+    tab_perso += "</div>";
+    tab_perso += "<table style='width: 100%;' id='datatable_users'>";
+    tab_perso += "<thead class='thead_tab1'";
+        tab_perso += "<tr>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Solicitante</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Micro</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Piso</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Unidad Solicitante</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Cedula</th>";
+            tab_perso +="<th class='text-center tit_c_tab1'>Nombres</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>F.Entregado</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>F.Devuelto</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Entregado por</th>";
+            tab_perso += "<th class='text-center tit_c_tab1'>Devuelto por</th>";
+        tab_perso += "</tr>"; 
+    tab_perso += "</thead>";
+    tab_perso += "<tbody class='tbody_tabex_so' >";
+    tab_perso += "</tbody>";
+    tab_perso += "</table>";
+    tab_perso += "</div>";
+    return tab_perso;       
+}

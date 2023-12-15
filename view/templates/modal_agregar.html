@@ -1,0 +1,119 @@
+ <!-- Ventana modal de entregar expediente -->
+        <div>
+            <!-- modal 1 -->
+            <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="titulo1" aria-hidden="true">
+                <div class="modal-dialog modal1" id="mod1">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <h5 class="modal-title" id="titulo1">Solicitar expediente</h5> -->
+                        <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    </div>
+                    <div class="modal-body">
+                            <h2 class="text-center" id='id_tit_mod1'>Entregar expediente</h2>
+                            <!-- mb-3  margin-bottom de 3 unidades -->
+                            <form action="">
+                                <div class="mb-3">
+                                    <!-- <div class="cont_h1_soli" id="cont_h1_soli"> -->
+                                        <label for="solicitante" class="form-label">Solicitante:</label>
+                                        <input type="text"class="inp_bus_soli_mod1" style="width: 70%;" id="solicitante" name="solicitante" placeholder="Buscar..." autofocus>
+                                    <!-- </div> -->
+                                  </div>
+                                <div class="mb-3" id="cont_h2_soli">
+                                </div>
+                                <div class="mb-3 cont_mod1_entregado" >
+                                    <label for="entregado_por1" class="form-label">Entregado por: </label>
+                                    <div class='cont_h2_entre' id='cont_h2_entre'></div>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-success"  id="agre_solicitar_exp" name="agregar_r_l">Guardar</button>
+                                </div>
+                                <div class="mb-2" id="error_soli_exp1"></div>
+                            </form>
+                    </div>
+                    
+                </div>
+                </div>
+            </div>
+            <!-- fin modal 1 -->
+            <!-- modal 2 -->
+            <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="titulo2" aria-hidden="true">
+                <div class="modal-dialog modal1">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <h5 class="modal-title" id="titulo1">Solicitar expediente</h5> -->
+                        <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    </div>
+                    <div class="modal-body" id="modal2">
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- fin modal 2 -->
+            <!-- modal 3 modificar usuario login -->
+            <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="titulo1" aria-hidden="true">
+                <div class="modal-dialog modal1">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <h5 class="modal-title" id="titulo1">Solicitar expediente</h5> -->
+                        <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    </div>
+                    <div class="modal-body">
+                            <h2 class="text-center" id='id_tit_mod1'>Actualizar usuario</h2>
+                            <!-- mb-3  margin-bottom de 3 unidades -->
+                            <form action="" id='modal_form_mod_usu_log'>
+                                    <div class="" id="cont_h1_soli">
+                                        <label for="usu_act_adm" class="form-label">Usuario:</label>
+                                        <input type="hidden" id="id_usu" name="" value="">
+                                        <input type="text"class="inp_bus_soli_mod1" id="usu_act_adm" name="usu_act_adm" value=''>
+                                    </div>
+                                    <div class="" id="cont_h1_soli">
+                                        <label for="nom_act_adm" class="form-label">Nombre:</label>
+                                        <input type="text"class="inp_bus_soli_mod1" id="nom_act_adm" name="nom_act_adm" value=''>
+                                    </div>
+                                    <div class="" id="cont_h1_soli">
+                                        <label for="nom_act_adm" class="form-label">Correo:</label>
+                                        <input type="text"class="inp_bus_soli_mod1" id="cor_act_adm" name="nom_act_adm" value=''>
+                                    </div>
+                                    <div class="" id="cont_h1_soli">
+                                        <label for="act_act_adm" class="form-label">Activo:</label>
+                                        <input type="text" class="inp_bus_soli_mod1" id="act_act" name="act_act" value='' disabled="true">
+                                        <select id="act_act_adm" name="act_act_adm" onclick='sel_act()'>
+                                            
+                                        </select>
+                                    </div> 
+
+                                    <div class="" id="cont_h1_soli">
+                                        <div style='display: none;'>
+                                            <label for="adm_act_fec" class="form-label">Fecha de registro:</label>
+                                            <input type="text" class="inp_bus_soli_mod1" id="adm_fec" name="adm_fec" value='' disabled="true">
+                                        </div>
+                                        <div style='display: none;'>
+                                            <input type="date" id="fecha_r" name="fecha_r">
+                                            <button type="button" class="btn btn-success btn-xs" id="btn_agregar_fe" name="btn_agregar_fe">Agregar fecha</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="" id="cont_h1_soli">
+                                        <label for="adm_act_adm" class="form-label">Administrador:</label>
+                                        <input type="text" class="inp_bus_soli_mod1" id="adm_act" name="adm_act" value='' disabled="true">
+                                        <select id="adm_act_adm" name="adm_act_adm" onclick='sel_adm()'>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class='cont_h2_entre' id='cont_h2_entre'></div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-success"  id="btn_acttualizar_usu" name="btn_acttualizar_usu">Actualizar</button>
+                                </div>
+                                <div class="mb-2" id="error_soli_exp3">error</div>
+                            </form>
+                            <!--  -->
+                        <!-- </div>    -->
+                         <!--  -->
+                    </div>
+                    
+                </div>
+                </div>
+            </div>
+            <!-- fin modal 3 modificar usuario login -->
+        </div>
+            <!-- fin modal agregar -->

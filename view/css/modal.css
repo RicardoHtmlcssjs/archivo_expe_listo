@@ -1,0 +1,38 @@
+/*--------modal 1 solicitar expediente-------*/
+.modal1{
+	max-width: 700px;
+}
+/*btn cerrar modal*/
+.btn_cerrar_mod1{
+	height: 30px;
+	width: 30px;
+	text-align: center;
+	padding-bottom: 5px;
+	border-radius: 5px;
+	outline: none;
+	color: #fff;
+	border: none;
+}
+/*cont1 modal 1*/
+.cont_mod1_solicitante{
+	display: flex;
+	justify-content: center;
+}
+/*cont1 hijo1 inp text*/
+.cont_h1_soli{
+	width: 40%;
+}
+.cont_h2_soli{
+	width: 40%;
+}
+/*input buscar solicitante cl1*/
+.inp_bus_soli_mod1{
+	border: 1px solid rgb(70, 130, 180);
+	border-radius: 0.5rem;
+	font-size:15px;
+}
+.cont_mod1_entregado{
+	display: flex;
+	justify-content: center;
+}
+/*--------------------------------------

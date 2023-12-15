@@ -1,0 +1,104 @@
+/*1ra tabla personal*/
+/*2do contenedor col de la tabla*/
+.cont_col_tab1{
+	border: 1px solid rgba(120, 120, 120, 0.4);
+	border-radius: 5px;
+}
+/*thead de la tabla*/
+.thead_tab1{
+	background-color: rgba(176, 224, 230, 0.4); 
+}
+.thead_tab1 tr th{
+	font-size: 15px;
+	border: 1px solid rgba(120, 120, 120, 0.3);
+}
+/*titulo del th*/
+.tit_c_tab1{
+	color: rgb(70, 130, 180);
+}
+/* input text buscar tabla 1*/
+.inp_bus_tab1{
+	width:90%;
+	font-size: 13px;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	padding: 0 3px;
+}
+/*btn limpiar inp buscar*/
+.btn_limpiar_inp{
+	width:10%;
+	border:none;
+	padding: 0px;
+	background-color: rgba(176, 224, 230, 0.4);
+}
+.btn_limpiar_inp:hover{
+	transition: all ease 0.5s;
+	background-color: rgb(176, 224, 230);
+}
+
+/*input buscar*/
+.inp_buscar{
+	width: 100%;
+	border: none;
+	border-radius: 0.5rem;
+	font-size:12px;
+	
+}
+/*contenedor del titulo de la tabla*/
+.cont_tit_tabla{
+	border-radius: 5px;
+	border: 2px solid rgba(120,120,120,0.8);
+	display: flex;
+}
+/*logo titulo*/
+.logo_titulo{
+	width: 30px;
+	height: 30px;
+}
+/*titulo de la tabla expediente 1*/
+.text_titulo_tat{
+	color: white;
+	font-style: italic;
+	font-weight: bold; 
+}
+/*botones encierrar agregar y refrescar*/
+.btn_agr_ref{
+	outline: none;
+	border: 2px solid rgba(120,120,120,0.8);
+	border-radius: 5px;
+}
+/*imagen del boton de agregar*/
+.img_btn_agr{
+	width: 30px;
+	height: 30px;
+}
+.img_btn_ref{
+	width: 30px;
+	height: 30px;
+}
+/*tbody de la tabla*/
+.tbody_tab1{
+	font-size: 13px;
+	background-color: white;
+}
+.tbody_tab1 tr td{
+	border: 1px solid rgba(120, 120, 120, 0.3);
+}
+/*boton de mostrar los expedientes solicitados*/
+.btn_mos_solicitud{
+	background-color: rgb(176, 224, 230);
+	border: none;
+	border-radius: 2px;
+	transition: all ease 0.2s;
+	width:20%;
+	margin-right: 15px; 
+}
+.btn_mos_solicitud:hover{
+	background-color: rgb(176, 180, 180);
+}
+
+/*contenedor col de tabla expedientes solicitados*/
+.exp_soli{
+	padding: 0px; 
+}
