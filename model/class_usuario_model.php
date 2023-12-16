@@ -79,42 +79,6 @@
 			return $result;
 		}
 
-
-		// buscar personal al escribir en el input
-		// no necesito
-		public function buscar_personal($val, $q){
-			parent::conecta();
-			$db = $this->conn;
-			if($q == 1){
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  CAST(personal.cedula AS VARCHAR) LIKE '%$val%' LIMIT 10");
-			}elseif($q == 2){
-				$val = strtoupper($val);
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  personal.nombres LIKE '%$val%' LIMIT 10");
-			}elseif($q == 3){
-				$val = ucwords($val);
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  tblestatus.dstatus LIKE '%$val%' LIMIT 10");
-			}elseif($q == 4){
-				$val = strtoupper($val);
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  tblestatus.cstatus LIKE '%$val%' LIMIT 10");
-			}elseif($q == 5){
-				$val = strtoupper($val);
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  personal.statra LIKE '%$val%' LIMIT 10");
-			}elseif($q == 6){
-				$val = strtoupper($val);
-				$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE  personal.destno LIKE '%$val%' LIMIT 10");
-			}
-			$registros = "";
-			foreach ($query as $key) {
-				$registros .= "<tr><td><input type='button' class='btn_mos_solicitud' id='btn_m_s' onclick='hh(".$key["cedula"].")' value='S'>".$key["cedula"]."</td>";
-				$registros .= "<td>".$key["nombres"]."</td>";
-				$registros .= "<td>".$key["dstatus"]."</td>";
-				$registros .= "<td class='text-center'>".$key["cstatus"]."</td>";
-				$registros .= "<td>".$key["nfil"]. "-" .$key["ncol"]."</td>"; 
-				$registros .= "<td class='text-center'>".$key["statra"]."</td>";
-				$registros .= "<td class='text-center'>".$key["destno"]."</td></tr>";
-			}
-			return $registros;
-		}
 		// opcion nabvar expedientes sin devolber mostrar todos expedientes que noha sido devueltos
 		public function todos_exp_sin_dev(){
 			parent::conecta();
