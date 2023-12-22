@@ -117,9 +117,8 @@
                 if($solicitados_ex == " "){
                 	$solicitados_ex = 0;
                 }                $result = json_encode($array);
-                // return $result;
+                
                 return $solicitados_ex;
-                // return strlen($key["ranalista"]);
 		}
 		// mostrar expediente solicitados de un usuario en espesifico o devolber expediente
 		public function expedientes_solicitados($r_ci){
@@ -200,13 +199,13 @@
 			}
 			return $result;
 		}
-		// mostrara el que solicita el expediente
+		// mostrara el que solicita el expediente analista
 		public function solicitar_exp_analista($val1, $ci_per_s){
 			
 			$q1 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' ORDER BY snombres ASC");
 			$val1 = ucwords($val1);
 			$q2 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' AND snombres LIKE '%$val1%' ORDER BY snombres ASC");
-			$select_soli = "<select class='form-select' style='text-center' id='analista'>";
+			$select_soli = "<select class='form-control' style='text-center' id='analista'>";
 			if(empty($val1)){		
 				foreach ($q1 as $key) {
 					$select_soli .= "<option value='".$key["idsolicita"]."'>".$key["snombres"]."</option>";
@@ -226,7 +225,7 @@
 			// parent::conecta();
 			// $db = $this->conn;
 			// $query = $db->execute("SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'E'");
-			$select_entregado_por = "<select class='entregado_por' id='entregado_por'>";
+			$select_entregado_por = "<select class='form-control' id='entregado_por'>";
 			$q1 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'E' AND  activo = 'S'");
 
 			foreach ($q1 as $key) {
