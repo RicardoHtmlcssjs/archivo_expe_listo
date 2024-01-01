@@ -541,7 +541,7 @@
 						$result = "Usuario creado exitosamente";
 
 						include("class_email.php");
-						$ema = new Email();			
+						$ema = new Email();
 						return $ema->enviar_email($contra_nueva, $usu, $corr);
 					}
 				 
@@ -552,7 +552,7 @@
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad ORDER BY solicitante.activo DESC");
+			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad ORDER BY solicitante.idsolicita DESC");
 			$solicitados_us = "";
 			$array = array();
 			foreach ($query as $key) {
@@ -562,7 +562,7 @@
 			return $result;
 			// return $solicitados_us;
 		}
-		// option modal del select unidad solicitante
+		// option modal del select unidad solicitante de modificar 
 		public function mostrar_unidad_s_empleado(){
 			$conexion = new Conexion();
 			$query = $conexion->consulta("s","SELECT * FROM tblunidad");
@@ -583,6 +583,38 @@
 			$result = json_encode($array);
 			
 			return $result;
+		}
+		// MOSTRAR ultimo id la tabla unidad
+		public function id_uin(){
+			$conexion = new Conexion();
+			$query = $conexion->consulta("s","SELECT idsolicita FROM solicitante ORDER BY idsolicita ASC");
+			foreach ($query as $key) {
+				$id_sol = $key['idsolicita'];
+			}
+			return $id_sol;
+		}
+		// mostrar id de tblunidad
+		public function mos_id_uni($unidad){
+			$conexion = new Conexion();
+			$query = $conexion->consulta("s","SELECT idunidad FROM tblunidad WHERE unombre = '".$unidad."'");
+			foreach ($query as $key) {
+				$id_uni = $key['idunidad'];
+			}
+			return $id_uni;
+		}
+		// 
+		// agregar analista o empleado
+		public function agre_ana_emo($nombre, $piso, $unidad, $tipo){
+			$conexion = new Conexion();
+			// select * from solicitante order by idsolicita desc
+			$ul_id = $this->id_uin();
+			$ul_id = $ul_id + 1;
+			$id_unidad = $this->mos_id_uni($unidad);
+			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, '".$tipo."', 'S')");
+			session_start();
+			$id_usu_admin = $_SESSION["id_usu_log"];
+			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($ul_id, $id_usu_admin, now(), 'Creacion de personal', now())");
+			return 1;
 		}
 		// guardar cambios modal empleados y analistas
 		public function guardar_r_a_e($unidad, $activo, $tipo, $id_ae){

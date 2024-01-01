@@ -527,12 +527,12 @@ class Usuarios{
 					$("#rr").html(accion.mensaje_alerta("danger", "El usuario ya existe", "view/images/icono_danger.png"));
 				}else if(result == 4){
 					$("#rr").html(accion.mensaje_alerta("danger", "El correo ya existe", "view/images/icono_danger.png"));
-				}				
+				}
 				else if(result == 0){
 					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar la contraseña al correo, pero el usuario ha sido creado", "view/images/icono_danger.png"));
 				}else{
 					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
-				}				
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -550,7 +550,7 @@ class Usuarios{
 				$("#opc_adm_4").removeClass("opnb");
 				$("#cuerpo").html(expedientes_sn_dev());
 				$("#cont_2_tbl").append(header_table_personal("Administrador - Empleados y analistas","view/images/expedientes.png"));
-
+				$("#cont_2_tbl").append("<div><button class='btn btn-success' onClick='mos_mod_agre_ana_emp()'><i class='fa-solid fas fa-user-plus'></i></button></div>");
 
 		$('#tbl_exp_sd').DataTable({
 			"ajax":{
@@ -593,6 +593,39 @@ class Usuarios{
 			}
 		});
 	}
+	// mostrar datos de unidad a modal agregar personal analista o empleado
+	mostrar_unidad(){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_unidad.php",
+			type: "POST",
+			success: function(result){
+				$("#id_unidad").html(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// agrega analista o empleado
+	agre_ana_emp(nombre, piso, unidad, tipo){
+		$.ajax({
+			url: "model/ajax/ajax_agre_ana_emp.php",
+			type: "POST",
+			data:{
+				nombre: nombre, piso: piso, unidad: unidad, tipo: tipo
+			},
+			success: function(result){
+				$("#exampleModal2").modal("hide");
+				usuario.mos_tabla_emp_ana();
+				// alert(result);
+
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+
 	// agregar datos a el modal de la tabla analista y empleados al modificar uno como administrador
 	agre_act_tip(id){
 		$.ajax({
@@ -616,7 +649,7 @@ class Usuarios{
 		});
 	}
 	// option del select de unidad solicitante modal analistas y empleados
-	 mostrar_unidad_s_empleado_a(){
+	mostrar_unidad_s_empleado_a(){
 		$.ajax({
 			url: "model/ajax/ajax_mostrar_unidad_s_empleado_a.php",
 			type: "POST",
@@ -664,7 +697,7 @@ class Usuarios{
 			}
 		});
 	}
-	// mostrar mi perfil 
+	// mostrar mi perfil
 	mi_perfil(){
 		$.ajax({
 			url: "model/ajax/ajax_perfil.php",

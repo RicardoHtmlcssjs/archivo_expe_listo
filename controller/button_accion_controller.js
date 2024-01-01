@@ -232,7 +232,7 @@ function modal_mod_ana_e(id){
 // boton de mi perfil
 $("#opnb_perfil").on("click", ()=>{
 	usuario.mi_perfil();
-}); 
+});
 // boton guardar datos del formulario mi perfil
 function guardar_per(){
 	let inp_usu = $("#usuario_per").val();
@@ -286,9 +286,54 @@ function btn_act_con(){
 		$("#rr").html(accion.mensaje_alerta("danger", "Las contraseñas no coinsiden", "view/images/icono_danger.png"));
 	}else{
 		usuario.camb_contra_perfil(inp_cont_act, inp_cont_n1, inp_cont_n2);
-	}	
-} 
-// btn navbar transacciones analistas y empleados 
+	}
+}
+// mostrar modal agregar emplado y analista
+function mos_mod_agre_ana_emp(){
+	let modal_mod_ana_e = "<h2 class='text-center' id='id_tit_mod1'>Agregar personal</h2>"; 
+	modal_mod_ana_e += "<form action='>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='nombre' class='form-label'>Nombre </label>";
+	modal_mod_ana_e += "<input type='text' class='form-control' placeholder='Ingresa el nombre' id='nombre' name='nombre'>";
+	modal_mod_ana_e += "</div>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='piso' class='form-label'>Piso </label>";
+	modal_mod_ana_e += "<input type='number' class='form-control' placeholder='Ingresa el piso' id='piso' name='piso' maxlength='2'>";
+	modal_mod_ana_e += "</div>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='id_unidad' class='form-label'>Unidad </label>";
+	modal_mod_ana_e += "<select class='form-control' id='id_unidad' name='id_unidad'>";
+	modal_mod_ana_e += "</select>";
+	modal_mod_ana_e += "</div>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='id_usu_mo_con' class='form-label'>Tipo </label>";
+	modal_mod_ana_e += "<select class='form-control' id='id_tipo' name='id_tipo'>";
+	modal_mod_ana_e += "<option value='E'>Empleado</option>";
+	modal_mod_ana_e += "<option value='S'>Supervisor</option>";
+	modal_mod_ana_e += "</select>";
+	modal_mod_ana_e += "</div>";
+	modal_mod_ana_e += "<div class='modal-footer justify-content-center'>";
+	modal_mod_ana_e += "<button type='button' class='btn btn-success'  id='btn_act_cont' name='btn_act_cont' onclick='btn_agre_ana()'>Guardar cambios</button>";
+	modal_mod_ana_e += "</div><div id='rr'></div>";
+	modal_mod_ana_e += "</form>";
+	$("#modal2").html(modal_mod_ana_e);
+	usuario.mostrar_unidad();
+	$("#exampleModal2").modal("show");
+}
+// btn agregar un analista o empleado
+function btn_agre_ana(){
+	let nombre = $("#nombre").val();
+	let piso = $("#piso").val();
+	let unidad = $("#id_unidad").val();
+	let tipo = $("#id_tipo").val();
+	if(nombre === "" || piso === "" ){
+		$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
+	}else{
+		usuario.agre_ana_emp(nombre, piso, unidad, tipo);
+	}
+}
+
+// btn navbar transacciones analistas y empleados
 $("#opc_adm_4").on("click", ()=>{
 	usuario.mos_tabla_tran_emp_ana();
 });
