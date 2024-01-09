@@ -6,7 +6,7 @@
 			$this->con = $contrasena; 
 		}
 		public function hora_normal($hora){
-			$horas = substr($hora, 0, 2);			
+			$horas = substr($hora, 0, 2);
 			if($horas > 12){
 				$horas = $horas - 12;
 				$mp = "PM";
@@ -20,7 +20,6 @@
 
 			return $result;
 		}
-		
 		// comprobacion cuando el usuario se logea
 		public function login_usuarios(){
 			parent::conecta();
@@ -88,22 +87,22 @@
 			$array = array();
 			foreach ($query as $key) {
 				if(strlen($key["ranalista"]) == 0){
-                	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'"); 
-                	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'"); 
+                	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'");
+                	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'");
                 	foreach ($query2 as $key2) {
                 		$eanal = $key2["snombres"];
                 	}
                 	if($key['ranalista'] != ""){
                 		foreach ($query3 as $key3) {
                 		$ranal = $key3["snombres"];
-                	}	
+                	}
                 	}else{
                 		$ranal = "";
                 	}
                 	
                 	$snombres = $key['snombres'];
 		            $solicitados_ex .= "<tr>";
-		            $solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='modal2_devol_exp_per(".$key['cedula'].", 2)'>D</button>".$key['snombres']."</td>
+		            $solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
 		                        <td class=''>".$key['micro']."</td>
 		                        <td class=''>".$key['piso']."</td>
 		                        <td class=''>".$key['unombre']."</td>
@@ -144,39 +143,41 @@
                 </thead>
                 <tbody class='tbody_tab1'>";
                 foreach ($query as $key) {
-                	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'"); 
-                	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'"); 
-                	foreach ($query2 as $key2) {
-                		$eanal = $key2["snombres"];
-                	}
-                	if($key['ranalista'] != ""){
-                		foreach ($query3 as $key3) {
-                		$ranal = $key3["snombres"];
-                		}	
-                	}else{
-                		$ranal = "";
-                	}
-                	
-                	$snombres = $key['snombres'];
-		            $solicitados_ex .= "<tr>";
-		            $solicitados_ex .= "<td class=''>".$key['snombres']."</td>
-		                        <td class=''>".$key['micro']."</td>
-		                        <td class=''>".$key['piso']."</td>
-		                        <td class=''>".$key['unombre']."</td>
-		                        <td class=''>".$key['cedula']."</td>
-		                        <td class=''>".$key['nombres']."</td>
-		                        <td class=''>".$key['fentrega']."</td>
-		                        <td class=''>".$key['fdevolucion']."</td>
-		                        <td class=''>$eanal</td>
-		                        <td class=''>$ranal</td>
-		                    </tr>";
+					$query2 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = '".$key['eanalista']."'");
+					$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'");
+					// $query2 = $db->execute("SELECT login FROM vsistema WHERE idsolicita = '".$key['eanalista']."'");
+					// $query3 = $db->execute("SELECT login FROM vsistema WHERE idsolicita = '".$key['ranalista']."'");
+
+					foreach ($query2 as $key2) {
+						$eanal = $key2["snombres"];
+					}
+					if($key['ranalista'] != ""){
+						foreach ($query3 as $key3) {
+							$ranal = $key3["snombres"];
+						}
+					}else{
+						$ranal = "";
+					}
+					$snombres = $key['snombres'];
+					$solicitados_ex .= "<tr>";
+					$solicitados_ex .= "<td class=''>".$key['snombres']."</td>
+								<td class=''>".$key['micro']."</td>
+								<td class=''>".$key['piso']."</td>
+								<td class=''>".$key['unombre']."</td>
+								<td class=''>".$key['cedula']."</td>
+								<td class=''>".$key['nombres']."</td>
+								<td class=''>".$key['fentrega']."</td>
+								<td class=''>".$key['fdevolucion']."</td>
+								<td class=''>$eanal</td>
+								<td class=''>$ranal</td>
+								</tr>";
                 }
-           	$solicitados_ex .= "</tbody>
-            	</table>
-        		</div>";
-        		if(!isset($snombres)){
-        			$solicitados_ex = 0;
-        		}
+				$solicitados_ex .= "</tbody>
+				</table>
+				</div>";
+				if(!isset($snombres)){
+					$solicitados_ex = 0;
+				}
 			return $solicitados_ex;
 		}
 		// class borrar btn y si se solicitado expediente
@@ -235,22 +236,53 @@
 			return $select_entregado_por;
 		}
 		// entregar expediente solicitado
-		public function entregar_expediente($analis, $p_entregado, $ci_entregar_exp){
+		public function entregar_expediente($analis, $ci_entregar_exp){
 			parent::conecta();
 			$db = $this->conn;
+			
 			$query =$db->execute("SELECT id_controle from controle");
 			foreach ($query as $key) {
 				$ult_id_controle = $key["id_controle"];
 			}
 			$ult_id_controle = $ult_id_controle + 1;
-			$query2 = $db->execute("INSERT INTO controle (id_controle, cedula, id_solicita, fentrega, eanalista) VALUES ($ult_id_controle, $ci_entregar_exp, $p_entregado, now(), $analis)");
-			return $ci_entregar_exp;
+			session_start();
+			$id_usu_log = $_SESSION["id_usu_log"];
+			$query2 = $db->execute("INSERT INTO controle (id_controle, cedula, id_solicita, fentrega, eanalista) VALUES ($ult_id_controle, $ci_entregar_exp, $analis, now(), $id_usu_log)");
+			return $id_usu_log;
 		}
-		public function recivir_expediente($ci, $recivir_expediente){
+		// recvir expedien normal de la opc 2
+		public function recivir_expediente($ci){
 			parent::conecta();
 			$db = $this->conn;
-			$db->execute("UPDATE controle SET fdevolucion = now(), ranalista = ".$recivir_expediente." WHERE cedula = ".$ci."");
+			// ver el ultimo id de la tabla controle en la bbdd
+			$query1 = $db->execute("SELECT id_controle FROM controle WHERE cedula = $ci ORDER BY id_controle DESC LIMIT 1");
+			foreach ($query1 as $key) {
+				$ult_id = $key["id_controle"];
+			}
+			session_start();
+			$id_usu_log = $_SESSION["id_usu_log"];
+			$db->execute("UPDATE controle SET fdevolucion = now(), ranalista = ".$id_usu_log." WHERE id_controle = ".$ult_id."");
 			$result = 1;
+			return  $result;
+		}
+		// DEBOLVER EXPEDIENTE SOLICITADOS EN LA OPCIN DE NADA MAS DEBOLVER EXPEDIENTE
+		public function debolver_expe_solo($ci){
+			parent::conecta();
+			$db = $this->conn;
+			// ver el ultimo id de la tabla controle en la bbdd
+			$query1 = $db->execute("SELECT id_controle FROM controle WHERE cedula = $ci ORDER BY id_controle DESC LIMIT 1");
+			foreach ($query1 as $key) {
+				$ult_id = $key["id_controle"];
+			}
+			session_start();
+			$id_usu_log = $_SESSION["id_usu_log"];
+			$re = $db->execute("UPDATE controle SET fdevolucion = now(), ranalista = ".$id_usu_log." WHERE id_controle = ".$ult_id."");
+			if($re){
+				$result = 1;
+			}else{
+				$result = 0;
+			}
+			// $result = $re;
 			return  $result;
 		}
 		// tabla de mostrar usuarios que se logean

@@ -3,6 +3,6 @@
 	include("../class_limpiar_cadena.php");
 	$ci = $class->limpiar_cadena($_POST["ci"]);
 	$cl_usuario = new Usuario("","");
-	$result = $cl_usuario->recivir_expediente($ci);
+	$result = $cl_usuario->debolver_expe_solo($ci);
 	echo $result;
 ?>

@@ -14,7 +14,6 @@ function most_mod_agr(ci_per_s){
 	$("#error_soli_exp1").html("");
 	$("#solicitante").val("");
 	usuario.selec_analis($("#solicitante").val(), ci_per_s);
-	usuario.entregado_por_exp();
 	$("#exampleModal1").modal("show");
 	$("#mod1").css("width","1000px");
 };
@@ -27,43 +26,48 @@ $("#solicitante").on("keyup",function(){
 });
 // btn guardar solicitud de expediente
 $("#agre_solicitar_exp").on("click", function(){
-	if($("#analista").val() == null){
-		$("#error_soli_exp1").html(accion.mensaje_alerta("danger", "Selecciona un solicitante", "view/images/icono_danger.png"));
-	}else{
 		$("#error_soli_exp1").html("");
 		$("#exampleModal1").modal("hide");
 		let ci_entregar_exp = $("#ci_per_agre_exp").val();
 		let analis = $("#analista").val();
-		let p_entregado = $("#entregado_por").val();
-		usuario.expediente_entregado(analis, p_entregado, ci_entregar_exp);
-		//$("#ci_per_agre_exp").val("");
-		//$("#ci_per_agre_exp").val("");
+		usuario.expediente_entregado(analis, ci_entregar_exp);
 		$("#solicitante").val("");
-
-	};
 });
 // modal de devovelver expedientes solicitados - persona
-function modal2_devol_exp_per(ci, opc){
+function modal2_devol_exp_per(ci){
 	$("#exampleModal2").modal("show");
-	let modal_dev_exp = "<h2 class='text-center' id='id_tit_mod1'>Recivir expediente</h2>";
+	let modal_dev_exp = "<h2 class='text-center' id='id_tit_mod1'>Recibir expediente</h2>";
         modal_dev_exp += "<form action='>";
 		modal_dev_exp += "<div class='mb-3 cont_mod1_entregado' >";
-        modal_dev_exp += "<label for='entregado_por1' class='form-label'>Recivido por: </label>";
-        modal_dev_exp += "<div class='cont_h2_entre' id='cont_recivido_por_res'></div>";
-        modal_dev_exp += "</div>";
 		modal_dev_exp += "<div class='modal-footer justify-content-center'>";
-		modal_dev_exp += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='agregar_r_l'>Guardar</button>";
+		modal_dev_exp += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='rec_exp("+ci+")'>Si</button>";
 		modal_dev_exp += "</div>";
 		modal_dev_exp += "<div class='mb-2' id='error_soli_exp1'></div>";
 		modal_dev_exp += "</form>";
 
 	$("#modal2").html(modal_dev_exp);
-	let ci_entregar_exp = $("#ci_per_solic_expe").val();
-	usuario.recivido_por();
-	$("#btn_recivir_expediente").on("click", function(){
-		let per_recivido = $("#entregado_por").val();
-		usuario.entregar_exdpediente(ci, per_recivido, opc);
-	});
+}
+// DEbolver expediente solicitado
+function rec_exp(ci, num){
+	if(num !=2){
+		usuario.debolver_expediente(ci);
+	}else{
+		usuario.debolver_exp(ci);
+	}
+}
+// debolver expedientes solicitados en opcion que muestra nada mas todos los expedientes solicitados
+function entre_exp(ci){
+	$("#exampleModal2").modal("show");
+	let modal_dev_exp = "<h2 class='text-center' id='id_tit_mod1'>Recibir expediente</h2>";
+        modal_dev_exp += "<form action='>";
+		modal_dev_exp += "<div class='mb-3 cont_mod1_entregado' >";
+		modal_dev_exp += "<div class='modal-footer justify-content-center'>";
+		modal_dev_exp += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='rec_exp("+ci+", 2)'>Si</button>";
+		modal_dev_exp += "</div>";
+		modal_dev_exp += "<div class='mb-2' id='error_soli_exp1'></div>";
+		modal_dev_exp += "</form>";
+
+	$("#modal2").html(modal_dev_exp);
 }
 // click nabvar opcion 1 personal
 $("#opnb1").on("click", function(){
@@ -74,25 +78,25 @@ $("#opnb2").on("click", function(){
 	usuario.expedi_sn_devolver();
 })
 // boton de administrador 1 usuarios mostrar usuarios tabla
-$("#opc_adm_1").on("click",()=>{	
+$("#opc_adm_1").on("click",()=>{
 	usuario.usus_login();
 });
 // boton arriba de la tabla, agregar nuevo usuario
 function modal_agreagar_usu(){
-	let modal_agre_usu = "<h2 class='text-center' id='id_tit_mod1'>Crear usuario</h2>"; 
+	let modal_agre_usu = "<h2 class='text-center' id='id_tit_mod1'>Crear usuario</h2>";
 				modal_agre_usu += "<form action='>";
 				modal_agre_usu += "<div class='mb-3 cont_mod1_entregado'>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='crear_usu' class='form-label'>Ingresa el usuario: </label>";
-				modal_agre_usu += "<input type='text' class='inp_bus_soli_mod1 ml-1 px-1' id='crear_usu' name='crear_usu' value=''>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_usu' name='crear_usu' value=''>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='crear_nom' class='form-label'>Ingresa el nombre: </label>";
-				modal_agre_usu += "<input type='text' class='inp_bus_soli_mod1 ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='adm_correo' class='form-label'>Ingresa el correo: </label>";
-				modal_agre_usu += "<input type='email' class='inp_bus_soli_mod1 ml-1 px-1' id='adm_correo' name='adm_correo' value=''>";
+				modal_agre_usu += "<input type='email' class='form-control ml-1 px-1' id='adm_correo' name='adm_correo' value=''>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
                 modal_agre_usu += "<label for='crear_act' class='form-label'>Activo:</label>";

@@ -179,7 +179,7 @@ class Usuarios{
 				ci: ci
 			},
 			success: function(result){
-				if(result == 0){ 
+				if(result == 0){
 					result = "<input type='hidden' value='"+ci+"' id='ci_per_solic_expe'>";
 					result += accion.mensaje_alerta('danger', 'Personal sin solicitud de expediente', 'view/images/icono_danger.png');
 				};
@@ -190,7 +190,7 @@ class Usuarios{
 			error: function(error){
 				console.log(error);
 			}
-		});  
+		});
 	}
 	// clase si falta por entregar el expediente borrar el boton de solicitar expediente
 	expe_espera_recivir(ci){
@@ -211,12 +211,35 @@ class Usuarios{
 			}
 		});
 	}
+	//entregar expediente solicitado
+	debolver_exp(ci){
+		$.ajax({
+			url: "model/ajax/ajax_debolver_expe_solo.php",
+			type: "POST",
+			data: {
+				ci: ci
+			},
+			success: function(result){
+				// alert(result);
+				// if(result == 1){
+					$("#exampleModal2").modal("hide");
+					// alert(result);
+					usuario.expedi_sn_devolver();
+				// }else{
+				// 	alert("Ha ocurrido un error");
+				// }
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
 	// mostrara todos las analistas
-	selec_analis(val1, ci_per_s){		
+	selec_analis(val1, ci_per_s){
 		$.ajax({
 			url: "model/ajax/ajax_solitar_exp_ana.php",
 			type: "POST",
-			data: {				
+			data: {
 				val1: val1, ci_per_s: ci_per_s
 			},
 			success: function(result){
@@ -227,63 +250,32 @@ class Usuarios{
 			}
 		});
 	};
-	// mostrar quien lo entrego
-	entregado_por_exp(){
+	expediente_entregado(analis, ci_entregar_exp){
 		$.ajax({
-			url: "model/ajax/ajax_entregado_por.php",
-			type: "POST",
-			success: function(result){
-				$("#cont_h2_entre").html(result);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-	}
-	// proceso de  extraga de expediente 
-	expediente_entregado(analis, p_entregado, ci_entregar_exp){
-		$.ajax({
-			url: "model/ajax/ajax_agregar_entre_exp.php",
+			url: "model/ajax/ajax_entregar_expe.php",
 			type: "POST",
 			data: {
-				analis: analis, p_entregado: p_entregado, ci_entregar_exp: ci_entregar_exp
+				analis: analis, ci_entregar_exp: ci_entregar_exp
 			},
 			success: function(result){
-				usuario.expedientes_soli_personal(result);
+				$("#exampleModal2").modal("hide");
+				usuario.expedientes_soli_personal(ci_entregar_exp);
 			},
 			error: function(error){
 				console.log(error);
 			}
 		});
 	}
-	// motrsra el select en el modal quien lo recivira
-	recivido_por(ci){
-		$.ajax({
-			url: "model/ajax/ajax_entregado_por.php",
-			type: "POST",
-			success: function(result){
-				$("#cont_recivido_por_res").html(result);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-	}
-	// entregar expediente
-	entregar_exdpediente(ci, per_recivido, opc){
+	debolver_expediente(ci){
 		$.ajax({
 			url: "model/ajax/ajax_recivir_expe.php",
 			type: "POST",
 			data: {
-				ci: ci, per_recivido: per_recivido
+				ci: ci
 			},
 			success: function(result){
-				if(opc == 2){
-					usuario.expedi_sn_devolver();
-				}else{
-					usuario.expedientes_soli_personal(ci);
-				}
 				$("#exampleModal2").modal("hide");
+				usuario.expedientes_soli_personal(ci);
 			},
 			error: function(error){
 				console.log(error);
