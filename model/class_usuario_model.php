@@ -3,7 +3,7 @@
 	class Usuario extends Conexion{
 		public function __construct($usuario, $contrasena){
 			$this->usu = $usuario;
-			$this->con = $contrasena; 
+			$this->con = $contrasena;
 		}
 		public function hora_normal($hora){
 			$horas = substr($hora, 0, 2);
@@ -25,13 +25,19 @@
 			parent::conecta();
 			$db = $this->conn;
 			$contra = md5($this->con);
-			$sql = "SELECT idusuario, login, syspassword, id_permisos FROM vsistema WHERE login = '".$this->usu."' AND syspassword = '".$contra."'";
+			$sql = "SELECT idusuario, login, syspassword, id_permisos, sysnombre FROM vsistema WHERE login = '".$this->usu."' AND syspassword = '".$contra."'";
 			$query = $db->execute($sql);
 			foreach ($query as $key) {
 				$usuario = $key["login"];
 				$password = $key["syspassword"];
 				$idusuario = $key["idusuario"];
 				$permisos = $key["id_permisos"];
+				$nombre= $key["sysnombre"];
+				$sql2 = "SELECT idsolicita FROM solicitante WHERE snombres = '".$nombre."'";
+				$query2 = $db->execute($sql2);
+				foreach($query2 as $key2){
+					$id_solicita = $key2["idsolicita"];
+				}
 			}
 			if(empty($this->usu || empty($this->con))){
 				return 2;
@@ -39,7 +45,9 @@
 				if(md5($this->con) == $password){
 					session_start();
 					$_SESSION["id_usu_log"] = $idusuario;
-					$_SESSION["admin_usu_p"] = $permisos;  
+					$_SESSION["admin_usu_p"] = $permisos;
+					$_SESSION["nombre_u"] = $nombre;
+					$_SESSION["id_solicita"] = $id_solicita;
 					if($permisos == 2){
 						return 1.1;
 					}else{
@@ -47,7 +55,7 @@
 					}
 				}else{
 					return 0;
-				} 
+				}
 			}else{
 				return 0;
 			}
@@ -116,7 +124,6 @@
                 if($solicitados_ex == " "){
                 	$solicitados_ex = 0;
                 }                $result = json_encode($array);
-                
                 return $solicitados_ex;
 		}
 		// mostrar expediente solicitados de un usuario en espesifico o devolber expediente
@@ -202,16 +209,14 @@
 		}
 		// mostrara el que solicita el expediente analista
 		public function solicitar_exp_analista($val1, $ci_per_s){
-			
 			$q1 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' ORDER BY snombres ASC");
 			$val1 = ucwords($val1);
 			$q2 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' AND snombres LIKE '%$val1%' ORDER BY snombres ASC");
 			$select_soli = "<select class='form-control' style='text-center' id='analista'>";
-			if(empty($val1)){		
+			if(empty($val1)){
 				foreach ($q1 as $key) {
 					$select_soli .= "<option value='".$key["idsolicita"]."'>".$key["snombres"]."</option>";
 				}
-				
 			}else{
 				foreach ($q2 as $key2) {
 					$select_soli .= "<option value='".$key2["idsolicita"]."'>".$key2["snombres"]."</option>";
@@ -246,7 +251,7 @@
 			}
 			$ult_id_controle = $ult_id_controle + 1;
 			session_start();
-			$id_usu_log = $_SESSION["id_usu_log"];
+			$id_usu_log = $_SESSION["id_solicita"];
 			$query2 = $db->execute("INSERT INTO controle (id_controle, cedula, id_solicita, fentrega, eanalista) VALUES ($ult_id_controle, $ci_entregar_exp, $analis, now(), $id_usu_log)");
 			return $id_usu_log;
 		}
@@ -260,7 +265,7 @@
 				$ult_id = $key["id_controle"];
 			}
 			session_start();
-			$id_usu_log = $_SESSION["id_usu_log"];
+			$id_usu_log = $_SESSION["id_solicita"];
 			$db->execute("UPDATE controle SET fdevolucion = now(), ranalista = ".$id_usu_log." WHERE id_controle = ".$ult_id."");
 			$result = 1;
 			return  $result;
@@ -275,7 +280,7 @@
 				$ult_id = $key["id_controle"];
 			}
 			session_start();
-			$id_usu_log = $_SESSION["id_usu_log"];
+			$id_usu_log = $_SESSION["id_solicita"];
 			$re = $db->execute("UPDATE controle SET fdevolucion = now(), ranalista = ".$id_usu_log." WHERE id_controle = ".$ult_id."");
 			if($re){
 				$result = 1;
@@ -316,6 +321,16 @@
 			$res = "";
 			foreach ($query as $key) {
 				$res .= "<option value='".$key["desc_permisos"] ."'>".$key["desc_permisos"]."</option>";
+			}
+			return $res;
+		}
+		// MOSTRAR unidades existentes al crear un usuario
+		public function mostrar_unidad_usu_cre(){
+			$conexion = new Conexion();
+			$query = $conexion->consulta("s","SELECT * FROM tblunidad");
+			$res = "";
+			foreach ($query as $key) {
+				$res .= "<option value='".$key["idunidad"] ."'>".$key["unombre"]."</option>";
 			}
 			return $res;
 		}
@@ -525,10 +540,9 @@
 			// return $solicitados_us;
 		}
 		// agregar nuevo usuario  $usu, $nom, $act, $adm, $corr
-		public function agre_usu_adm($usu, $nom, $act, $adm, $corr){
+		public function agre_usu_adm($usu, $nom, $act, $adm, $corr, $piso, $unidad){
 			$conexion = new Conexion();
 			if(empty($usu) || empty($nom) || empty($corr)){
-				// $result = "Algun campo esta vacio";
 				$result = 2;
 			}else{
 					$cont_usu = 0;
@@ -542,7 +556,6 @@
 					foreach ($query_correo as $key_correo) {
 						$existe_correo = $key_correo["correo"];
 					}
-					
 					if($cont_usu > 0){
 						// $result = "El usuario ya existe";
 						return 3;
@@ -554,7 +567,7 @@
 							$id_p_n = $key2["id_permisos"];
 						}
 						$query3 = $conexion->consulta("s","SELECT id_activo FROM login_activo WHERE desc_activo = '".$act."'");
-						foreach ($query3 as $key3) { 
+						foreach ($query3 as $key3) {
 							$id_a_n = $key3["id_activo"];
 						}
 						$query4 = $conexion->consulta("s","SELECT idusuario FROM vsistema ORDER BY idusuario DESC LIMIT 1");
@@ -572,11 +585,18 @@
 						$query5 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($idusuario, $id_usu_admin, now(), '". $descipcion ."', now())");
 						$result = "Usuario creado exitosamente";
 
+						$query6 = $conexion->consulta("s", "SELECT idsolicita FROM solicitante ORDER BY idsolicita DESC LIMIT 1");
+						foreach ($query6 as $key6) {
+							$ult_id_solicita = $key6["idsolicita"];
+						}
+						$ult_id_solicita = $ult_id_solicita + 1;
+
+						$query7 = $conexion->consulta("s", "INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ult_id_solicita, '".$nom."', 0000, $piso, $unidad, 'E', '".$act."')");
+
 						include("class_email.php");
 						$ema = new Email();
 						return $ema->enviar_email($contra_nueva, $usu, $corr);
 					}
-				 
 
 			}
 			return $result;
@@ -594,7 +614,7 @@
 			return $result;
 			// return $solicitados_us;
 		}
-		// option modal del select unidad solicitante de modificar 
+		// option modal del select unidad solicitante de modificar
 		public function mostrar_unidad_s_empleado(){
 			$conexion = new Conexion();
 			$query = $conexion->consulta("s","SELECT * FROM tblunidad");
@@ -613,7 +633,6 @@
 				$array [] = $key;
 			}
 			$result = json_encode($array);
-			
 			return $result;
 		}
 		// MOSTRAR ultimo id la tabla unidad

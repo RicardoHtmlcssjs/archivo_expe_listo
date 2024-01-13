@@ -106,6 +106,14 @@ function modal_agreagar_usu(){
                 modal_agre_usu += "<label for='crear_adm' class='form-label'>Administrador:</label>";
                 modal_agre_usu += "<select class='form-control' id='adm_act_adm' name='adm_act_adm'></select>";
                 modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label class='form_label' for='piso_usu'>Piso:</label>";
+				modal_agre_usu += "<input type='number' class='form-control' id='piso_usu' name='piso_usu'>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label class='form_label' for='unidad_usu'>Unidad:</label>";
+				modal_agre_usu += "<select class='form-control' id='unidad_usu' name='unidad_usu'></select>";
+				modal_agre_usu += "</div>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
 				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu()'>Guardar</button>";
@@ -115,19 +123,20 @@ function modal_agreagar_usu(){
 				$("#modal2").html(modal_agre_usu);
 				usuario.mostrar_opc_mod_act_desc();
 				usuario.mostrar_opc_mod_per();
+				usuario.mostra_opc_uni_tod();
 }
 // enviar formulario de modal agregar nuevo usuario
 function agregar_nue_usu(){
 	if( $("#adm_correo").val() != ""){
 		if(expresiones_re.email($("#adm_correo").val()) == true){
-			usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val());
+			usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
 		}else{
 			$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
 		}
 	}else if($("#adm_correo").val() === ""){
 		$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
 	}else{
-		usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(), $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val());
+		usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(), $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
 	}
 }
 // mostrar modal al hacer click en modificar usuario como administrador

@@ -148,7 +148,6 @@ class Usuarios{
 			type: "POST",
 			success: function(result){
 				$("#cuerpo").html(expedientes_sn_dev2());
-				
 				$("#cont_2_tbl").append(header_table_personal("Expedientes sin devolver","view/images/expedientes.png"));
 				if(result == 0){
 					$("#tbl_exp_sd").html("");
@@ -169,7 +168,6 @@ class Usuarios{
 			}
 		})
 
-		
 	}
 	expedientes_soli_personal(ci){
 		$.ajax({
@@ -370,7 +368,20 @@ class Usuarios{
 			}
 		});
 	}
-	// mostrar en el modal 3 
+	// mostrar opc de unidad a la que pertenese todas
+	mostra_opc_uni_tod(){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_unidad_usu_cre.php",
+			type: "POST",
+			success: function(result){
+				$("#unidad_usu").html(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// mostrar en el modal 3
 	usu_editar(id_usuario){
 		$.ajax({
 			url: "model/ajax/ajax_usu_editar.php",
@@ -499,16 +510,16 @@ class Usuarios{
 		});
 	}
 	// agregar un usuario como administrador
-	agre_usu_adm(usu, nom, act, adm, corr){
+	agre_usu_adm(usu, nom, act, adm, corr, piso, unidad){
 		$.ajax({
 			url: "model/ajax/ajax_agre_usu_adm.php",
 			type: "POST",
 			data: {
-				usu: usu, nom: nom, act: act, adm: adm, corr: corr
+				usu: usu, nom: nom, act: act, adm: adm, corr: corr, piso: piso, unidad: unidad
 			},
 			success: function(result){
 				if(result == 2){
-					$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));					
+					$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
 				}else if(result == 1){
 					$("#rr").html(accion.mensaje_alerta("success", "Usuario creado exitosamente", "view/images/icono_bien.png"));
 					$("#exampleModal2").modal("hide");
@@ -524,6 +535,7 @@ class Usuarios{
 					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar la contraseña al correo, pero el usuario ha sido creado", "view/images/icono_danger.png"));
 				}else{
 					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
+					alert(result);
 				}
 			},
 			error: function(error){

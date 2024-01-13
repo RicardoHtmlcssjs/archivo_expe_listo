@@ -6,7 +6,9 @@ include("../class_limpiar_cadena.php");
 	$corr = $class->limpiar_cadena($_POST["corr"]);
 	$act = $class->limpiar_cadena($_POST["act"]);
 	$adm = $class->limpiar_cadena($_POST["adm"]);
+	$piso = $class->limpiar_cadena($_POST["piso"]);
+	$unidad = $class->limpiar_cadena($_POST["unidad"]);
 	$cl_usuario = new Usuario("","");
-	$result = $cl_usuario->agre_usu_adm($usu, $nom, $act, $adm, $corr);
+	$result = $cl_usuario->agre_usu_adm($usu, $nom, $act, $adm, $corr, $piso, $unidad);
 	echo $result;
 ?>
