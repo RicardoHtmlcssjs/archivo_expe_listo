@@ -180,10 +180,15 @@ class Usuarios{
 				if(result == 0){
 					result = "<input type='hidden' value='"+ci+"' id='ci_per_solic_expe'>";
 					result += accion.mensaje_alerta('danger', 'Personal sin solicitud de expediente', 'view/images/icono_danger.png');
-				};
-				usuario.expe_espera_recivir(ci);
-				$('#exp_soli').html(accion.boton('Solicitar expediente','success', 'view/images/icono_expediente.png', "onclick='most_mod_agr("+ci+")'"));
-				$('#exp_soli').append(result);
+					$('#exp_soli').html(accion.boton('Solicitar expediente','success', 'view/images/icono_expediente.png', "onclick='most_mod_agr("+ci+")'"));
+					$('#exp_soli').append(result);
+				}else if(result == 2){
+					usuario.expe_espera_recivir(ci);
+				}else{
+					$('#exp_soli').html(accion.boton('Solicitar expediente','success', 'view/images/icono_expediente.png', "onclick='most_mod_agr("+ci+")'"));
+					$('#exp_soli').append(result);
+					usuario.expe_espera_recivir(ci);
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -301,7 +306,7 @@ class Usuarios{
 				"dataSrc": ""
 			},
 			"columns":[
-				{"data": "login"},				
+				{"data": "login"},
 				{"data": "sysnombre"},
 				{
                     "data": null,
@@ -425,11 +430,11 @@ class Usuarios{
 				}else if(result == 1){
 					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "El usuario ya exise", "view/images/icono_danger.png"));
 				}else if(result == 2){
-					$("#exampleModal3").modal("hide");		
+					$("#exampleModal3").modal("hide");
 					$("#usu_act_adm").val("");
 					$("#nom_act_adm").val("");
-					usuario.usus_login();					
-				}				
+					usuario.usus_login();
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -444,8 +449,7 @@ class Usuarios{
 			data: {
 				id: id
 			},
-			success: function(result){			
-					
+			success: function(result){
 				if(result == 2){
 					$("#rr").html(accion.mensaje_alerta("danger", "El usuario debe tener un correo, para poder cambiar su contraseña", "view/images/icono_danger.png"));
 				}else if(result == 1){
@@ -453,10 +457,7 @@ class Usuarios{
 					$("#exampleModal2").modal("hide");	
 				}else if(result == 0){
 					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar el correo", "view/images/icono_danger.png"));
-					
-				}	
-				
-				// $("#rr").html(accion.mensaje_alerta(`${cco}`, `${res}`, `${img}`));
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -611,18 +612,16 @@ class Usuarios{
 		});
 	}
 	// agrega analista o empleado
-	agre_ana_emp(nombre, piso, unidad, tipo){
+	agre_ana_emp(nombre, piso, unidad){
 		$.ajax({
 			url: "model/ajax/ajax_agre_ana_emp.php",
 			type: "POST",
 			data:{
-				nombre: nombre, piso: piso, unidad: unidad, tipo: tipo
+				nombre: nombre, piso: piso, unidad: unidad
 			},
 			success: function(result){
 				$("#exampleModal2").modal("hide");
 				usuario.mos_tabla_emp_ana();
-				// alert(result);
-
 			},
 			error: function(error){
 				console.log(error);
@@ -679,18 +678,17 @@ class Usuarios{
 	// obtner valores al guardar registros
 	obt_reg_r_a_e(){
 		let unidad = $("#unidad_ana_e").val();
-		let tipo = $("#val_tipo").val();
 		let activo = $("#val_activo").val();
 		let id_ae = $("#id_ana_emp").val();
-		this.guardar_r_a_e(unidad, tipo, activo, id_ae);
+		this.guardar_r_a_e(unidad, activo, id_ae);
 	}
 	// guardar cambio en el modal analista y empleados
-	guardar_r_a_e(unidad, tipo, activo, id_ae){
+	guardar_r_a_e(unidad, activo, id_ae){
 		$.ajax({
 			url: "model/ajax/ajax_guardar_r_a_e.php",
 			type: "POST",
 			data: {
-				unidad: unidad, tipo: tipo, activo: activo, id_ae: id_ae
+				unidad: unidad, activo: activo, id_ae: id_ae
 			},
 			success: function(result){
 				$("#exampleModal2").modal("hide");
@@ -734,6 +732,7 @@ class Usuarios{
 			success: function(result){
 				if(result == 1){
 					$("#resp_login").html(accion.mensaje_alerta("success", "El usuario fue actualizado exitosamente", "view/images/icono_bien.png"));
+					usuario.mostrar_usuario();
 				}else if(result == 0){
 					$("#resp_login").html(accion.mensaje_alerta("danger", "El usuario ya existe", "view/images/icono_danger.png"));
 				}else{

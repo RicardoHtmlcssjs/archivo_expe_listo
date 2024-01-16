@@ -20,6 +20,16 @@
 
 			return $result;
 		}
+		// quitar acentos de un texto
+		public function quitar_acentos($cadena){
+			$cadena = mb_strtolower($cadena, "UTF-8");
+			$cadena_nueva = str_replace("á", "a", $cadena);
+			$cadena_nueva2 = str_replace("é", "e", $cadena_nueva);
+			$cadena_nueva3 = str_replace("í", "i", $cadena_nueva2);
+			$cadena_nueva4 = str_replace("ó", "o", $cadena_nueva3);
+			$cadena_nueva5 = str_replace("ú", "u", $cadena_nueva4);
+			return $cadena_nueva5;
+		}
 		// comprobacion cuando el usuario se logea
 		public function login_usuarios(){
 			parent::conecta();
@@ -33,10 +43,15 @@
 				$idusuario = $key["idusuario"];
 				$permisos = $key["id_permisos"];
 				$nombre= $key["sysnombre"];
-				$sql2 = "SELECT idsolicita FROM solicitante WHERE snombres = '".$nombre."'";
+				$nombre_com_vsistema = $this->quitar_acentos($nombre);
+				// $sql2 = "SELECT idsolicita FROM solicitante WHERE snombres = '".$nombre."'";
+				$sql2 = "SELECT idsolicita, snombres FROM solicitante";
 				$query2 = $db->execute($sql2);
 				foreach($query2 as $key2){
-					$id_solicita = $key2["idsolicita"];
+					$nombre_con_solicitante = $this->quitar_acentos($key2["snombres"]);
+					if($nombre_con_solicitante == $nombre_com_vsistema){
+						$id_solicita = $key2["idsolicita"];
+					}
 				}
 			}
 			if(empty($this->usu || empty($this->con))){
@@ -184,6 +199,8 @@
 				</div>";
 				if(!isset($snombres)){
 					$solicitados_ex = 0;
+				}else{
+					return $solicitados_ex;
 				}
 			return $solicitados_ex;
 		}
@@ -191,16 +208,16 @@
 		public function borra_btn_sol_exp($ci){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT fdevolucion, ranalista FROM controle WHERE cedula = $ci");
-			$count = 0;
+			$query = $db->execute("SELECT fdevolucion, fentrega, ranalista FROM controle WHERE cedula = $ci ORDER BY id_controle DESC LIMIT 1");
+			$fde = "";
+			$fen = "";
+			$rana = "";
 			foreach ($query as $key) {
-				$count = $count + 1;
 				$fde = $key["fdevolucion"];
 				$rana = $key["ranalista"];
+				$fen = $key["fentrega"];
 			}
-			if($count == 0){
-				$result = 1;
-			}elseif((strlen($fde) == 0 && $count > 0) || (strlen($rana) == 0 && $count > 0)){
+			if((strlen($fde) == 0) || (strlen($rana) == 0) && (strlen($fen) >= 1)){
 				$result = 0;
 			}else{
 				$result = 1;
@@ -244,8 +261,7 @@
 		public function entregar_expediente($analis, $ci_entregar_exp){
 			parent::conecta();
 			$db = $this->conn;
-			
-			$query =$db->execute("SELECT id_controle from controle");
+			$query =$db->execute("SELECT id_controle from controle order by id_controle desc limit 1");
 			foreach ($query as $key) {
 				$ult_id_controle = $key["id_controle"];
 			}
@@ -296,9 +312,11 @@
 			$query = $conexion->consulta("s","SELECT vsistema.idusuario, vsistema.login, vsistema.correo, vsistema.sysnombre, vsistema.sysactivo, login_activo.desc_activo, vsistema.sysfechal, permisos_usu_log.desc_permisos, vsistema.id_permisos  FROM vsistema INNER JOIN permisos_usu_log ON vsistema.id_permisos = permisos_usu_log.id_permisos INNER JOIN login_activo ON vsistema.sysactivo = login_activo.id_activo");
 			$solicitados_us = "";
 			$aray = array();
+			session_start();
 			foreach ($query as $key) {
-				$array[] = $key;
-
+				if($key["idusuario"] != $_SESSION["id_usu_log"]){
+					$array[] = $key;
+				}
 			}
 			$result = json_encode($array);
 			return $result;
@@ -348,7 +366,7 @@
 		}
 		// actualizacion de datos del usuario siendo administrador
 		public function actualizar_usu_adm($id_u, $usu, $nom, $act, $adm, $cor){
-			$conexion = new Conexion();					
+			$conexion = new Conexion();
 
 			$query = $conexion->consulta("s","SELECT id_activo FROM login_activo WHERE desc_activo = '$act'");
 			$query2 = $conexion->consulta("s","SELECT id_permisos FROM permisos_usu_log WHERE desc_permisos = '$adm'");
@@ -445,7 +463,7 @@
 				// $text4 = "campo permisos";
 				$cont = $cont + 1;
 				if($cont == 1){
-					$text1 = "campo correo";	
+					$text1 = "campo correo";
 				}
 				if ($cont == 2) {
 					$text2 = "campo correo";
@@ -486,7 +504,6 @@
 			$query4 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_u, $id_usu_admin, now(), '". $descipcion ."', now())");
 			$result = 2;
 		}
-		
 			return $result;
 		}
 		// cambio de contraseña como administrador
@@ -505,6 +522,7 @@
 
 			$descipcion = "Dato actualizado: Cambio de contraseña.";
 			session_start();
+
 			$id_usu_admin = $_SESSION["id_usu_log"];
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id, $id_usu_admin, now(), '". $descipcion ."', now())");
 			// $cuerpo[]=array("login" => "".$usu."", "con" => "".$nueva_con."");
@@ -655,20 +673,20 @@
 		}
 		// 
 		// agregar analista o empleado
-		public function agre_ana_emo($nombre, $piso, $unidad, $tipo){
+		public function agre_ana_emo($nombre, $piso, $unidad){
 			$conexion = new Conexion();
 			// select * from solicitante order by idsolicita desc
 			$ul_id = $this->id_uin();
 			$ul_id = $ul_id + 1;
 			$id_unidad = $this->mos_id_uni($unidad);
-			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, '".$tipo."', 'S')");
+			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, 'S', 'S')");
 			session_start();
 			$id_usu_admin = $_SESSION["id_usu_log"];
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($ul_id, $id_usu_admin, now(), 'Creacion de personal', now())");
 			return 1;
 		}
 		// guardar cambios modal empleados y analistas
-		public function guardar_r_a_e($unidad, $activo, $tipo, $id_ae){
+		public function guardar_r_a_e($unidad, $activo, $id_ae){
 			$conexion = new Conexion();
 			session_start();
 			$id_u = $_SESSION['id_usu_log'];
@@ -700,7 +718,7 @@
 					$text1 = "Campo activo";
 				}
 				if($count == 2){
-					$text2 = "Campo activo"; 
+					$text2 = "Campo activo";
 				}
 			}
 			if($ac_tipo != $tipo){
@@ -730,7 +748,7 @@
 				
 
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_ae, $id_u, now(), '".$descipcion."', now())");
-			$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
 
 
 			return $descipcion;
@@ -774,18 +792,17 @@
 		}
 		// actulizar datos de mi perfil
 		public function actualizar_perfil($usu, $nom){
-			 
 			$conexion = new Conexion();
 			session_start();
 			$id_u = $_SESSION['id_usu_log'];
 			$query1 = $conexion->consulta("s","SELECT login, sysnombre FROM vsistema WHERE idusuario = $id_u");
 			foreach ($query1 as $key1) {
 				$usu_exi = $key1["login"];
-				$nom_exi = $key1["sysnombre"]; 
+				$nom_exi = $key1["sysnombre"];
 			}
-			$query2 = $conexion->consulta("s","SELECT login FROM vsistema WHERE login = '$usu'");		
+			$query2 = $conexion->consulta("s","SELECT login FROM vsistema WHERE login = '$usu'");
 			foreach ($query2 as $key2) {
-					$usu_esco =$key2["login"];					
+					$usu_esco =$key2["login"];
 				}
 				if(isset($usu_esco)){
 					if($usu_esco == $usu_exi){
@@ -795,12 +812,17 @@
 					}
 				}else{
 					$result = 1;
-				}	
+				}
 				if($result == 1){
 					$query3 = $conexion->consulta("s","UPDATE vsistema SET  login = '".$usu."',  sysnombre = '".$nom."'  WHERE idusuario = $id_u");
+					$_SESSION["nombre_u"] = $nom;
+
 
 					$descipcion = "Actualizacion de usuario y nombre por el usuario propietario.";
 					$query4 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_u, $id_u, now(), '". $descipcion ."', now())");
+
+					$id_solicita = $_SESSION["id_solicita"];
+					$query5 = $conexion->consulta("s", "UPDATE solicitante SET snombres = '".$nom."' WHERE idsolicita = $id_solicita");
 				}
 
 			return $result;

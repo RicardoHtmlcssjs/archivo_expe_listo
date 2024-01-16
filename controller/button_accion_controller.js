@@ -220,10 +220,6 @@ function modal_mod_ana_e(id){
 	modal_mod_ana_e += "<label for='id_usu_mo_con' class='form-label'>Tipo: </label>";
 	modal_mod_ana_e += "<input type='hidden' id='id_ana_emp' name='id_ana_emp' value='"+id+"'>";
 	modal_mod_ana_e += "<input type='text' class=' mx-1 px-1' id='val_tipo' name='val_tipo' disabled='true'>";
-	modal_mod_ana_e += "<select class='from-control' id='id_tipo' value='hola' onclick='usuario.select_r_a_e(1, this.value)'>";
-	modal_mod_ana_e += "<option value='E'>E</option>";
-	modal_mod_ana_e += "<option value='S'>S</option>";
-	modal_mod_ana_e += "</select>";
 	modal_mod_ana_e += "</div>";
 	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
 	modal_mod_ana_e += "<label for='act_contra2' class='form-label'>Activo: </label>";
@@ -252,10 +248,10 @@ function guardar_per(){
 	let inp_nom = $("#nombre_per").val();
 	if(inp_usu === "" || inp_nom === ""){
 		$("#resp_login").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
-	}else if(inp_usu.length < 8){
-		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo usuario debe tener 8 caracteres como minimo", "view/images/icono_danger.png"));
-	}else if(inp_nom.length < 8){
-		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo nombre debe tener 8 caracteres como minimo", "view/images/icono_danger.png"));
+	}else if(inp_usu.length <= 3){
+		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo usuario debe tener 4 caracteres como minimo", "view/images/icono_danger.png"));
+	}else if(inp_nom.length <= 3){
+		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo nombre debe tener 4 caracteres como minimo", "view/images/icono_danger.png"));
 	}else{
 		usuario.actualizar_mi_perfil(inp_usu, inp_nom);
 	}	
@@ -303,7 +299,7 @@ function btn_act_con(){
 }
 // mostrar modal agregar emplado y analista
 function mos_mod_agre_ana_emp(){
-	let modal_mod_ana_e = "<h2 class='text-center' id='id_tit_mod1'>Agregar personal</h2>"; 
+	let modal_mod_ana_e = "<h2 class='text-center' id='id_tit_mod1'>Agregar personal</h2>";
 	modal_mod_ana_e += "<form action='>";
 	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
 	modal_mod_ana_e += "<label for='nombre' class='form-label'>Nombre </label>";
@@ -316,13 +312,6 @@ function mos_mod_agre_ana_emp(){
 	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
 	modal_mod_ana_e += "<label for='id_unidad' class='form-label'>Unidad </label>";
 	modal_mod_ana_e += "<select class='form-control' id='id_unidad' name='id_unidad'>";
-	modal_mod_ana_e += "</select>";
-	modal_mod_ana_e += "</div>";
-	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
-	modal_mod_ana_e += "<label for='id_usu_mo_con' class='form-label'>Tipo </label>";
-	modal_mod_ana_e += "<select class='form-control' id='id_tipo' name='id_tipo'>";
-	modal_mod_ana_e += "<option value='E'>Empleado</option>";
-	modal_mod_ana_e += "<option value='S'>Supervisor</option>";
 	modal_mod_ana_e += "</select>";
 	modal_mod_ana_e += "</div>";
 	modal_mod_ana_e += "<div class='modal-footer justify-content-center'>";
@@ -338,11 +327,10 @@ function btn_agre_ana(){
 	let nombre = $("#nombre").val();
 	let piso = $("#piso").val();
 	let unidad = $("#id_unidad").val();
-	let tipo = $("#id_tipo").val();
 	if(nombre === "" || piso === "" ){
 		$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
 	}else{
-		usuario.agre_ana_emp(nombre, piso, unidad, tipo);
+		usuario.agre_ana_emp(nombre, piso, unidad);
 	}
 }
 

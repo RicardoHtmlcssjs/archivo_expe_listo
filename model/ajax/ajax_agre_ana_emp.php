@@ -5,7 +5,6 @@
 	$nombre = $class->limpiar_cadena($_POST['nombre']);
 	$piso = $class->limpiar_cadena($_POST['piso']);
 	$unida = $_POST["unidad"];
-	$tipo = $_POST["tipo"];
-	$result = $cl_usuario->agre_ana_emo($nombre, $piso, $unida, $tipo);
+	$result = $cl_usuario->agre_ana_emo($nombre, $piso, $unida);
 	echo $result;
 ?>
