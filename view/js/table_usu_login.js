@@ -11,6 +11,7 @@ function tabla_usuario_login(){
                         tab_perso += "<th class='text-center tit_c_tab1'>Usuario</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Nombres</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Contraseña</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Cedula</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Correo</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Activo</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Fecha de registro</th>";

@@ -2,7 +2,7 @@
       use PHPMailer\PHPMailer\PHPMailer;
       use PHPMailer\PHPMailer\SMTP;
       use PHPMailer\PHPMailer\Exception;
-class Email{ 
+class Email{
   public function enviar_email($nueva_con_ne, $usu, $correo){
 
       //Load Composer's autoloader
@@ -18,7 +18,6 @@ class Email{
 
         $mail->CharSet = "ISO-8859-1";
         $mail->IsHTML(true);
-        //$mail->Timeout   = 1000000;
         $mail->SMTPDebug = 0; // Visualizar Errores 2
         $mail->Username   = "soticminec@gmail.com";
         $mail->Password   = "ovdneqbisusrugat";
@@ -58,10 +57,8 @@ class Email{
         $mail->AddAddress($correo);
 
         if (!$mail->send()){
-          // $res = "Tratando de enviar el Mensaje al Correo.<br>".$mail->ErrorInfo;
           $res = 0;
         }else{
-          // $res = "Cambio exitos";
           $res = 1;
         }
         return $res;

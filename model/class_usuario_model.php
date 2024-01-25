@@ -309,7 +309,7 @@
 		// tabla de mostrar usuarios que se logean
 		public function mostrar_usu_login(){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT vsistema.idusuario, vsistema.login, vsistema.correo, vsistema.sysnombre, vsistema.sysactivo, login_activo.desc_activo, vsistema.sysfechal, permisos_usu_log.desc_permisos, vsistema.id_permisos  FROM vsistema INNER JOIN permisos_usu_log ON vsistema.id_permisos = permisos_usu_log.id_permisos INNER JOIN login_activo ON vsistema.sysactivo = login_activo.id_activo");
+			$query = $conexion->consulta("s","SELECT vsistema.idusuario, vsistema.login, vsistema.correo, vsistema.sysnombre, vsistema.syscedula, vsistema.sysactivo, login_activo.desc_activo, vsistema.sysfechal, permisos_usu_log.desc_permisos, vsistema.id_permisos  FROM vsistema INNER JOIN permisos_usu_log ON vsistema.id_permisos = permisos_usu_log.id_permisos INNER JOIN login_activo ON vsistema.sysactivo = login_activo.id_activo");
 			$solicitados_us = "";
 			$aray = array();
 			session_start();
@@ -355,7 +355,7 @@
 		// mostrar datos existentes en modal 3 actualizar usuario login 
 		public function usu_editar($id_usuario){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT vsistema.idusuario, vsistema.login, vsistema.sysnombre, vsistema.correo, vsistema.sysfechal, login_activo.desc_activo, permisos_usu_log.desc_permisos  FROM vsistema INNER JOIN permisos_usu_log ON vsistema.id_permisos = permisos_usu_log.id_permisos INNER JOIN login_activo ON vsistema.sysactivo = login_activo.id_activo WHERE vsistema.idusuario = $id_usuario");
+			$query = $conexion->consulta("s","SELECT vsistema.idusuario, vsistema.login, vsistema.sysnombre, vsistema.correo, vsistema.syscedula, vsistema.sysfechal, login_activo.desc_activo, permisos_usu_log.desc_permisos  FROM vsistema INNER JOIN permisos_usu_log ON vsistema.id_permisos = permisos_usu_log.id_permisos INNER JOIN login_activo ON vsistema.sysactivo = login_activo.id_activo WHERE vsistema.idusuario = $id_usuario");
 			$array = array();
 			foreach($query as $key){
 				$array [] = $key;
@@ -365,7 +365,7 @@
 			return $result2;
 		}
 		// actualizacion de datos del usuario siendo administrador
-		public function actualizar_usu_adm($id_u, $usu, $nom, $act, $adm, $cor){
+		public function actualizar_usu_adm($id_u, $usu, $nom, $act, $ci, $adm, $cor){
 			$conexion = new Conexion();
 
 			$query = $conexion->consulta("s","SELECT id_activo FROM login_activo WHERE desc_activo = '$act'");
@@ -378,23 +378,25 @@
 			}
 
 
-			$query5 = $conexion->consulta("s","SELECT login, sysnombre, id_permisos, sysactivo, correo FROM vsistema WHERE idusuario = $id_u");
+			$query5 = $conexion->consulta("s","SELECT login, sysnombre, id_permisos, sysactivo, correo, syscedula FROM vsistema WHERE idusuario = $id_u");
 			foreach ($query5 as $key5) {
 				$usu_ante = $key5["login"];
 				$nombre_ante = $key5["sysnombre"];
 				$permisos_ante = $key5["id_permisos"];
-				$activo_ante = $key5["sysactivo"]; 
+				$activo_ante = $key5["sysactivo"];
 				$correo_ante = $key5["correo"];
+				$cedula_ante = $key5["syscedula"];
 			}
 			$cont_cor_no = 0;
 			$cont_usu_no = 0;
+			$cont_ci_no = 0;
 			$query6 =  $conexion->consulta("s","SELECT login FROM vsistema WHERE login = '".$usu."'");
 			foreach ($query6 as $key6) {
 				if($key6["login"] == $usu){
 					if($usu != $usu_ante){
 						$cont_usu_no = $cont_usu_no + 1;
 					}
-				}	
+				}
 			}
 			$query7 =  $conexion->consulta("s","SELECT correo FROM vsistema WHERE correo = '".$cor."'");
 			foreach ($query7 as $key7) {
@@ -402,13 +404,26 @@
 					if($cor != $correo_ante){
 						$cont_cor_no = $cont_cor_no + 1;
 					}
-				}	
+				}
+			}
+			$query8 =  $conexion->consulta("s","SELECT syscedula FROM vsistema WHERE syscedula = $ci");
+			foreach ($query8 as $key8) {
+				if($key8["syscedula"] == $ci){
+					if($ci != $cedula_ante){
+						$cont_ci_no = $cont_ci_no + 1;
+					}
+				}
 			}
 
 			if($cont_cor_no >= 1){
-				$result = 0;
+				return 0;
+				// $result = 0;
 			}elseif($cont_usu_no >= 1){
-				$result = 1;
+				return 1;
+				// $result = 1;
+			}elseif($cont_ci_no >= 1){
+				return 3;
+				// $result = 3;
 			}else{
 
 			$cont = 0;
@@ -497,7 +512,7 @@
 					$descipcion = "Datos actualizados son los mismos";
 				}
 
-			$query3 = $conexion->consulta("s","UPDATE vsistema SET login = '$usu', sysnombre = '$nom', id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
+			$query3 = $conexion->consulta("s","UPDATE vsistema SET login = '$usu', sysnombre = '$nom', syscedula = $ci, id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
 
 			session_start();
 			$id_usu_admin = $_SESSION["id_usu_log"];
@@ -509,14 +524,20 @@
 		// cambio de contraseña como administrador
 		public function cam_contra_adm($id){
 			$conexion = new Conexion();
-				$query = $conexion->consulta("s","SELECT login, correo FROM vsistema  WHERE idusuario = '".$id."'");
+				$query = $conexion->consulta("s","SELECT login, correo, syscedula FROM vsistema  WHERE idusuario = '".$id."'");
 				foreach ($query as $key) {
 					$usu = $key["login"];
 					$correo = $key["correo"];
+					$ci = $key["syscedula"];
 				}
-			$num_ram = mt_rand(1,1000);
-			$nueva_con_ne = $usu . $num_ram; 
+			if($ci == 0 || empty($ci)){
+				$nueva_con_ne = $usu;
 				$nueva_con = md5($nueva_con_ne);
+			}else{
+				$nueva_con_ne = $ci;
+				$nueva_con = md5($ci);
+			}
+			
 
 			$query2 = $conexion->consulta("s","UPDATE vsistema SET syspassword = '".$nueva_con."' WHERE idusuario = $id");
 
@@ -531,9 +552,9 @@
 				return 2;
 			}else{
 				include("class_email.php");
-				$ema = new Email();			
-				return $ema->enviar_email($nueva_con_ne, $usu, $correo);	
-			}			
+				$ema = new Email();
+				return $ema->enviar_email($nueva_con_ne, $usu, $correo);
+			}
 		}
 		// tabla de transacciones de usuarios
 		public function usus_login_transacciones(){
@@ -593,9 +614,8 @@
 						$idusuario = $key4["idusuario"];
 					}
 						$idusuario ++;
-						$contra_nueva = $usu . mt_rand(1, 1000);
-						$enc_cnt_nue = md5("$contra_nueva");
-						$query5 = $conexion->consulta("s","INSERT INTO vsistema (idusuario, login, sysnombre, syspassword, sysfechal, id_permisos, sysactivo, correo) VALUES ($idusuario,'".$usu."', '".$nom."', '".$enc_cnt_nue."', now(), $id_p_n, $id_a_n, '".$corr."')");
+						$enc_cnt_nue = md5("$usu");
+						$query5 = $conexion->consulta("s","INSERT INTO vsistema (idusuario, login, sysnombre, syspassword, sysfechal, syscedula, id_permisos, sysactivo, correo) VALUES ($idusuario,'".$usu."', '".$nom."', '".$enc_cnt_nue."', now(), $usu, $id_p_n, $id_a_n, '".$corr."')");
 
 						session_start();
 						$id_usu_admin = $_SESSION["id_usu_log"];
@@ -613,7 +633,7 @@
 
 						include("class_email.php");
 						$ema = new Email();
-						return $ema->enviar_email($contra_nueva, $usu, $corr);
+						return $ema->enviar_email($usu, $usu, $corr);
 					}
 
 			}

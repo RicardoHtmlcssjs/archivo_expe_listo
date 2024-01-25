@@ -316,6 +316,7 @@ class Usuarios{
                         return "<button class='btn btn-primary btn-xs' onclick='mos_modal_contra("+ row.idusuario +")'>Cambiar</button>";
                     }
                 },
+				{"data": "syscedula"},
                 {"data": "correo"},
 				{"data": "desc_activo"},
 				{"data": "sysfechal"},
@@ -401,6 +402,7 @@ class Usuarios{
 					$("#usu_act_adm").val(element.login);
 					$("#cor_act_adm").val(element.correo);
 					$("#nom_act_adm").val(element.sysnombre);
+					$("#ced_act_adm").val(element.syscedula);
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
 					$("#adm_act").val(element.desc_permisos);
@@ -417,12 +419,12 @@ class Usuarios{
 			this.usus_login();
 	}
 	// actualizar datos del usuario como administrador
-	actualizar_usu_adm(cor, id_u, usu, nom, act,  adm){
+	actualizar_usu_adm(cor, id_u, usu, nom, ci, act,  adm){
 		$.ajax({
 			url: "model/ajax/ajax_actualizar_usu_adm.php",
 			type: "POST",
 			data: {
-				cor: cor, id_u: id_u, usu: usu, nom: nom, act: act, adm: adm
+				cor: cor, id_u: id_u, usu: usu, nom: nom, ci: ci, act: act, adm: adm
 			},
 			success: function(result){
 				if(result == 0){
@@ -434,6 +436,10 @@ class Usuarios{
 					$("#usu_act_adm").val("");
 					$("#nom_act_adm").val("");
 					usuario.usus_login();
+				}else if(result == 3){
+					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "La cedula ya exise", "view/images/icono_danger.png"));
+				}else{
+					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", result, "view/images/icono_danger.png"));	
 				}
 			},
 			error: function(error){
@@ -519,7 +525,9 @@ class Usuarios{
 				usu: usu, nom: nom, act: act, adm: adm, corr: corr, piso: piso, unidad: unidad
 			},
 			success: function(result){
-				if(result == 2){
+				if(result == 3){
+					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
+				}else if(result == 2){
 					$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
 				}else if(result == 1){
 					$("#rr").html(accion.mensaje_alerta("success", "Usuario creado exitosamente", "view/images/icono_bien.png"));

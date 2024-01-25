@@ -87,11 +87,11 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<form action='>";
 				modal_agre_usu += "<div class='mb-3 cont_mod1_entregado'>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
-				modal_agre_usu += "<label for='crear_usu' class='form-label'>Ingresa el usuario: </label>";
-				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_usu' name='crear_usu' value=''>";
+				modal_agre_usu += "<label for='crear_usu' class='form-label'>Ingresa la cedula: </label>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='crear_usu' name='crear_usu' value='' maxlength='10'>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
-				modal_agre_usu += "<label for='crear_nom' class='form-label'>Ingresa el nombre: </label>";
+				modal_agre_usu += "<label for='crear_nom' class='form-label'>Ingresa el nombre y apellido: </label>";
 				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
@@ -167,9 +167,11 @@ $("#btn_acttualizar_usu").on("click", function(){
 		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo usuario vacio", "view/images/icono_danger.png"));
 	}else if($("#nom_act_adm").val() === ""){
 		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo nombre vacio", "view/images/icono_danger.png"));
+	}else if($("#ced_act_adm").val() === ""){
+		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo cedula vacio", "view/images/icono_danger.png"));
 	}else if($("#cor_act_adm").val() != " "){
 		if(expresiones_re.email($("#cor_act_adm").val()) == true){
-			usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#usu_act_adm").val(), $("#nom_act_adm").val(), $("#act_act").val(), $("#adm_act").val());
+			usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#usu_act_adm").val(), $("#nom_act_adm").val(), $("#ced_act_adm").val(), $("#act_act").val(), $("#adm_act").val());
 		}else{
 			$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
 		}
