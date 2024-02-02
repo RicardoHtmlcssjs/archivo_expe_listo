@@ -730,12 +730,12 @@ class Usuarios{
 		});
 	}
 	// actualzar datos de mi perfil
-	actualizar_mi_perfil(usu, nom){
+	actualizar_mi_perfil(nom){
 		$.ajax({
 			url: "model/ajax/ajax_actualizar_perfil.php",
 			type: "POST",
 			data: {
-				usu: usu, nom: nom
+				nom: nom
 			},
 			success: function(result){
 				if(result == 1){

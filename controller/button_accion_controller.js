@@ -246,16 +246,13 @@ $("#opnb_perfil").on("click", ()=>{
 });
 // boton guardar datos del formulario mi perfil
 function guardar_per(){
-	let inp_usu = $("#usuario_per").val();
 	let inp_nom = $("#nombre_per").val();
-	if(inp_usu === "" || inp_nom === ""){
+	if(inp_nom === ""){
 		$("#resp_login").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
-	}else if(inp_usu.length <= 3){
-		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo usuario debe tener 4 caracteres como minimo", "view/images/icono_danger.png"));
 	}else if(inp_nom.length <= 3){
 		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo nombre debe tener 4 caracteres como minimo", "view/images/icono_danger.png"));
 	}else{
-		usuario.actualizar_mi_perfil(inp_usu, inp_nom);
+		usuario.actualizar_mi_perfil(inp_nom);
 	}	
 }
 
