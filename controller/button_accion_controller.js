@@ -87,8 +87,9 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<form action='>";
 				modal_agre_usu += "<div class='mb-3 cont_mod1_entregado'>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
-				modal_agre_usu += "<label for='crear_usu' class='form-label'>Ingresa la cedula: </label>";
-				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='crear_usu' name='crear_usu' value='' maxlength='10'>";
+				modal_agre_usu += "<label for='cedula' class='form-label'>Ingresa la cedula: </label>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event)'>";
+				modal_agre_usu += "<select class='form-control mt-2' id='cedula_esco' name='cedula_esco'></select>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='crear_nom' class='form-label'>Ingresa el nombre y apellido: </label>";
@@ -127,18 +128,30 @@ function modal_agreagar_usu(){
 }
 // enviar formulario de modal agregar nuevo usuario
 function agregar_nue_usu(){
-	if( $("#adm_correo").val() != ""){
-		if(expresiones_re.email($("#adm_correo").val()) == true){
-			usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+	if($("#cedula_esco").val() != null){
+		if( $("#adm_correo").val() != ""){
+			if(expresiones_re.email($("#adm_correo").val()) == true){
+				usuario.agre_usu_adm($("#cedula_esco").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+			}else{
+				$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+			}
+		}else if($("#adm_correo").val() === ""){
+			$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
 		}else{
-			$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+			usuario.agre_usu_adm($("#cedula_esco").val(), $("#crear_nom").val(), $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
 		}
-	}else if($("#adm_correo").val() === ""){
-		$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
 	}else{
-		usuario.agre_usu_adm($("#crear_usu").val(), $("#crear_nom").val(), $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+		$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));
 	}
 }
+// buscar personal en vsaime al precionar enter en el campo cedula
+function cedulaBuscar(event) {
+	if (event.keyCode === 13) {
+		// alert($("#cedula"));
+		usuario.buscar_usu_vsaime($("#cedula").val());
+	}
+}
+
 // mostrar modal al hacer click en modificar usuario como administrador
 function modificar_usu(id_usuario){
 	$("#error_soli_exp3").html("");
@@ -162,21 +175,14 @@ $("#btn_agregar_fe").on("click", function(){
 }); 
 // btn de modal 3 actualizar datos de usuarios
 $("#btn_acttualizar_usu").on("click", function(){
-
-	if($("#usu_act_adm").val() === ""){
-		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo usuario vacio", "view/images/icono_danger.png"));
-	}else if($("#nom_act_adm").val() === ""){
-		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo nombre vacio", "view/images/icono_danger.png"));
-	}else if($("#ced_act_adm").val() === ""){
-		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo cedula vacio", "view/images/icono_danger.png"));
-	}else if($("#cor_act_adm").val() != " "){
+	if($("#cor_act_adm").val() != " "){
 		if(expresiones_re.email($("#cor_act_adm").val()) == true){
-			usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#usu_act_adm").val(), $("#nom_act_adm").val(), $("#ced_act_adm").val(), $("#act_act").val(), $("#adm_act").val());
+			usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val());
 		}else{
 			$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
 		}
 	}else{
-		usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#usu_act_adm").val(), $("#nom_act_adm").val(), $("#act_act").val(), $("#adm_act").val());
+		usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val());
 	}
 		
 		
@@ -248,7 +254,7 @@ $("#opnb_perfil").on("click", ()=>{
 function guardar_per(){
 	let inp_nom = $("#nombre_per").val();
 	if(inp_nom === ""){
-		$("#resp_login").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
+		$("#resp_login").html(accion.mensaje_alerta("danger", "Campo nombre esta vacio", "view/images/icono_danger.png"));
 	}else if(inp_nom.length <= 3){
 		$("#resp_login").html(accion.mensaje_alerta("danger", "El campo nombre debe tener 4 caracteres como minimo", "view/images/icono_danger.png"));
 	}else{

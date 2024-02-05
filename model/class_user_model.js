@@ -399,10 +399,10 @@ class Usuarios{
 				let r = JSON.parse(result);
 				$.each(r, function(index, element){
 					$("#id_usu").val(element.idusuario);
-					$("#usu_act_adm").val(element.login);
+					// $("#usu_act_adm").val(element.login);
 					$("#cor_act_adm").val(element.correo);
 					$("#nom_act_adm").val(element.sysnombre);
-					$("#ced_act_adm").val(element.syscedula);
+					// $("#ced_act_adm").val(element.syscedula);
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
 					$("#adm_act").val(element.desc_permisos);
@@ -419,25 +419,21 @@ class Usuarios{
 			this.usus_login();
 	}
 	// actualizar datos del usuario como administrador
-	actualizar_usu_adm(cor, id_u, usu, nom, ci, act,  adm){
+	actualizar_usu_adm(cor, id_u, act, adm){
 		$.ajax({
 			url: "model/ajax/ajax_actualizar_usu_adm.php",
 			type: "POST",
 			data: {
-				cor: cor, id_u: id_u, usu: usu, nom: nom, ci: ci, act: act, adm: adm
+				cor: cor, id_u: id_u, act: act, adm: adm
 			},
 			success: function(result){
 				if(result == 0){
 					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "El correo ya exise", "view/images/icono_danger.png"));
-				}else if(result == 1){
-					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "El usuario ya exise", "view/images/icono_danger.png"));
 				}else if(result == 2){
 					$("#exampleModal3").modal("hide");
 					$("#usu_act_adm").val("");
 					$("#nom_act_adm").val("");
 					usuario.usus_login();
-				}else if(result == 3){
-					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "La cedula ya exise", "view/images/icono_danger.png"));
 				}else{
 					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", result, "view/images/icono_danger.png"));	
 				}
@@ -517,12 +513,12 @@ class Usuarios{
 		});
 	}
 	// agregar un usuario como administrador
-	agre_usu_adm(usu, nom, act, adm, corr, piso, unidad){
+	agre_usu_adm(ci, nom, act, adm, corr, piso, unidad){
 		$.ajax({
 			url: "model/ajax/ajax_agre_usu_adm.php",
 			type: "POST",
 			data: {
-				usu: usu, nom: nom, act: act, adm: adm, corr: corr, piso: piso, unidad: unidad
+				ci: ci, nom: nom, act: act, adm: adm, corr: corr, piso: piso, unidad: unidad
 			},
 			success: function(result){
 				if(result == 3){
@@ -551,6 +547,23 @@ class Usuarios{
 				console.log(error);
 			}
 		});
+	}
+	// buscar personal por cedula de vsaime
+	buscar_usu_vsaime(ci){
+		$.ajax({
+			url: "model/ajax/ajax_buscar_ci.php",
+			type: "POST",
+			data: {
+				ci: ci
+			},
+			success: function(result){
+				$("#cedula_esco").html(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+		// alert(ci)
 	}
 	// mostrar tablas de empleados y analistas
 	mos_tabla_emp_ana(){
@@ -739,10 +752,8 @@ class Usuarios{
 			},
 			success: function(result){
 				if(result == 1){
-					$("#resp_login").html(accion.mensaje_alerta("success", "El usuario fue actualizado exitosamente", "view/images/icono_bien.png"));
+					$("#resp_login").html(accion.mensaje_alerta("success", "El Nombre fue actualizado exitosamente", "view/images/icono_bien.png"));
 					usuario.mostrar_usuario();
-				}else if(result == 0){
-					$("#resp_login").html(accion.mensaje_alerta("danger", "El usuario ya existe", "view/images/icono_danger.png"));
 				}else{
 					$("#resp_login").html(accion.mensaje_alerta("danger", "Ha ocurrido un error ", "view/images/icono_danger.png"));
 				}

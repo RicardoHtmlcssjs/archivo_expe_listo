@@ -1,5 +1,6 @@
 <?php
 	include("lib/conexion.php");
+	include("lib/conexion2.php");
 	class Usuario extends Conexion{
 		public function __construct($usuario, $contrasena){
 			$this->usu = $usuario;
@@ -365,7 +366,7 @@
 			return $result2;
 		}
 		// actualizacion de datos del usuario siendo administrador
-		public function actualizar_usu_adm($id_u, $usu, $nom, $act, $ci, $adm, $cor){
+		public function actualizar_usu_adm($id_u, $act, $adm, $cor){
 			$conexion = new Conexion();
 
 			$query = $conexion->consulta("s","SELECT id_activo FROM login_activo WHERE desc_activo = '$act'");
@@ -378,26 +379,13 @@
 			}
 
 
-			$query5 = $conexion->consulta("s","SELECT login, sysnombre, id_permisos, sysactivo, correo, syscedula FROM vsistema WHERE idusuario = $id_u");
+			$query5 = $conexion->consulta("s","SELECT  id_permisos, sysactivo, correo FROM vsistema WHERE idusuario = $id_u");
 			foreach ($query5 as $key5) {
-				$usu_ante = $key5["login"];
-				$nombre_ante = $key5["sysnombre"];
 				$permisos_ante = $key5["id_permisos"];
 				$activo_ante = $key5["sysactivo"];
 				$correo_ante = $key5["correo"];
-				$cedula_ante = $key5["syscedula"];
 			}
 			$cont_cor_no = 0;
-			$cont_usu_no = 0;
-			$cont_ci_no = 0;
-			$query6 =  $conexion->consulta("s","SELECT login FROM vsistema WHERE login = '".$usu."'");
-			foreach ($query6 as $key6) {
-				if($key6["login"] == $usu){
-					if($usu != $usu_ante){
-						$cont_usu_no = $cont_usu_no + 1;
-					}
-				}
-			}
 			$query7 =  $conexion->consulta("s","SELECT correo FROM vsistema WHERE correo = '".$cor."'");
 			foreach ($query7 as $key7) {
 				if($key7["correo"] == $cor){
@@ -406,24 +394,10 @@
 					}
 				}
 			}
-			$query8 =  $conexion->consulta("s","SELECT syscedula FROM vsistema WHERE syscedula = $ci");
-			foreach ($query8 as $key8) {
-				if($key8["syscedula"] == $ci){
-					if($ci != $cedula_ante){
-						$cont_ci_no = $cont_ci_no + 1;
-					}
-				}
-			}
 
 			if($cont_cor_no >= 1){
 				return 0;
 				// $result = 0;
-			}elseif($cont_usu_no >= 1){
-				return 1;
-				// $result = 1;
-			}elseif($cont_ci_no >= 1){
-				return 3;
-				// $result = 3;
 			}else{
 
 			$cont = 0;
@@ -432,20 +406,6 @@
 			$text3 = "";
 			$text4 = "";
 			$text5 = "";
-			if($usu_ante != $usu){
-				$cont = $cont + 1;
-				$text1 = "el usuario";
-			}
-			if($nombre_ante != $nom){
-				$cont = $cont + 1;
-				if($cont == 1){
-					$text1 = "el nombre";	
-				}
-				if ($cont == 2) {
-					$text2 = "el nombre";
-				}
-				
-			}
 			if($activo_ante != $id_act_s){
 				$cont = $cont + 1;
 				if($cont == 1){
@@ -512,7 +472,7 @@
 					$descipcion = "Datos actualizados son los mismos";
 				}
 
-			$query3 = $conexion->consulta("s","UPDATE vsistema SET login = '$usu', sysnombre = '$nom', syscedula = $ci, id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
+			$query3 = $conexion->consulta("s","UPDATE vsistema SET  id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
 
 			session_start();
 			$id_usu_admin = $_SESSION["id_usu_log"];
@@ -579,23 +539,23 @@
 			// return $solicitados_us;
 		}
 		// agregar nuevo usuario  $usu, $nom, $act, $adm, $corr
-		public function agre_usu_adm($usu, $nom, $act, $adm, $corr, $piso, $unidad){
+		public function agre_usu_adm($ci, $nom, $act, $adm, $corr, $piso, $unidad){
 			$conexion = new Conexion();
-			if(empty($usu) || empty($nom) || empty($corr)){
+			if(empty($ci) || empty($nom) || empty($corr)){
 				$result = 2;
 			}else{
-					$cont_usu = 0;
-					$query = $conexion->consulta("s","SELECT login FROM vsistema");
+					$cont_ci = 0;
+					$query = $conexion->consulta("s","SELECT login, syscedula FROM vsistema");
 					foreach ($query as $key) {
-						if($key["login"] == $usu){
-							$cont_usu ++;
+						if($key["syscedula"] == $ci){
+							$cont_ci ++;
 						}
 					}
 					$query_correo = $conexion->consulta("s","SELECT correo FROM vsistema WHERE correo = '".$corr."'");
 					foreach ($query_correo as $key_correo) {
 						$existe_correo = $key_correo["correo"];
 					}
-					if($cont_usu > 0){
+					if($cont_ci > 0){
 						// $result = "El usuario ya existe";
 						return 3;
 					}else if(isset($existe_correo)){
@@ -614,8 +574,8 @@
 						$idusuario = $key4["idusuario"];
 					}
 						$idusuario ++;
-						$enc_cnt_nue = md5("$usu");
-						$query5 = $conexion->consulta("s","INSERT INTO vsistema (idusuario, login, sysnombre, syspassword, sysfechal, syscedula, id_permisos, sysactivo, correo) VALUES ($idusuario,'".$usu."', '".$nom."', '".$enc_cnt_nue."', now(), $usu, $id_p_n, $id_a_n, '".$corr."')");
+						$enc_cnt_nue = md5("$ci");
+						$query5 = $conexion->consulta("s","INSERT INTO vsistema (idusuario, login, sysnombre, syspassword, sysfechal, syscedula, id_permisos, sysactivo, correo) VALUES ($idusuario,'".$ci."', '".$nom."', '".$enc_cnt_nue."', now(), $ci, $id_p_n, $id_a_n, '".$corr."')");
 
 						session_start();
 						$id_usu_admin = $_SESSION["id_usu_log"];
@@ -633,11 +593,23 @@
 
 						include("class_email.php");
 						$ema = new Email();
-						return $ema->enviar_email($usu, $usu, $corr);
+						return $ema->enviar_email($ci, $nom, $corr);
 					}
 
 			}
 			return $result;
+		}
+		// buscar personal por cedula en vsaime
+		public function buscar_usu_vsaime($ci){
+			$conexion = new Conexion();
+
+			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM dsaime WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 10");
+			$select_vi_cedu = "";
+			foreach ($query as $key) {
+				$select_vi_cedu .= "<option value='".$key["cedula"]."'>".$key["cedula"]." ".$key["primer_nombre"]." ".$key["primer_apellido"]."</option>";
+			}
+			$select_vi_cedu .= "</select>";
+			return $select_vi_cedu;
 		}
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){
@@ -790,10 +762,6 @@
                 <h2 class='text-center'>Mi perfil</h2>
                 <form action=''>
                     <div class='mb-3'>
-                        <label for='usuario_per' class='form-label'>Usuario</label>
-                        <input type='text'class='form-control' id='usuario_per' name='usuario_per' value='".$key['login']."'>
-                    </div>
-                    <div class='mb-3'>
                         <label for='nombre_per' class='form-label'>nombre</label>
                         <input type='text'class='form-control' id='nombre_per' name='nombre_per' value='".$key['sysnombre']."'>
                     </div>
@@ -811,44 +779,28 @@
 			return $for_perfil;
 		}
 		// actulizar datos de mi perfil
-		public function actualizar_perfil($usu, $nom){
+		public function actualizar_perfil($nom){
 			$conexion = new Conexion();
 			session_start();
 			$id_u = $_SESSION['id_usu_log'];
-			$query1 = $conexion->consulta("s","SELECT login, sysnombre FROM vsistema WHERE idusuario = $id_u");
+			$query1 = $conexion->consulta("s","SELECT sysnombre FROM vsistema WHERE idusuario = $id_u");
 			foreach ($query1 as $key1) {
-				$usu_exi = $key1["login"];
 				$nom_exi = $key1["sysnombre"];
 			}
-			$query2 = $conexion->consulta("s","SELECT login FROM vsistema WHERE login = '$usu'");
-			foreach ($query2 as $key2) {
-					$usu_esco =$key2["login"];
-				}
-				if(isset($usu_esco)){
-					if($usu_esco == $usu_exi){
-						$result = 1;
-					}else{
-						$result = 0;
-					}
-				}else{
-					$result = 1;
-				}
-				if($result == 1){
-					$query3 = $conexion->consulta("s","UPDATE vsistema SET  login = '".$usu."',  sysnombre = '".$nom."'  WHERE idusuario = $id_u");
+					$query3 = $conexion->consulta("s","UPDATE vsistema SET  sysnombre = '".$nom."'  WHERE idusuario = $id_u");
 					$_SESSION["nombre_u"] = $nom;
 
 
-					$descipcion = "Actualizacion de usuario y nombre por el usuario propietario.";
+					$descipcion = "Actualizacion de nombre por el usuario propietario.";
 					$query4 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_u, $id_u, now(), '". $descipcion ."', now())");
 
 					$id_solicita = $_SESSION["id_solicita"];
 					$query5 = $conexion->consulta("s", "UPDATE solicitante SET snombres = '".$nom."' WHERE idsolicita = $id_solicita");
-				}
 
-			return $result;
+			return 1;
 
 		}
-		// guardar cambio de contraseña mi perfil 
+		// guardar cambio de contraseña mi perfil
 		public function cam_cont_perfil($cont_v, $cont_n1, $cont_n2){
 			$conexion = new Conexion();
 			session_start();
