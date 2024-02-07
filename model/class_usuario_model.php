@@ -366,8 +366,19 @@
 			return $result2;
 		}
 		// actualizacion de datos del usuario siendo administrador
-		public function actualizar_usu_adm($id_u, $act, $adm, $cor){
+		public function actualizar_usu_adm($id_u, $act, $adm, $cor, $ci){
 			$conexion = new Conexion();
+
+			// verificar si existe la cedula
+			if($ci != null){
+				$query8 = $conexion->consulta("s", "SELECT syscedula FROM vsistema WHERE syscedula = $ci");
+				foreach ($query8 as $key8){
+					$ci_existe = $key8["syscedula"];
+				}
+				if(isset($ci_existe)){
+					return 3;
+				}
+			}
 
 			$query = $conexion->consulta("s","SELECT id_activo FROM login_activo WHERE desc_activo = '$act'");
 			$query2 = $conexion->consulta("s","SELECT id_permisos FROM permisos_usu_log WHERE desc_permisos = '$adm'");
@@ -453,6 +464,27 @@
 					$text5 = "campo correo";
 				}
 			}
+			if($ci != null){
+				$cont = $cont + 1;
+				if($cont == 1){
+					$text1 = "campo cedula con cambio de contraseña y usuario";
+				}
+				if ($cont == 2) {
+					$text2 = "campo cedula con cambio de contraseña y usuario";
+				}
+				if ($cont == 3) {
+					$text3 = "campo cedula con cambio de contraseña y usuario";
+				}
+				if ($cont == 4) {
+					$text4 = "campo cedula con cambio de contraseña y usuario";
+				}
+				if ($cont == 5) {
+					$text5 = "campo cedula con cambio de contraseña y usuario";
+				}
+				if ($cont == 6){
+					$text6 = "campo cedula con cambio de contraseña y usuario";
+				}
+			}
 				if($cont == 1){
 					$descipcion = "Datos actualizados: " . $text1 . ".";
 				}
@@ -468,16 +500,22 @@
 				if ($cont == 5) {
 					$descipcion = "Datos actualizados: " . $text1 . ", " . $text2 . ", " . $text3 . ", " . $text4 . ", " . $text5 . ".";
 				}
+				if ($cont == 6) {
+					$descipcion = "Datos actualizados: " . $text1 . ", " . $text2 . ", " . $text3 . ", " . $text4 . ", " . $text5 . ", " . $text6 . ".";
+				}
 				if($cont == 0){
 					$descipcion = "Datos actualizados son los mismos";
 				}
-
-			$query3 = $conexion->consulta("s","UPDATE vsistema SET  id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
-
+			
+			if($ci == null){
+				$query3 = $conexion->consulta("s","UPDATE vsistema SET id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor'  WHERE idusuario = $id_u");
+			}else{
+				$query3 = $conexion->consulta("s","UPDATE vsistema SET login = '".$ci."', syspassword = '".md5($ci)."', id_permisos = $id_per_s, sysactivo = $id_act_s, correo = '$cor', syscedula = $ci  WHERE idusuario = $id_u");
+			}
 			session_start();
-			$id_usu_admin = $_SESSION["id_usu_log"];
-			$query4 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_u, $id_usu_admin, now(), '". $descipcion ."', now())");
-			$result = 2;
+				$id_usu_admin = $_SESSION["id_usu_log"];
+				$query4 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_u, $id_usu_admin, now(), '". $descipcion ."', now())");
+				$result = 2;
 		}
 			return $result;
 		}
@@ -573,6 +611,7 @@
 					foreach ($query4 as $key4) {
 						$idusuario = $key4["idusuario"];
 					}
+
 						$idusuario ++;
 						$enc_cnt_nue = md5("$ci");
 						$query5 = $conexion->consulta("s","INSERT INTO vsistema (idusuario, login, sysnombre, syspassword, sysfechal, syscedula, id_permisos, sysactivo, correo) VALUES ($idusuario,'".$ci."', '".$nom."', '".$enc_cnt_nue."', now(), $ci, $id_p_n, $id_a_n, '".$corr."')");
@@ -600,16 +639,35 @@
 			return $result;
 		}
 		// buscar personal por cedula en vsaime
-		public function buscar_usu_vsaime($ci){
+		public function buscar_usu_vsaime($ci, $nac){
 			$conexion = new Conexion();
 
-			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM dsaime WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 10");
+			if($nac == "V"){
+				$tabla = "dsaime";
+			}else{
+				$tabla = "dsaimextranjero";
+			}
+
+			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 10");
 			$select_vi_cedu = "";
 			foreach ($query as $key) {
+				$ci = $key["cedula"];
 				$select_vi_cedu .= "<option value='".$key["cedula"]."'>".$key["cedula"]." ".$key["primer_nombre"]." ".$key["primer_apellido"]."</option>";
 			}
 			$select_vi_cedu .= "</select>";
 			return $select_vi_cedu;
+		}
+		// mostrar nombre del usuario a crear por medio de la cedula
+		public function mostrar_nombre($ci){
+			$ci_v = intval($ci);
+			$conexion = new Conexion();
+			$query = $conexion->consulta2("s", "SELECT primer_nombre, primer_apellido FROM dsaime WHERE cedula = $ci_v");
+			$nombre_usu_ci= "";
+			foreach ($query as $key) {
+				$nombre_usu_ci = $key["primer_nombre"] . " " .  $key["primer_apellido"];
+			}
+			
+			return $nombre_usu_ci;
 		}
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){

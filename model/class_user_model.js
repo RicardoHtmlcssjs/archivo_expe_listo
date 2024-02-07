@@ -402,7 +402,11 @@ class Usuarios{
 					// $("#usu_act_adm").val(element.login);
 					$("#cor_act_adm").val(element.correo);
 					$("#nom_act_adm").val(element.sysnombre);
-					// $("#ced_act_adm").val(element.syscedula);
+					if(element.syscedula == 0 || element.syscedula == null){
+						$("#cont_ci_usu_edi").show();
+					}else{
+						$("#cont_ci_usu_edi").hide();
+					}
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
 					$("#adm_act").val(element.desc_permisos);
@@ -419,12 +423,12 @@ class Usuarios{
 			this.usus_login();
 	}
 	// actualizar datos del usuario como administrador
-	actualizar_usu_adm(cor, id_u, act, adm){
+	actualizar_usu_adm(cor, id_u, act, adm, ci){
 		$.ajax({
 			url: "model/ajax/ajax_actualizar_usu_adm.php",
 			type: "POST",
 			data: {
-				cor: cor, id_u: id_u, act: act, adm: adm
+				cor: cor, id_u: id_u, act: act, adm: adm, ci: ci
 			},
 			success: function(result){
 				if(result == 0){
@@ -434,8 +438,10 @@ class Usuarios{
 					$("#usu_act_adm").val("");
 					$("#nom_act_adm").val("");
 					usuario.usus_login();
+				}else if (result == 3){
+					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
 				}else{
-					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", result, "view/images/icono_danger.png"));	
+					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", result, "view/images/icono_danger.png"));
 				}
 			},
 			error: function(error){
@@ -549,21 +555,40 @@ class Usuarios{
 		});
 	}
 	// buscar personal por cedula de vsaime
-	buscar_usu_vsaime(ci){
+	buscar_usu_vsaime(ci, id_ci, id_btn_enviar, div, nac){
 		$.ajax({
 			url: "model/ajax/ajax_buscar_ci.php",
 			type: "POST",
 			data: {
-				ci: ci
+				ci: ci, nac: nac
 			},
 			success: function(result){
 				$("#cedula_esco").html(result);
+				id_ci.prop('disabled', false);
+				id_btn_enviar.prop('disabled', false);
+				div.html('');
 			},
 			error: function(error){
 				console.log(error);
 			}
 		});
-		// alert(ci)
+	}
+	// mostrar cedula de usuario a crear en el campo nombre
+	mostra_nombre(ci){
+			$.ajax({
+				url: "model/ajax/ajax_mostrar_nombre.php",
+				type: "POST",
+				data: {
+					ci: ci
+				},
+				success: function(result){
+					// alert(result);
+					$('#crear_nom').val(result);
+				},
+				error: function(error){
+					console.log(error);
+				}
+			});
 	}
 	// mostrar tablas de empleados y analistas
 	mos_tabla_emp_ana(){

@@ -5,7 +5,8 @@
 	$id_u = $class->limpiar_cadena($_POST["id_u"]);
 	$act = $class->limpiar_cadena($_POST["act"]);
 	$adm = $class->limpiar_cadena($_POST["adm"]);
+	$ci = $class->limpiar_cadena($_POST["ci"]);
 	$cl_usuario = new Usuario("","");
-	$result = $cl_usuario->actualizar_usu_adm($id_u, $act, $adm, $cor);
+	$result = $cl_usuario->actualizar_usu_adm($id_u, $act, $adm, $cor, $ci);
 	echo $result;
 ?>
