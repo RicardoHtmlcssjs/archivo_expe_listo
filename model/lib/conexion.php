@@ -5,7 +5,6 @@ include("config.php");
 class Conexion{
 	public $host = HOST;
 	public $port = PORT;
-	public $port2 = PORT2;
 	public $dbname = DBNAME;
 	public $dbname2 = DBNAME2;
 	public $user = USER;
@@ -40,7 +39,7 @@ class Conexion{
 		$this->conn2 = NewADOConnection($this->driver);
 
 		// Establecer los parámetros de la conexión
-		$this->conn2->Connect("host=$this->host port=$this->port2 dbname=$this->dbname2 user=$this->user password=$this->pass");
+		$this->conn2->Connect("host=$this->host port=$this->port dbname=$this->dbname2 user=$this->user password=$this->pass");
 
 		// Verificar si la conexión fue exitosa
 		if (!$this->conn2) {

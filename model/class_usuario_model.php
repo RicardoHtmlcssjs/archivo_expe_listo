@@ -1,6 +1,5 @@
 <?php
 	include("lib/conexion.php");
-	include("lib/conexion2.php");
 	class Usuario extends Conexion{
 		public function __construct($usuario, $contrasena){
 			$this->usu = $usuario;
@@ -36,7 +35,7 @@
 			parent::conecta();
 			$db = $this->conn;
 			$contra = md5($this->con);
-			$sql = "SELECT idusuario, login, syspassword, id_permisos, sysnombre FROM vsistema WHERE login = '".$this->usu."' AND syspassword = '".$contra."'";
+			$sql = "SELECT idusuario, login, syspassword, id_permisos, sysnombre, sysactivo FROM vsistema WHERE login = '".$this->usu."' AND syspassword = '".$contra."'";
 			$query = $db->execute($sql);
 			foreach ($query as $key) {
 				$usuario = $key["login"];
@@ -44,6 +43,7 @@
 				$idusuario = $key["idusuario"];
 				$permisos = $key["id_permisos"];
 				$nombre= $key["sysnombre"];
+				$activo = $key["sysactivo"];
 				$nombre_com_vsistema = $this->quitar_acentos($nombre);
 				// $sql2 = "SELECT idsolicita FROM solicitante WHERE snombres = '".$nombre."'";
 				$sql2 = "SELECT idsolicita, snombres FROM solicitante";
@@ -59,6 +59,9 @@
 				return 2;
 			}elseif(isset($usuario)){
 				if(md5($this->con) == $password){
+					if($activo == 1){
+						return 3;
+					}
 					session_start();
 					$_SESSION["id_usu_log"] = $idusuario;
 					$_SESSION["admin_usu_p"] = $permisos;
@@ -568,10 +571,10 @@
 			foreach ($query as $key) {
 				$usu_adm = $key["id_usu_adm"];
 				$horas = $this->hora_normal($key['hora_tran']);
-				$query2 = $conexion->consulta("s","SELECT login  FROM vsistema WHERE idusuario = $usu_adm");
+				$query2 = $conexion->consulta("s","SELECT sysnombre  FROM vsistema WHERE idusuario = $usu_adm");
 				foreach ($query2 as $key2) {
-					$usuario_adm = $key2["login"];
-					$array[]=array("login" => "".$key['login']."", "sysnombre" => "".$key['sysnombre']."", "idd" => "".$key2["login"]."", "fecha_tran" => "".$key['fecha_tran']."", "hora_tran" => "".$horas."", "desc_tran" => "".$key['desc_tran']."");
+					$usuario_adm = $key2["sysnombre"];
+					$array[]=array("login" => "".$key['login']."", "sysnombre" => "".$key['sysnombre']."", "idd" => "".$key2["sysnombre"]."", "fecha_tran" => "".$key['fecha_tran']."", "hora_tran" => "".$horas."", "desc_tran" => "".$key['desc_tran']."");
 				}
 			}
 			$result = json_encode($array);

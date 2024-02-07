@@ -133,6 +133,7 @@ function agregar_nue_usu(){
 	if($("#cedula_esco").val() != null){
 		if( $("#adm_correo").val() != ""){
 			if(expresiones_re.email($("#adm_correo").val()) == true){
+				// $("#cedula_esco").prop('disabled', true);
 				usuario.agre_usu_adm($("#cedula_esco").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
 			}else{
 				$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));

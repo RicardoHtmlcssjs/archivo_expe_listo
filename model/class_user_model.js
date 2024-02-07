@@ -51,6 +51,8 @@ class Usuarios{
 					usuario.mostrar_usuario();
 				}else if(result == 0){
 					$("#resp_login").html((accion.mensaje_alerta("danger", "Usuario o contraseña son incorrecta", "view/images/icono_danger.png")));
+				}else if(result == 3){
+					$("#resp_login").html((accion.mensaje_alerta("danger", "El usuario no esta activo, comunicate con el administrador", "view/images/icono_danger.png")));
 				}else{
 					alert(result);
 					$("#resp_login").html((accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png")));
