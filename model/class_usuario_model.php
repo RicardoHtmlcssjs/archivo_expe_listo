@@ -83,9 +83,9 @@
 			$db = $this->conn;
 			session_start();
 			$id_usu = $_SESSION["id_usu_log"];
-			$query = $db->execute("SELECT login from vsistema where idusuario = $id_usu");
+			$query = $db->execute("SELECT sysnombre from vsistema where idusuario = $id_usu");
 			foreach ($query as $key) {
-				$usuario = $key['login'];
+				$usuario = $key['sysnombre'];
 			}
 			return $usuario;
 		}
@@ -522,15 +522,17 @@
 		// cambio de contraseña como administrador
 		public function cam_contra_adm($id){
 			$conexion = new Conexion();
-				$query = $conexion->consulta("s","SELECT login, correo, syscedula FROM vsistema  WHERE idusuario = '".$id."'");
+				$query = $conexion->consulta("s","SELECT login, sysnombre, correo, syscedula FROM vsistema  WHERE idusuario = '".$id."'");
 				foreach ($query as $key) {
 					$usu = $key["login"];
 					$correo = $key["correo"];
 					$ci = $key["syscedula"];
+					$nombre = $key["sysnombre"];
 				}
 			if($ci == 0 || empty($ci)){
-				$nueva_con_ne = $usu;
-				$nueva_con = md5($nueva_con_ne);
+				// $nueva_con_ne = $usu;
+				// $nueva_con = md5($nueva_con_ne);
+				return 30;
 			}else{
 				$nueva_con_ne = $ci;
 				$nueva_con = md5($ci);
@@ -544,14 +546,14 @@
 
 			$id_usu_admin = $_SESSION["id_usu_log"];
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_usu (id_usu_tran, id_usu_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id, $id_usu_admin, now(), '". $descipcion ."', now())");
-			// $cuerpo[]=array("login" => "".$usu."", "con" => "".$nueva_con."");
+			$cuerpo[]=array("login" => "".$usu."", "con" => "".$nueva_con."");
 
 			if($correo == null){
 				return 2;
 			}else{
 				include("class_email.php");
 				$ema = new Email();
-				return $ema->enviar_email($nueva_con_ne, $usu, $correo);
+				return $ema->enviar_email($nueva_con_ne, $nombre, $correo);
 			}
 		}
 		// tabla de transacciones de usuarios
@@ -576,7 +578,7 @@
 			return $result;
 			// return $solicitados_us;
 		}
-		// agregar nuevo usuario  $usu, $nom, $act, $adm, $corr
+		// agregar nuevo usuario 
 		public function agre_usu_adm($ci, $nom, $act, $adm, $corr, $piso, $unidad){
 			$conexion = new Conexion();
 			if(empty($ci) || empty($nom) || empty($corr)){
@@ -648,7 +650,7 @@
 				$tabla = "dsaimextranjero";
 			}
 
-			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 10");
+			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 5");
 			$select_vi_cedu = "";
 			foreach ($query as $key) {
 				$ci = $key["cedula"];

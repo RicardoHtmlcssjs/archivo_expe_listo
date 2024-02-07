@@ -3,7 +3,7 @@
       use PHPMailer\PHPMailer\SMTP;
       use PHPMailer\PHPMailer\Exception;
 class Email{
-  public function enviar_email($nueva_con_ne, $usu, $correo){
+  public function enviar_email($nueva_con_ne, $nom, $correo){
 
       //Load Composer's autoloader
       // require 'vendor/autoload.php';
@@ -47,7 +47,7 @@ class Email{
                   </div>
                   <div width='200px' style='background: #fff; color: #000; border: 1px solid #000;'>
                     <h1><i>Archivos de Expediente</i></h1>
-                    <h3>$usu tu nueva contraseña es: $nueva_con_ne</h3>
+                    <h3>$nom tu usuario y contraseña es: $nueva_con_ne</h3>
                   </div>
                   <div></div>
                 </div>

@@ -461,10 +461,12 @@ class Usuarios{
 				if(result == 2){
 					$("#rr").html(accion.mensaje_alerta("danger", "El usuario debe tener un correo, para poder cambiar su contraseña", "view/images/icono_danger.png"));
 				}else if(result == 1){
-					alert("La contraseña fue cambiada exitosamente");
-					$("#exampleModal2").modal("hide");	
+					alert("La contraseña fue cambiada exitosamente y fue enviada a el correo del usuario");
+					$("#exampleModal2").modal("hide");
 				}else if(result == 0){
-					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar el correo", "view/images/icono_danger.png"));
+					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar el correo pero la contraseña fue cambiada", "view/images/icono_danger.png"));
+				}else if(result == 30){
+					$("#rr").html(accion.mensaje_alerta("danger", "Debes cambiar la cedula del usuario ya que esta vacia o es 0", "view/images/icono_danger.png"));
 				}
 			},
 			error: function(error){
@@ -532,9 +534,9 @@ class Usuarios{
 				}else if(result == 2){
 					$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
 				}else if(result == 1){
-					$("#rr").html(accion.mensaje_alerta("success", "Usuario creado exitosamente", "view/images/icono_bien.png"));
+					$("#rr").html(accion.mensaje_alerta("success", "Usuario creado exitosamente y fue enviado un correo con su usuario y contraseña", "view/images/icono_bien.png"));
 					$("#exampleModal2").modal("hide");
-					var notification = alertify.notify('El usuario ha sido creado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+					var notification = alertify.notify('El usuario ha sido creado exitosamente y fue enviado un correo con su usuario y contraseña.', 'success', 5, function(){  console.log('dismissed'); });
 					usuario.usus_login();
 
 				}else if(result == 3){

@@ -310,8 +310,8 @@ function btn_act_con(){
 	let inp_cont_n2 = $("#contra_n2").val();
 	if(inp_cont_act === "" || inp_cont_n1 === "" || inp_cont_n2 === ""){
 		$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
-	}else if(inp_cont_n1.length < 8 || inp_cont_n2.length < 8){
-		$("#rr").html(accion.mensaje_alerta("danger", "Los campos de contraseñas deben tener minimo 8 caracteres", "view/images/icono_danger.png"));
+	}else if(inp_cont_n1.length < 5 || inp_cont_n2.length < 5){
+		$("#rr").html(accion.mensaje_alerta("danger", "Los campos de contraseñas deben tener minimo 5 caracteres", "view/images/icono_danger.png"));
 	}else if(inp_cont_n1 != inp_cont_n2){
 		$("#rr").html(accion.mensaje_alerta("danger", "Las contraseñas no coinsiden", "view/images/icono_danger.png"));
 	}else{
