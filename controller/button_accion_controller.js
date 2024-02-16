@@ -89,7 +89,7 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='cedula' class='form-label'>Ingresa la cedula: </label>";
 				modal_agre_usu += "<div class='d-flex flex-row'><select id='nac' name='nac' class='form-control'><option value='V'>V</option><option value='E'>E</option></select>";
-				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event)'></div>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event, 1)'></div>";
 				modal_agre_usu += "<div class='text-center' id='buscando_ci' name='buscando_ci'></div>";
 				modal_agre_usu += "<select class='form-control mt-2' id='cedula_esco' name='cedula_esco' onclick='buscar_nombre(this.value)'></select>";
 				modal_agre_usu += "</div>";
@@ -146,25 +146,30 @@ function agregar_nue_usu(){
 	}
 }
 // buscar personal en vsaime al precionar enter en el campo cedula
-function cedulaBuscar(event) {
+function cedulaBuscar(event, num) {
 	if (event.keyCode === 13) {
 		$("#cedula").prop('disabled', true);
 		$("#btn_agregar_usu").prop('disabled', true);
 		const div = $('#buscando_ci');
 		const h4 = $("<h4 class='my-1'>Buscando <i class='fas fa-spinner fa-spin' style='color: green;'></i></h4>");
 		div.append(h4);
-		usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());
+		if (num == 1) {
+			usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());	
+		}else{
+			usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());	
+		}
 	}
 }
+
 // hacer click en un valor del select
 function buscar_nombre(e){
-	// alert(e);
 	usuario.mostra_nombre(e);
 }
 
 // mostrar modal al hacer click en modificar usuario como administrador
 function modificar_usu(id_usuario){
 	$("#error_soli_exp3").html("");
+	$("#cedula_esco").html("");
 	usuario.usu_editar(id_usuario);
 	usuario.mostrar_opc_mod_act_desc();
 	usuario.mostrar_opc_mod_per();
@@ -185,6 +190,10 @@ $("#btn_agregar_fe").on("click", function(){
 }); 
 // btn de modal 3 actualizar datos de usuarios
 $("#btn_acttualizar_usu").on("click", function(){
+	if($("#cedula_esco").val() == null){
+		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Ingrese una cedula", "view/images/icono_danger.png"));
+		return;
+	}
 	if($("#cor_act_adm").val() != " "){
 		if(expresiones_re.email($("#cor_act_adm").val()) == true){
 			if ($("#cont_ci_usu_edi").css("display") === "none") {
@@ -192,14 +201,15 @@ $("#btn_acttualizar_usu").on("click", function(){
 				usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val(), null);
 			  } else {
 				// El div está visiblea
-				usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val(), $("#ci_usu_edi").val());
+				usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val(), $("#cedula_esco").val());
 			  }
 
 		}else{
 			$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
 		}
 	}else{
-		usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val());
+		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo correo esta vacio", "view/images/icono_danger.png"));
+		// usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val());
 	}
 		
 		

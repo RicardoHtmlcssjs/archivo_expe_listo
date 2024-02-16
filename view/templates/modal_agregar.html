@@ -57,10 +57,18 @@
                             <h2 class="text-center" id='id_tit_mod1'>Actualizar datos del   usuario</h2>
                             <!-- mb-3  margin-bottom de 3 unidades -->
                             <form action="" id='modal_form_mod_usu_log'>
-                                <div id="cont_ci_usu_edi" name="cont_ci_usu_edi" style="display: none;">
+                                <div class="mb-1" id="cont_ci_usu_edi" name="cont_ci_usu_edi" style="display: none;">
                                     <label for="cedula_usu">Cedula:</label>
-                                    <input class="form-control" type="text" id="ci_usu_edi" name="ci_usu_edi">
+                                    <div class="d-flex flex-row">
+                                        <select id="nac" name="nac" class="form-control mr-1"><option value="V">V</option><option value="E">E</option></select>
+                                        <input class="form-control" type="number" id="cedula" name="cedula" onkeypress="cedulaBuscar(event, 2)">
+                                    </div>
                                 </div>
+                                <div class='text-center' id='buscando_ci' name='buscando_ci'></div>
+                                <div class="">
+                                    <select class="form-control" id="cedula_esco" name="cedula_esco" onclick=''></select>
+                                </div>
+
                                     <div class="" id="cont_h1_soli">
                                         <label for="cor_act_adm" class="form-label">Correo:</label>
                                         <input type="text"class="form-control" id="cor_act_adm" name="nom_act_adm" value=''>
