@@ -406,8 +406,10 @@ class Usuarios{
 					$("#nom_act_adm").val(element.sysnombre);
 					if(element.syscedula == 0 || element.syscedula == null){
 						$("#cont_ci_usu_edi").show();
+						$("#cedula_esco").show();
 					}else{
 						$("#cont_ci_usu_edi").hide();
+						$("#cedula_esco").hide();
 					}
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
