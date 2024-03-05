@@ -170,6 +170,7 @@ function buscar_nombre(e){
 function modificar_usu(id_usuario){
 	$("#error_soli_exp3").html("");
 	$("#cedula_esco").html("");
+	$("#cedula").val("")
 	usuario.usu_editar(id_usuario);
 	usuario.mostrar_opc_mod_act_desc();
 	usuario.mostrar_opc_mod_per();
@@ -188,7 +189,7 @@ $("#btn_agregar_fe").on("click", function(){
 	let fecha_poner = $("#fecha_r").val();
 	$("#adm_fec").val(fecha_poner);
 }); 
-// btn de modal 3 actualizar datos de usuarios
+// btn de modal 3 actualizar datos de usuarios y modificar cedula
 $("#btn_acttualizar_usu").on("click", function(){
 	if($("#cedula_esco").val() == null){
 		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Ingrese una cedula", "view/images/icono_danger.png"));
@@ -210,9 +211,21 @@ $("#btn_acttualizar_usu").on("click", function(){
 	}else{
 		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo correo esta vacio", "view/images/icono_danger.png"));
 		// usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val());
-	}
-		
-		
+	}		
+});
+
+// btn2 de modal 3 actualizar datos del usuario y no midificara la cedula
+$("#btn_acttualizar_usu2").on("click", function(){
+	if($("#cor_act_adm").val() != " "){
+		if(expresiones_re.email($("#cor_act_adm").val()) == true){
+			usuario.actualizar_usu_adm($("#cor_act_adm").val(), $("#id_usu").val(), $("#act_act").val(), $("#adm_act").val(), null);
+		}else{
+			$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+		}
+	}else{
+		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Campo correo esta vacio", "view/images/icono_danger.png"));
+	}	
+
 });
 function mos_modal_contra(id_usuario){
 	// alert(id_usuario);

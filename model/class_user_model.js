@@ -407,7 +407,11 @@ class Usuarios{
 					if(element.syscedula == 0 || element.syscedula == null){
 						$("#cont_ci_usu_edi").show();
 						$("#cedula_esco").show();
+						$("#btn_acttualizar_usu2").hide();
+						$("#btn_acttualizar_usu").show();
 					}else{
+						$("#btn_acttualizar_usu").hide();
+						$("#btn_acttualizar_usu2").show();
 						$("#cont_ci_usu_edi").hide();
 						$("#cedula_esco").hide();
 					}
