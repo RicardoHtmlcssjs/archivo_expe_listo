@@ -573,10 +573,26 @@ class Usuarios{
 				ci: ci, nac: nac
 			},
 			success: function(result){
-				$("#cedula_esco").html(result);
-				id_ci.prop('disabled', false);
-				id_btn_enviar.prop('disabled', false);
-				div.html('');
+				if(result == "</select>"){
+					$("#nac").css("display", "none");
+					$("#cedula").css("display", "none");
+					$("#cedula_esco").css("display", "none");
+					$("#btn_agr_ced_man1").css("display", "none");
+					$("#btn_agr_ced_man2").css("display", "block");
+					$("#btn_agregar_usu").css("display", "none");
+					$("#btn_agregar_usu2").css("display", "block");
+					$("#nombre2").css("display", "block");
+					$("#cedula2").css("display", "block");
+					$("#lb_cedula2").css("display", "block");
+					$("#crear_nom").css("display", "none");
+					$("#lb_crear_nom").css("display", "none");
+					$("#buscando_ci").css("display", "none");
+				}else{
+					$("#cedula_esco").html(result);
+					id_ci.prop('disabled', false);
+					id_btn_enviar.prop('disabled', false);
+					div.html('');
+				}
 			},
 			error: function(error){
 				console.log(error);
