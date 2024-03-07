@@ -653,7 +653,7 @@
 				$tabla = "dsaimextranjero";
 			}
 
-			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 1");
+			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 3");
 			$select_vi_cedu = "";
 			foreach ($query as $key) {
 				$ci = $key["cedula"];

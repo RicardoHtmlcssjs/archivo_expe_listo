@@ -99,7 +99,7 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<div class='my-2'><button type='button' class='btn btn-success' id='btn_agr_ced_man1' name='btn_agr_ced_man1' onclick='accion_btn_bus_man(1)'>Agregar personal manualmente</button><button type='button' class='btn btn-success' id='btn_agr_ced_man2' name='btn_agr_ced_man2' onclick='accion_btn_bus_man(2)' style='display: none;'>Buscar por cedula</button></div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'></div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
-				modal_agre_usu += "<label for='crear_nom' class='form-label'>Nombre: </label>";
+				modal_agre_usu += "<label for='crear_nom' class='form-label' id='lb_crear_nom' name='lb_crear_nom'>Nombre: </label>";
 				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value='' disabled='true'>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
@@ -116,7 +116,7 @@ function modal_agreagar_usu(){
                 modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label class='form_label' for='piso_usu'>Piso:</label>";
-				modal_agre_usu += "<input type='number' class='form-control' id='piso_usu' name='piso_usu'>";
+				modal_agre_usu += "<input type='number' class='form-control' id='piso_usu' name='piso_usu' maxlength='2'>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label class='form_label' for='unidad_usu'>Unidad:</label>";
@@ -124,8 +124,8 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar1</button>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar2</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar</button>";
 				modal_agre_usu += "</div><div id='rr'></div>";
 				modal_agre_usu += "</form>";
 				$("#exampleModal2").modal("show");
@@ -152,7 +152,28 @@ function agregar_nue_usu(num){
 			$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));
 		}
 	}else{
-		alert(num);
+		// si cedula estavacia
+		if($("#cedula2").val() != ""){
+			if($("#nombre2").val() != ""){
+				if( $("#adm_correo").val() != ""){
+					if(expresiones_re.email($("#adm_correo").val()) == true){
+						if($("#piso_usu").val() != ""){
+							usuario.agre_usu_adm($("#cedula2").val(), $("#nombre2").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+						}else{
+							$("#rr").html(accion.mensaje_alerta("danger", "Campo piso vacio", "view/images/icono_danger.png"));
+						}
+					}else{
+						$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+					}
+				}else if($("#adm_correo").val() === ""){
+					$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
+				}
+			}else{
+				$("#rr").html(accion.mensaje_alerta("danger", "Campo nombre vacio", "view/images/icono_danger.png"));
+			}
+		}else{
+			$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));
+		}
 
 	}
 }
