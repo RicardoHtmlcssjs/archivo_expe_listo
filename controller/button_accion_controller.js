@@ -92,7 +92,12 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event, 1)'></div>";
 				modal_agre_usu += "<div class='text-center' id='buscando_ci' name='buscando_ci'></div>";
 				modal_agre_usu += "<select class='form-control mt-2' id='cedula_esco' name='cedula_esco' onclick='buscar_nombre(this.value)'></select>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula2' name='cedula2' value='' style='display: none;'>";
+				modal_agre_usu += "<label for='nombre2' class='form-label' id='lb_cedula2' style='display: none;'>Ingresa el nombre: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='nombre2' name='nombre2' value='' style='display: none;'>";
 				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='my-2'><button type='button' class='btn btn-success' id='btn_agr_ced_man1' name='btn_agr_ced_man1' onclick='accion_btn_bus_man(1)'>Agregar personal manualmente</button><button type='button' class='btn btn-success' id='btn_agr_ced_man2' name='btn_agr_ced_man2' onclick='accion_btn_bus_man(2)' style='display: none;'>Buscar por cedula</button></div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'></div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='crear_nom' class='form-label'>Nombre: </label>";
 				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value='' disabled='true'>";
@@ -119,7 +124,8 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu()'>Guardar</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar1</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar2</button>";
 				modal_agre_usu += "</div><div id='rr'></div>";
 				modal_agre_usu += "</form>";
 				$("#exampleModal2").modal("show");
@@ -129,20 +135,55 @@ function modal_agreagar_usu(){
 				usuario.mostra_opc_uni_tod();
 }
 // enviar formulario de modal agregar nuevo usuario
-function agregar_nue_usu(){
-	if($("#cedula_esco").val() != null){
-		if( $("#adm_correo").val() != ""){
-			if(expresiones_re.email($("#adm_correo").val()) == true){
-				// $("#cedula_esco").prop('disabled', true);
-				usuario.agre_usu_adm($("#cedula_esco").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
-			}else{
-				$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+function agregar_nue_usu(num){
+	if(num == 1){
+		if($("#cedula_esco").val() != null){
+			if( $("#adm_correo").val() != ""){
+				if(expresiones_re.email($("#adm_correo").val()) == true){
+					// $("#cedula_esco").prop('disabled', true);
+					usuario.agre_usu_adm($("#cedula_esco").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+				}else{
+					$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+				}
+			}else if($("#adm_correo").val() === ""){
+				$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
 			}
-		}else if($("#adm_correo").val() === ""){
-			$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
+		}else{
+			$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));
 		}
 	}else{
-		$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));
+		alert(num);
+
+	}
+}
+// agregar cedula y nombre manualmente o buscar de vsaime
+function accion_btn_bus_man(num){
+	if(num == 1){
+		$("#nac").css("display", "none");
+		$("#cedula").css("display", "none");
+		$("#cedula_esco").css("display", "none");
+		$("#btn_agr_ced_man1").css("display", "none");
+		$("#btn_agr_ced_man2").css("display", "block");
+		$("#btn_agregar_usu").css("display", "none");
+		$("#btn_agregar_usu2").css("display", "block");
+		$("#nombre2").css("display", "block");
+		$("#cedula2").css("display", "block");
+		$("#lb_cedula2").css("display", "block");
+		$("#crear_nom").css("display", "none");
+		$("#lb_crear_nom").css("display", "none");
+	}else{
+		$("#nac").css("display", "block");
+		$("#cedula").css("display", "block");
+		$("#cedula_esco").css("display", "block");
+		$("#btn_agr_ced_man1").css("display", "block");
+		$("#btn_agr_ced_man2").css("display", "none");
+		$("#btn_agregar_usu").css("display", "block");
+		$("#btn_agregar_usu2").css("display", "none");
+		$("#nombre2").css("display", "none");
+		$("#cedula2").css("display", "none");
+		$("#lb_cedula2").css("display", "none");
+		$("#crear_nom").css("display", "block");
+		$("#lb_crear_nom").css("display", "block");
 	}
 }
 // buscar personal en vsaime al precionar enter en el campo cedula
