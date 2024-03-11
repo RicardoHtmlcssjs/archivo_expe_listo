@@ -599,7 +599,6 @@
 						$existe_correo = $key_correo["correo"];
 					}
 					if($cont_ci > 0){
-						// $result = "El usuario ya existe";
 						return 3;
 					}else if(isset($existe_correo)){
 						return 4;
