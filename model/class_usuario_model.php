@@ -470,22 +470,22 @@
 			if($ci != null){
 				$cont = $cont + 1;
 				if($cont == 1){
-					$text1 = "campo cedula con cambio de contraseña y usuario";
+					$text1 = "campo cedula";
 				}
 				if ($cont == 2) {
-					$text2 = "campo cedula con cambio de contraseña y usuario";
+					$text2 = "campo cedula";
 				}
 				if ($cont == 3) {
-					$text3 = "campo cedula con cambio de contraseña y usuario";
+					$text3 = "campo cedula";
 				}
 				if ($cont == 4) {
-					$text4 = "campo cedula con cambio de contraseña y usuario";
+					$text4 = "campo cedula";
 				}
 				if ($cont == 5) {
-					$text5 = "campo cedula con cambio de contraseña y usuario";
+					$text5 = "campo cedula";
 				}
 				if ($cont == 6){
-					$text6 = "campo cedula con cambio de contraseña y usuario";
+					$text6 = "campo cedula";
 				}
 			}
 				if($cont == 1){
@@ -680,7 +680,7 @@
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad ORDER BY solicitante.idsolicita DESC");
+			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad WHERE tipo = 'S' ORDER BY solicitante.idsolicita DESC");
 			$solicitados_us = "";
 			$array = array();
 			foreach ($query as $key) {
@@ -777,18 +777,6 @@
 				}
 				if($count == 2){
 					$text2 = "Campo activo";
-				}
-			}
-			if($ac_tipo != $tipo){
-				$count = $count + 1;
-				if($count == 1){
-					$text1 = "Campo tipo";
-				}
-				if($count == 2){
-					$text2 = "Campo tipo"; 
-				}
-				if($count == 3){
-					$text3 = "Campo tipo"; 
 				}
 			}
 			if($count == 0){
