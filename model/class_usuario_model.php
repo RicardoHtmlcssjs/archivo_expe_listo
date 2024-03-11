@@ -20,6 +20,30 @@
 
 			return $result;
 		}
+		// establecer fecha mas legible
+		public function fecha_leg($fec){
+			$result = "";
+			if(empty($fec)){
+				return $result;
+			}
+			$ano = substr($fec, 0, 4);
+			$mes = substr($fec, 5, 2);
+			$dia = substr($fec, 8, 2);
+			if($mes == "01"){$mes = "ENE";}
+			elseif ($mes == "02") {$mes = "FEB";}
+			elseif ($mes == "03") {$mes = "MAR";}
+			elseif ($mes == "04") {$mes = "ABR";}
+			elseif ($mes == "05") {$mes = "MAY";}
+			elseif ($mes == "06") {$mes = "JUN";}
+			elseif ($mes == "07") {$mes = "JUL";}
+			elseif ($mes == "08") {$mes = "AGO";}
+			elseif ($mes == "09") {$mes = "SEP";}
+			elseif ($mes == "10") {$mes = "OCT";}
+			elseif ($mes == "11") {$mes = "NOV";}
+			elseif ($mes == "12") {$mes = "DIC";}
+			$result = $dia . "-" . $mes . "-" . $ano;
+			return $result;
+		}
 		// quitar acentos de un texto
 		public function quitar_acentos($cadena){
 			$cadena = mb_strtolower($cadena, "UTF-8");
@@ -126,7 +150,7 @@
                 	}else{
                 		$ranal = "";
                 	}
-                	
+                	$fec_entre = $this->fecha_leg($key['fentrega']);
                 	$snombres = $key['snombres'];
 		            $solicitados_ex .= "<tr>";
 		            $solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
@@ -135,7 +159,7 @@
 		                        <td class=''>".$key['unombre']."</td>
 		                        <td class=''>".$key['cedula']."</td>
 		                        <td class=''>".$key['nombres']."</td>
-		                        <td class=''>".$key['fentrega']."</td>
+		                        <td class=''>".$fec_entre."</td>
 		                        <td class=''>$eanal</td>
 		                    </tr>";
                 }
@@ -184,6 +208,9 @@
 					}else{
 						$ranal = "";
 					}
+					$fec_entre = $this->fecha_leg($key['fentrega']);
+					$fec_rec = $this->fecha_leg($key['fdevolucion']);	
+					
 					$snombres = $key['snombres'];
 					$solicitados_ex .= "<tr>";
 					$solicitados_ex .= "<td class=''>".$key['snombres']."</td>
@@ -192,8 +219,8 @@
 								<td class=''>".$key['unombre']."</td>
 								<td class=''>".$key['cedula']."</td>
 								<td class=''>".$key['nombres']."</td>
-								<td class=''>".$key['fentrega']."</td>
-								<td class=''>".$key['fdevolucion']."</td>
+								<td class=''>".$fec_entre."</td>
+								<td class=''>".$fec_rec."</td>
 								<td class=''>$eanal</td>
 								<td class=''>$ranal</td>
 								</tr>";
@@ -319,7 +346,10 @@
 			session_start();
 			foreach ($query as $key) {
 				if($key["idusuario"] != $_SESSION["id_usu_log"]){
-					$array[] = $key;
+					$fec1 = $this->fecha_leg($key["sysfechal"]);
+					// $array[] = $key;
+					// $array[]=array("idusuario" => "".$key['idusuario']."", "login" => "".$key['login']."", "correo" => "".$key["correo"]."", "sysnombre" => "".$key['sysnombre']."", "syscedula" => "".$key['syscedula']."", "sysactivo" => "".$key['sysactivo']"", "desc_activo" => "".$key['desc_activo']."", "sysfechal" => "".$key['sysfechal']."", "desc_permisos" => "".$key['desc_permisos']."", "id_permisos" => "".$key['id_permisos']."");
+					$array[]=array("idusuario" => "".$key['idusuario']."","login" => "".$key['login']."", "correo" => "".$key["correo"]."", "sysnombre" => "".$key['sysnombre']."", "syscedula" => "".$key['syscedula']."", "desc_activo" => "".$key['desc_activo']."", "sysfechal" => "".$fec1."", "desc_permisos" => "".$key['desc_permisos']."", "id_permisos" => "".$key['id_permisos']."");
 				}
 			}
 			$result = json_encode($array);
@@ -573,8 +603,9 @@
 				$horas = $this->hora_normal($key['hora_tran']);
 				$query2 = $conexion->consulta("s","SELECT sysnombre  FROM vsistema WHERE idusuario = $usu_adm");
 				foreach ($query2 as $key2) {
+					$fec1 = $this->fecha_leg($key['fecha_tran']);
 					$usuario_adm = $key2["sysnombre"];
-					$array[]=array("login" => "".$key['login']."", "sysnombre" => "".$key['sysnombre']."", "idd" => "".$key2["sysnombre"]."", "fecha_tran" => "".$key['fecha_tran']."", "hora_tran" => "".$horas."", "desc_tran" => "".$key['desc_tran']."");
+					$array[]=array("login" => "".$key['login']."", "sysnombre" => "".$key['sysnombre']."", "idd" => "".$key2["sysnombre"]."", "fecha_tran" => "".$fec1."", "hora_tran" => "".$horas."", "desc_tran" => "".$key['desc_tran']."");
 				}
 			}
 			$result = json_encode($array);
@@ -895,8 +926,8 @@
 			$array = array();
 			foreach ($query1 as $key) {
 				$horas = $this->hora_normal($key['hora_tran']);
-					// $array[] = $key1;
-					$array[]=array("snombres" => "".$key['snombres']."", "login" => "".$key['login']."", "fecha_tran" => "".$key["fecha_tran"]."", "desc_tran" => "".$key['desc_tran']."", "hora_tran" => "".$horas."");
+				$fec1 = $this->fecha_leg($key["fecha_tran"]);
+					$array[]=array("snombres" => "".$key['snombres']."", "login" => "".$key['login']."", "fecha_tran" => "".$fec1."", "desc_tran" => "".$key['desc_tran']."", "hora_tran" => "".$horas."");
 					$result = json_encode($array);
 			}
 			return $result;

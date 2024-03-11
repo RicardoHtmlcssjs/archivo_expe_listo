@@ -265,6 +265,7 @@ class Usuarios{
 			success: function(result){
 				$("#exampleModal2").modal("hide");
 				usuario.expedientes_soli_personal(ci_entregar_exp);
+				var notification = alertify.notify('El expediente fue entregado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
 			},
 			error: function(error){
 				console.log(error);
@@ -281,6 +282,7 @@ class Usuarios{
 			success: function(result){
 				$("#exampleModal2").modal("hide");
 				usuario.expedientes_soli_personal(ci);
+				var notification = alertify.notify('El expediente fue debuelto', 'success', 5, function(){  console.log('dismissed'); });
 			},
 			error: function(error){
 				console.log(error);
@@ -446,6 +448,7 @@ class Usuarios{
 					$("#usu_act_adm").val("");
 					$("#nom_act_adm").val("");
 					usuario.usus_login();
+					var notification = alertify.notify('Los datos del usuarios fueron actualizados exitosamente', 'success', 5, function(){  console.log('dismissed'); });
 				}else if (result == 3){
 					$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
 				}else{
@@ -469,7 +472,7 @@ class Usuarios{
 				if(result == 2){
 					$("#rr").html(accion.mensaje_alerta("danger", "El usuario debe tener un correo, para poder cambiar su contraseña", "view/images/icono_danger.png"));
 				}else if(result == 1){
-					alert("La contraseña fue cambiada exitosamente y fue enviada a el correo del usuario");
+					var notification = alertify.notify('La contraseña fue cambiada exitosamente y fue enviada a el correo del usuario', 'success', 5, function(){  console.log('dismissed'); });
 					$("#exampleModal2").modal("hide");
 				}else if(result == 0){
 					$("#rr").html(accion.mensaje_alerta("danger", "No se pudo enviar el correo pero la contraseña fue cambiada", "view/images/icono_danger.png"));
@@ -701,6 +704,7 @@ class Usuarios{
 			success: function(result){
 				$("#exampleModal2").modal("hide");
 				usuario.mos_tabla_emp_ana();
+				var notification = alertify.notify('El personal solicitante ha sido creado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
 			},
 			error: function(error){
 				console.log(error);
@@ -772,6 +776,7 @@ class Usuarios{
 			success: function(result){
 				$("#exampleModal2").modal("hide");
 				usuario.mos_tabla_emp_ana();
+				var notification = alertify.notify('El personal solicitante ha sido actualizado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
 			},
 			error: function(error){
 				console.log(error);
