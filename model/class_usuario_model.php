@@ -655,13 +655,16 @@
 
 			// $query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE CAST(cedula AS VARCHAR) LIKE '%$ci%' ORDER BY cedula ASC LIMIT 1");
 			$query = $conexion->consulta2("s", "SELECT cedula, primer_nombre, primer_apellido FROM $tabla WHERE cedula = $ci");
-			$select_vi_cedu = "";
+			$select_vi_cedu = [];
 			foreach ($query as $key) {
-				$ci = $key["cedula"];
-				$select_vi_cedu .= "<option value='".$key["cedula"]."'>".$key["cedula"]." ".$key["primer_nombre"]." ".$key["primer_apellido"]."</option>";
+				$nom_com = $key["primer_nombre"] . " " . $key["primer_apellido"];
+				$select_vi_cedu[] = $key["cedula"];
+				$select_vi_cedu[] = $nom_com;
+				// $ci = $key["cedula"];
+				// $select_vi_cedu .= "<option value='".$key["cedula"]."'>".$key["cedula"]." ".$key["primer_nombre"]." ".$key["primer_apellido"]."</option>";
 			}
-			$select_vi_cedu .= "</select>";
-			return $select_vi_cedu;
+			$json = json_encode($select_vi_cedu);
+			return $json;
 		}
 		// mostrar nombre del usuario a crear por medio de la cedula
 		public function mostrar_nombre($ci){

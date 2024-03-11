@@ -91,14 +91,14 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<div class='d-flex flex-row'><select id='nac' name='nac' class='form-control'><option value='V'>V</option><option value='E'>E</option></select>";
 				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event, 1)'></div>";
 				modal_agre_usu += "<div class='text-center' id='buscando_ci' name='buscando_ci'></div>";
-				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula2' name='cedula2' value=''>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1 my-2' id='cedula2' name='cedula2' value='' readonly>";
 				modal_agre_usu += "<label for='nombre2' class='form-label' id='lb_cedula2' style='display: none;'>Ingresa el nombre: </label>";
 				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='nombre2' name='nombre2' value='' style='display: none;'>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'></div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='crear_nom' class='form-label' id='lb_crear_nom' name='lb_crear_nom'>Nombre: </label>";
-				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value='' disabled='true'>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='adm_correo' class='form-label'>Ingresa el correo: </label>";
@@ -122,8 +122,8 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar</button>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar1</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar2</button>";
 				modal_agre_usu += "</div><div id='rr'></div>";
 				modal_agre_usu += "</form>";
 				$("#exampleModal2").modal("show");
@@ -135,16 +135,23 @@ function modal_agreagar_usu(){
 // enviar formulario de modal agregar nuevo usuario
 function agregar_nue_usu(num){
 	if(num == 1){
-		if($("#cedula_esco").val() != null){
-			if( $("#adm_correo").val() != ""){
-				if(expresiones_re.email($("#adm_correo").val()) == true){
-					// $("#cedula_esco").prop('disabled', true);
-					usuario.agre_usu_adm($("#cedula").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
-				}else{
-					$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+		if($("#cedula2").val() != ""){
+			if($("#crear_nom").val() != ""){
+				if( $("#adm_correo").val() != ""){
+					if(expresiones_re.email($("#adm_correo").val()) == true){
+						if($("#piso_usu").val() != ""){
+							usuario.agre_usu_adm($("#cedula2").val(), $("#crear_nom").val(),  $("#act_act_adm").val(), $("#adm_act_adm").val(), $("#adm_correo").val(), $("#piso_usu").val(), $("#unidad_usu").val());
+						}else{
+							$("#rr").html(accion.mensaje_alerta("danger", "Campo piso esta vacio", "view/images/icono_danger.png"));
+						}
+					}else{
+						$("#rr").html(accion.mensaje_alerta("danger", "Correo invalido", "view/images/icono_danger.png"));
+					}
+				}else if($("#adm_correo").val() === ""){
+					$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
 				}
-			}else if($("#adm_correo").val() === ""){
-				$("#rr").html(accion.mensaje_alerta("danger", "Campo correo vacio", "view/images/icono_danger.png"));
+			}else{
+				$("#rr").html(accion.mensaje_alerta("danger", "Campo nombre vacio", "view/images/icono_danger.png"));
 			}
 		}else{
 			$("#rr").html(accion.mensaje_alerta("danger", "Ingresa una cedula", "view/images/icono_danger.png"));

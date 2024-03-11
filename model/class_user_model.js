@@ -573,7 +573,9 @@ class Usuarios{
 				ci: ci, nac: nac
 			},
 			success: function(result){
-				if(result == "</select>"){
+				const objeto = JSON.parse(result);
+				// alert(objeto[0]);
+				if(objeto[0] == undefined){
 					$("#nac").css("display", "none");
 					$("#cedula").css("display", "none");
 					$("#cedula_esco").css("display", "none");
@@ -587,11 +589,16 @@ class Usuarios{
 					$("#crear_nom").css("display", "none");
 					$("#lb_crear_nom").css("display", "none");
 					$("#buscando_ci").css("display", "none");
+					$("#cedula2").val("");
+					$("#cedula2").removeAttr("readonly");
+					$("#crear_nom").val("");
 				}else{
 					$("#cedula_esco").html(result);
 					id_ci.prop('disabled', false);
 					id_btn_enviar.prop('disabled', false);
 					div.html('');
+					$("#cedula2").val(objeto[0]);
+					$("#crear_nom").val(objeto[1]);
 				}
 			},
 			error: function(error){
