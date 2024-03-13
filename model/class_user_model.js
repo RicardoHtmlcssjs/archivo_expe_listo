@@ -49,6 +49,9 @@ class Usuarios{
 				}else if(result == 1 || result == 1.1){
 					usuario.mostrar_personal(result);
 					usuario.mostrar_usuario();
+					if(result == 1.1){
+						usuario.mostrar_exp_mas_3_dias_soli();
+					}
 				}else if(result == 0){
 					$("#resp_login").html((accion.mensaje_alerta("danger", "Usuario o contraseña son incorrecta", "view/images/icono_danger.png")));
 				}else if(result == 3){
@@ -79,7 +82,24 @@ class Usuarios{
 
 		});
 	};
+	// mostrar expedientes solictados con mas de 3 dias de retraso 
+	mostrar_exp_mas_3_dias_soli(){ 
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_exp_mas_3_dias_soli.php",
+			type: "POST",
+			success: function(result){
+				// $("#nom_usu_log_header").html("<i class='px-1 mr-4' id='nom_usu_log_header' name='nom_usu_log_header'><b>"+ result +"</b></i>");
+				// $("#exampleModal1").html("<p>hola</p>");
+				$("#exampleModal2").modal("show");
+				$("#modal2").html(accion.modal_expedientes_retrasados());
+				alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
 
+		});
+	};
 	// mostrar pesonal luego de logearse y btn navbar personal
 	mostrar_personal(num){
 				$("#cuerpo").css("width", "80%");
@@ -210,7 +230,7 @@ class Usuarios{
 					$('#most_mod_agr').remove();
 
 					// Crea un div con contenido
-					let divConContenido = $(`<div style="display: flex;">${accion.boton('Devolver expediente','success', 'view/images/icono_expediente.png', "onclick='modal2_devol_exp_per("+ci+")'")}${accion.boton('Editar observacion','success', 'view/images/icono_expediente.png', "onclick='modal_edit_observacion("+ci+")'")}</div>`);
+					let divConContenido = $(`<div style="display: flex;">${accion.boton('Devolver expediente','success', 'view/images/icono_expediente.png', "onclick='modal2_devol_exp_per("+ci+")'")}${accion.boton('Editar observacion','success', 'view/images/pen_edit.png', "onclick='modal_edit_observacion("+ci+")'")}</div>`);
 					$("#exp_soli").prepend(divConContenido);
 				}
 			},

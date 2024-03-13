@@ -237,6 +237,74 @@
 				}
 			return $solicitados_ex;
 		}
+		// mostrar expedientes solicitados con mas de 3 dias de retraso
+		public function mostrar_exp_mas_3_dias_soli(){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula WHERE ranalista ISNULL");
+			$solicitados_ex = "";
+			$array = array();
+			foreach ($query as $key) {
+				if(strlen($key["ranalista"]) == 0){
+                	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'");
+                	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'");
+                	foreach ($query2 as $key2) {
+                		$eanal = $key2["snombres"];
+                	}
+                	if($key['ranalista'] != ""){
+                		foreach ($query3 as $key3) {
+                		$ranal = $key3["snombres"];
+                	}
+                	}else{
+                		$ranal = "";
+                	}
+					$año_act = date("Y");
+					$mes_act = date("m");
+					$dia_act = date("d");
+					$fec_entre_edi = $key['fentrega'];
+					$año_sol = substr($fec_entre_edi, 0, 4);
+					$mes_sol = substr($fec_entre_edi, 5, 2);
+					$dia_sol = substr($fec_entre_edi, 8, 2);
+
+					if($año_sol <= $año_act){
+						if($mes_sol < $mes_act){
+							$fec_entre = $this->fecha_leg($key['fentrega']);
+                			$snombres = $key['snombres'];
+		            		$solicitados_ex .= "<tr>";
+		            		$solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
+		                        <td class=''>".$key['micro']."</td>
+		                        <td class=''>".$key['piso']."</td>
+		                        <td class=''>".$key['unombre']."</td>
+		                        <td class=''>".$key['cedula']."</td>
+		                        <td class=''>".$key['nombres']."</td>
+		                        <td class=''>".$fec_entre." mes menor</td>
+		                        <td class=''>$eanal</td>
+		                    </tr>";
+						}elseif($mes_sol == $mes_act && ($dia_sol+3) < $dia_act){
+							$fec_entre = $this->fecha_leg($key['fentrega']);
+                			$snombres = $key['snombres'];
+		            		$solicitados_ex .= "<tr>";
+		            		$solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
+		                        <td class=''>".$key['micro']."</td>
+		                        <td class=''>".$key['piso']."</td>
+		                        <td class=''>".$key['unombre']."</td>
+		                        <td class=''>".$key['cedula']."</td>
+		                        <td class=''>".$key['nombres']."</td>
+		                        <td class=''>".$fec_entre." dia menor</td>
+		                        <td class=''>$eanal</td>
+		                    </tr>";
+						}
+					}
+
+                	
+                }
+            }
+                if($solicitados_ex == " "){
+                	$solicitados_ex = 0;
+                }                
+				// $result = json_encode($array);
+                return $solicitados_ex;
+		}
 		// class borrar btn y si se solicitado expediente
 		public function borra_btn_sol_exp($ci){
 			parent::conecta();
