@@ -30,7 +30,8 @@ $("#agre_solicitar_exp").on("click", function(){
 		$("#exampleModal1").modal("hide");
 		let ci_entregar_exp = $("#ci_per_agre_exp").val();
 		let analis = $("#analista").val();
-		usuario.expediente_entregado(analis, ci_entregar_exp);
+		let observacion = $("#observacion").val();
+		usuario.expediente_entregado(analis, ci_entregar_exp, observacion);
 		$("#solicitante").val("");
 });
 // modal de devovelver expedientes solicitados - persona
@@ -54,6 +55,23 @@ function rec_exp(ci, num){
 	}else{
 		usuario.debolver_exp(ci);
 	}
+}
+// mostrar modal editar ultima observacion observacion
+function modal_edit_observacion(ci){
+	let modal_edi_obs = "<h2 class='text-center' id='id_tit_mod1'>Editar observacion</h2>";
+        modal_edi_obs += "<form action='>";
+		modal_edi_obs += "<div class='mb-3' >";
+		modal_edi_obs += "<label for='observacion_act'>Observacion</label>";
+		modal_edi_obs += "<input class='form-control' type='text' id='observacion_act' name='observacion_act'>";
+		modal_edi_obs += "</div>";
+		modal_edi_obs += "<div class='modal-footer justify-content-center'>";
+		modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='alert("+ci+")'>Editar</button>";
+		modal_edi_obs += "</div>";
+		modal_edi_obs += "<div class='mb-2' id='error_soli_exp1'></div>";
+		modal_edi_obs += "</form>";
+	$("#modal2").html(modal_edi_obs);
+	usuario.editar_observacion(ci);
+	$("#exampleModal2").modal("show");
 }
 // debolver expedientes solicitados en opcion que muestra nada mas todos los expedientes solicitados
 function entre_exp(ci){

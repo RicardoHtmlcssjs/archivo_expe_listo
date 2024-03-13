@@ -4,7 +4,8 @@
     // analis, ci_entregar_exp
 	$analis = $class->limpiar_cadena($_POST["analis"]);
     $ci_entregar_exp = $class->limpiar_cadena($_POST["ci_entregar_exp"]);
+    $observacion = $class->limpiar_cadena($_POST["observacion"]);
 	$cl_usuario = new Usuario("","");
-	$result = $cl_usuario->entregar_expediente($analis, $ci_entregar_exp);
+	$result = $cl_usuario->entregar_expediente($analis, $ci_entregar_exp, $observacion);
 	echo $result;
 ?>

@@ -173,7 +173,7 @@
 		public function expedientes_solicitados($r_ci){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula WHERE controle.cedula = $r_ci");
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula WHERE controle.cedula = $r_ci");
 			$solicitados_ex = "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12 exp_soli cont_col_tab1 my-3'>
             <h4 class='text-center'>Control de expedientes solicitados</h4>
             <table class='' style='width: 100%;'>
@@ -185,6 +185,7 @@
                         <th class='text-center tit_c_tab1'>Unidad Solicitante</th>
                         <th class='text-center tit_c_tab1'>Cedula</th>
                         <th class='text-center tit_c_tab1'>Nombres</th>
+                        <th class='text-center tit_c_tab1'>Observacion</th>
                         <th class='text-center tit_c_tab1'>F.Entregado</th>
                         <th class='text-center tit_c_tab1'>F.Devuelto</th>
                         <th class='text-center tit_c_tab1'>Entregado por</th>
@@ -219,6 +220,7 @@
 								<td class=''>".$key['unombre']."</td>
 								<td class=''>".$key['cedula']."</td>
 								<td class=''>".$key['nombres']."</td>
+								<td class=''>".$key['observacion']."</td>
 								<td class=''>".$fec_entre."</td>
 								<td class=''>".$fec_rec."</td>
 								<td class=''>$eanal</td>
@@ -276,9 +278,6 @@
 		}
 		// mostrar en el modal entrgado por
 		public function entrgado_por(){
-			// parent::conecta();
-			// $db = $this->conn;
-			// $query = $db->execute("SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'E'");
 			$select_entregado_por = "<select class='form-control' id='entregado_por'>";
 			$q1 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'E' AND  activo = 'S'");
 
@@ -289,7 +288,7 @@
 			return $select_entregado_por;
 		}
 		// entregar expediente solicitado
-		public function entregar_expediente($analis, $ci_entregar_exp){
+		public function entregar_expediente($analis, $ci_entregar_exp, $observacion){
 			parent::conecta();
 			$db = $this->conn;
 			$query =$db->execute("SELECT id_controle from controle order by id_controle desc limit 1");
@@ -299,7 +298,7 @@
 			$ult_id_controle = $ult_id_controle + 1;
 			session_start();
 			$id_usu_log = $_SESSION["id_solicita"];
-			$query2 = $db->execute("INSERT INTO controle (id_controle, cedula, id_solicita, fentrega, eanalista) VALUES ($ult_id_controle, $ci_entregar_exp, $analis, now(), $id_usu_log)");
+			$query2 = $db->execute("INSERT INTO controle (id_controle, cedula, id_solicita,  fentrega, eanalista, observacion) VALUES ($ult_id_controle, $ci_entregar_exp, $analis, now(), $id_usu_log, '".$observacion."')");
 			return $id_usu_log;
 		}
 		// recvir expedien normal de la opc 2
@@ -336,6 +335,17 @@
 			}
 			// $result = $re;
 			return  $result;
+		}
+		// editar ultima observacion 
+		public function editar_observacion($ci){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT id_controle, observacion FROM controle  WHERE cedula = $ci order by id_controle desc limit 1");
+			foreach ($query as $key) {
+				$id_controle = $key["id_controle"];
+				$edit_observacion = $key["observacion"];
+			}
+			return $edit_observacion;
 		}
 		// tabla de mostrar usuarios que se logean
 		public function mostrar_usu_login(){

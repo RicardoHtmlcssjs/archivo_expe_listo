@@ -209,6 +209,7 @@ class Usuarios{
 				if(result == 0){
 					$('#most_mod_agr').remove();
 					$('#exp_soli').prepend(accion.boton('Devolver expediente','success', 'view/images/icono_expediente.png', "onclick='modal2_devol_exp_per("+ci+")'"));
+					$('#exp_soli').prepend(accion.boton('Editar observacion','success', 'view/images/icono_expediente.png', "onclick='modal_edit_observacion("+ci+")'"));
 				}
 			},
 			error: function(error){
@@ -239,6 +240,22 @@ class Usuarios{
 			}
 		});
 	}
+	// editar ultima observacion al resivir expediente
+	editar_observacion(ci){
+		$.ajax({
+			url: "model/ajax/ajax_editar_observacion.php",
+			type: "POST",
+			data: {
+				ci: ci
+			},
+			success: function(result){
+				$("#observacion_act").val(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
 	// mostrara todos las analistas
 	selec_analis(val1, ci_per_s){
 		$.ajax({
@@ -255,12 +272,12 @@ class Usuarios{
 			}
 		});
 	};
-	expediente_entregado(analis, ci_entregar_exp){
+	expediente_entregado(analis, ci_entregar_exp, observacion){
 		$.ajax({
 			url: "model/ajax/ajax_entregar_expe.php",
 			type: "POST",
 			data: {
-				analis: analis, ci_entregar_exp: ci_entregar_exp
+				analis: analis, ci_entregar_exp: ci_entregar_exp, observacion: observacion
 			},
 			success: function(result){
 				$("#exampleModal2").modal("hide");
