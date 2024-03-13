@@ -13,6 +13,7 @@ function hh(ci){
 function most_mod_agr(ci_per_s){
 	$("#error_soli_exp1").html("");
 	$("#solicitante").val("");
+	$("#observacion").val("");
 	usuario.selec_analis($("#solicitante").val(), ci_per_s);
 	$("#exampleModal1").modal("show");
 	$("#mod1").css("width","1000px");
@@ -65,13 +66,19 @@ function modal_edit_observacion(ci){
 		modal_edi_obs += "<input class='form-control' type='text' id='observacion_act' name='observacion_act'>";
 		modal_edi_obs += "</div>";
 		modal_edi_obs += "<div class='modal-footer justify-content-center'>";
-		modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='alert("+ci+")'>Editar</button>";
+		modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='guardar_edit_obs("+ci+")'>Editar</button>";
 		modal_edi_obs += "</div>";
 		modal_edi_obs += "<div class='mb-2' id='error_soli_exp1'></div>";
 		modal_edi_obs += "</form>";
 	$("#modal2").html(modal_edi_obs);
 	usuario.editar_observacion(ci);
 	$("#exampleModal2").modal("show");
+}
+// guardar en la bbdd observacion editada
+function guardar_edit_obs(ci){
+	$observacion_nv = $("#observacion_act").val();
+	usuario.guardar_edit_obs(ci, $observacion_nv);
+
 }
 // debolver expedientes solicitados en opcion que muestra nada mas todos los expedientes solicitados
 function entre_exp(ci){

@@ -208,8 +208,10 @@ class Usuarios{
 			success: function(result){
 				if(result == 0){
 					$('#most_mod_agr').remove();
-					$('#exp_soli').prepend(accion.boton('Devolver expediente','success', 'view/images/icono_expediente.png', "onclick='modal2_devol_exp_per("+ci+")'"));
-					$('#exp_soli').prepend(accion.boton('Editar observacion','success', 'view/images/icono_expediente.png', "onclick='modal_edit_observacion("+ci+")'"));
+
+					// Crea un div con contenido
+					let divConContenido = $(`<div style="display: flex;">${accion.boton('Devolver expediente','success', 'view/images/icono_expediente.png', "onclick='modal2_devol_exp_per("+ci+")'")}${accion.boton('Editar observacion','success', 'view/images/icono_expediente.png', "onclick='modal_edit_observacion("+ci+")'")}</div>`);
+					$("#exp_soli").prepend(divConContenido);
 				}
 			},
 			error: function(error){
@@ -240,7 +242,7 @@ class Usuarios{
 			}
 		});
 	}
-	// editar ultima observacion al resivir expediente
+	// mostrarobservacion en el campo observacion al resivir expediente
 	editar_observacion(ci){
 		$.ajax({
 			url: "model/ajax/ajax_editar_observacion.php",
@@ -250,6 +252,24 @@ class Usuarios{
 			},
 			success: function(result){
 				$("#observacion_act").val(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// guardar al editar observacion
+	guardar_edit_obs(ci, observacion_nv){
+		$.ajax({
+			url: "model/ajax/ajax_guardar_edit_obs.php",
+			type: "POST",
+			data: {
+				ci: ci, observacion_nv: observacion_nv
+			},
+			success: function(result){
+				$("#exampleModal2").modal("hide");
+				usuario.expedientes_soli_personal(ci);
+				var notification = alertify.notify('La observacion ha sido editada exitosamente', 'success', 5, function(){  console.log('dismissed'); });
 			},
 			error: function(error){
 				console.log(error);

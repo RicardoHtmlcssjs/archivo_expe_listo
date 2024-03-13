@@ -336,7 +336,7 @@
 			// $result = $re;
 			return  $result;
 		}
-		// editar ultima observacion 
+		// mostra ultima observacion 
 		public function editar_observacion($ci){
 			parent::conecta();
 			$db = $this->conn;
@@ -346,6 +346,21 @@
 				$edit_observacion = $key["observacion"];
 			}
 			return $edit_observacion;
+		}
+		// guardar valor editado en la bbdd edtar observacion
+		public function guardar_edit_obs($ci, $observacion){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT id_controle FROM controle  WHERE cedula = $ci order by id_controle desc limit 1");
+			foreach ($query as $key) {
+				$id_controle = $key["id_controle"];
+			}
+			$listo = $db->execute("UPDATE controle SET observacion = '".$observacion."' WHERE id_controle = $id_controle");
+			if($listo){
+				return 1;
+			}else{
+				return 0;
+			}
 		}
 		// tabla de mostrar usuarios que se logean
 		public function mostrar_usu_login(){
