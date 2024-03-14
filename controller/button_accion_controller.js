@@ -57,7 +57,7 @@ $('#btn_mod_exp').on('click', function() {
           form_data.append('file', file_data);
 		  alert(form_data);
 		  saludo = "hola";
-        // usuario.subir_expediente_pdf(saludo);
+        // usuario.subir_expediente_pdf(form_data);
 		  //   $.ajax({
         //       type: 'POST',
         //       url: 'model/ajax/ajax_subir_expediente.php',
