@@ -128,6 +128,7 @@ class Usuarios{
 			"columns":[
 				{"data": "cedula"},
 				{"data": "nombres"},
+				{"data": null},
 				{"data": "dstatus"},
 				{"data": "cstatus"},
 				{"data": "nfil"},
