@@ -18,5 +18,55 @@
 .dps_none{
 	display: none;
 }
+/* estilo del boton de subir expediente en pdf */
+.btn_subir_exp:hover{
+	box-shadow: 1px 1px 5px black;
+}
+/* -----------------estilos del modal agregar en pdf el expediente -----------------------*/
+.titulo_mod_exp {
+	text-align: center;
+  }
+  
+  .form_mod_exp {
+	margin: 20px auto;
+	width: 500px;
+	border: 1px solid #ccc;
+	padding: 20px;
+  }
+  
+  input[type="file"] {
+	display: block;
+  }
+  
+  .lb_mod_exp {
+	display: block;
+	cursor: pointer;
+	border: 1px dashed #ccc;
+	padding: 20px;
+	text-align: center;
+  }
+  
+  .lb_mod_exp:hover {
+	background-color: #f5f5f5;
+  }
+  
+  .area-arrastrar {
+	font-style: italic;
+  }
+  
+  .btn_mod_exp {
+	margin-top: 10px;
+	width: 100%;
+	padding: 10px;
+	background-color: #000;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+  }
+  
+  .btn_mod_exp:hover {
+	background-color: #333;
+  }
+/* --------------------------------------------------------------------------------------- */
 
 

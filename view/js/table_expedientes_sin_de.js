@@ -14,6 +14,8 @@ function expedientes_sn_dev2(){
                         tab_exp_sin_dev +="<th class='text-center tit_c_tab1'>Nombres</th>";
                         tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>F.Entrega</th>";
                         tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Entregado por</th>";
+                        tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Observacion</th>";
+                        tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Retraso</th>";
                     tab_exp_sin_dev += "</tr>";
                 tab_exp_sin_dev += "</thead>";
                 tab_exp_sin_dev += "<tbody class='tbody_tab1' id='tbody_r'>";

@@ -114,6 +114,41 @@
             </div>
             <!-- fin modal 3 modificar usuario login -->
         </div>
-        <!-- modal 4 agregar un usuario -->
-        
+        <!-- modal 4 alerta de expedientes con mas 3 dias de retraso -->
+        <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="titulo2" aria-hidden="true">
+            <div class="modal-dialog modal1">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <!-- <h5 class="modal-title" id="titulo1">Solicitar expediente</h5> -->
+                    <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: flex; align-items: center;">
+                                               
+                        <h4 id="cant_expe" name="cant_expe"><img src="view/images/icono_danger.png" width="35px" alt="" srcset="" class="mr-1 mb-1"> </h4> 
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
         <!-- fin modal agregar -->
+        <!-- modal 5 de subir expediente en pdf  -->
+        <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="titulo2" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="titulo_mod_exp">Subir archivo PDF</h1>
+                    <form enctype="multipart/form-data" class="area-arrastrar">
+                        <label for="archivo" class="lb_mod_exp">
+                        <input type="file" id="file" name="file" accept=".pdf" class="file" required>
+                        </label>
+                        <button type="button" class="btn_mod_exp" id="btn_mod_exp" name="btn_mod_exp">Subir archivo</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- fin modal 5 -->

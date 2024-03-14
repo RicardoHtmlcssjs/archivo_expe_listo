@@ -25,6 +25,67 @@ $("#solicitante").on("keyup",function(){
 		$("#error_soli_exp1").html("");
 	}
 });
+// accione que se activara a arrastrar en el modal agregar expediente pdf
+
+$('#btn_mod_exp').on('click', function() {
+	if($("#file").val() === ""){
+		alert("vacio");
+		return
+	}
+	
+	const archivo = $("#file")[0].files[0];
+	const extension = archivo.name.split(".").pop().toLowerCase();
+
+	if (extension !== "pdf") {
+	alert("El archivo no es un PDF");
+	}else{
+      //Todas las propiedades del Archivo
+      //El método prop() nos sirve para poder modificar las propiedades nativas de Javascript 
+      //de los elementos de una página, Ejemplo $('#checkbox1').prop("checked", true);
+      var file_data = $('.file').prop('files')[0];
+      var fileName = file_data.fileName;
+      var fileSize = file_data.fileSize;
+
+      console.log(file_data);
+	  console.log(fileName);
+	  console.log(fileSize);
+
+    //   if(file_data != undefined) {
+          var form_data = new FormData();  
+          console.log(form_data)  
+                        
+          form_data.append('file', file_data);
+		  alert(form_data);
+		  saludo = "hola";
+        // usuario.subir_expediente_pdf(saludo);
+		  //   $.ajax({
+        //       type: 'POST',
+        //       url: 'model/ajax/ajax_subir_expediente.php',
+        //       contentType: false,
+        //       processData: false,
+        //       data: {saludo: saludo},
+        //       success:function(response) {
+        //         alert(response);
+		// 		//   if(response == 'success') {
+        //         //       console.log('Archivo subido');
+        //         //       //Llamando mi funcion
+        //         //       mensajeToast();
+        //         //   } else {
+        //         //       console.log('Error al subir Archivo');
+        //         //   }
+        //         //   //Limpio el input type File
+        //         //   $('.file').val('');
+        //       },
+		// 	  error: function(error){
+		// 		alert(error);
+		// 	  }
+        //   });
+    //   }
+	}
+  });
+// fin del dragover modal pdf
+
+
 // btn guardar solicitud de expediente
 $("#agre_solicitar_exp").on("click", function(){
 		$("#error_soli_exp1").html("");
@@ -57,8 +118,12 @@ function rec_exp(ci, num){
 		usuario.debolver_exp(ci);
 	}
 }
+// subir expediente en pdf
+function mos_modal_exp_pdf(ci){
+	$("#exampleModal5").modal("show");
+}
 // mostrar modal editar ultima observacion observacion
-function modal_edit_observacion(ci){
+function modal_edit_observacion(ci, n){
 	let modal_edi_obs = "<h2 class='text-center' id='id_tit_mod1'>Editar observacion</h2>";
         modal_edi_obs += "<form action='>";
 		modal_edi_obs += "<div class='mb-3' >";
@@ -66,7 +131,11 @@ function modal_edit_observacion(ci){
 		modal_edi_obs += "<input class='form-control' type='text' id='observacion_act' name='observacion_act'>";
 		modal_edi_obs += "</div>";
 		modal_edi_obs += "<div class='modal-footer justify-content-center'>";
-		modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='guardar_edit_obs("+ci+")'>Editar</button>";
+		if(n == 2){
+			modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='guardar_edit_obs("+ci+",2)'>Editar</button>";
+		}else{
+			modal_edi_obs += "<button type='button' class='btn btn-success'  id='btn_recivir_expediente' name='btn_recivir_expediente' onclick='guardar_edit_obs("+ci+",1)'>Editar</button>";
+		}
 		modal_edi_obs += "</div>";
 		modal_edi_obs += "<div class='mb-2' id='error_soli_exp1'></div>";
 		modal_edi_obs += "</form>";
@@ -75,9 +144,14 @@ function modal_edit_observacion(ci){
 	$("#exampleModal2").modal("show");
 }
 // guardar en la bbdd observacion editada
-function guardar_edit_obs(ci){
-	$observacion_nv = $("#observacion_act").val();
-	usuario.guardar_edit_obs(ci, $observacion_nv);
+function guardar_edit_obs(ci, opc){
+	let observacion_nv = $("#observacion_act").val();
+	if(opc == 1){
+		usuario.guardar_edit_obs(ci, observacion_nv, opc);
+	}else if(opc == 2){
+		usuario.guardar_edit_obs(ci, observacion_nv, opc);
+	}
+	
 
 }
 // debolver expedientes solicitados en opcion que muestra nada mas todos los expedientes solicitados

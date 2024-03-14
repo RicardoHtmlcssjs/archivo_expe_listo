@@ -133,11 +133,11 @@
 		public function todos_exp_sin_dev(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula");
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.eanalista, controle.ranalista, controle.observacion FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula WHERE ranalista ISNULL ORDER BY id_controle ASC");
 			$solicitados_ex = "";
 			$array = array();
 			foreach ($query as $key) {
-				if(strlen($key["ranalista"]) == 0){
+				// if(strlen($key["ranalista"]) == 0){
                 	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'");
                 	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'");
                 	foreach ($query2 as $key2) {
@@ -150,6 +150,23 @@
                 	}else{
                 		$ranal = "";
                 	}
+					$tiempo_retraso = 0;
+					$año_act = date("Y");
+					$mes_act = date("m");
+					$dia_act = date("d");
+					$fec_entre_edi = $key['fentrega'];
+					$año_sol = substr($fec_entre_edi, 0, 4);
+					$mes_sol = substr($fec_entre_edi, 5, 2);
+					$dia_sol = substr($fec_entre_edi, 8, 2);
+
+					if($año_sol <= $año_act){
+						if($mes_sol < $mes_act){
+							$tiempo_retraso = $tiempo_retraso + 1;
+						}elseif($mes_sol == $mes_act && ($dia_sol+3) < $dia_act){
+							$tiempo_retraso = $tiempo_retraso + 1;
+						}
+					}
+
                 	$fec_entre = $this->fecha_leg($key['fentrega']);
                 	$snombres = $key['snombres'];
 		            $solicitados_ex .= "<tr>";
@@ -161,8 +178,14 @@
 		                        <td class=''>".$key['nombres']."</td>
 		                        <td class=''>".$fec_entre."</td>
 		                        <td class=''>$eanal</td>
-		                    </tr>";
-                }
+								<td class='text-center'><button class='btn btn-success py-0 px-1 btn-sm mr-1' onclick='modal_edit_observacion(".$key['cedula'].", 2)'>E</button>".$key['observacion']."</td>";
+					if($tiempo_retraso > 0){
+						$solicitados_ex .= "<td class='text-center text-danger'><b>X</b></td>";
+					}else{
+						$solicitados_ex .= "<td class='text-center'></td>";
+					}
+		            $solicitados_ex .="</tr>";
+                // }
             }
                 if($solicitados_ex == " "){
                 	$solicitados_ex = 0;
@@ -242,10 +265,11 @@
 			parent::conecta();
 			$db = $this->conn;
 			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula WHERE ranalista ISNULL");
-			$solicitados_ex = "";
+			$solicitados_ex = 0;
+
 			$array = array();
 			foreach ($query as $key) {
-				if(strlen($key["ranalista"]) == 0){
+				// if(strlen($key["ranalista"]) == 0){
                 	$query2 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['eanalista']."'");
                 	$query3 = $db->execute("SELECT snombres from solicitante where idsolicita = '".$key['ranalista']."'");
                 	foreach ($query2 as $key2) {
@@ -268,40 +292,18 @@
 
 					if($año_sol <= $año_act){
 						if($mes_sol < $mes_act){
-							$fec_entre = $this->fecha_leg($key['fentrega']);
-                			$snombres = $key['snombres'];
-		            		$solicitados_ex .= "<tr>";
-		            		$solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
-		                        <td class=''>".$key['micro']."</td>
-		                        <td class=''>".$key['piso']."</td>
-		                        <td class=''>".$key['unombre']."</td>
-		                        <td class=''>".$key['cedula']."</td>
-		                        <td class=''>".$key['nombres']."</td>
-		                        <td class=''>".$fec_entre." mes menor</td>
-		                        <td class=''>$eanal</td>
-		                    </tr>";
+							$solicitados_ex = $solicitados_ex + 1;
 						}elseif($mes_sol == $mes_act && ($dia_sol+3) < $dia_act){
-							$fec_entre = $this->fecha_leg($key['fentrega']);
-                			$snombres = $key['snombres'];
-		            		$solicitados_ex .= "<tr>";
-		            		$solicitados_ex .= "<td class=''><button type='submit' class='btn_mos_solicitud' onclick='entre_exp(".$key['cedula'].")'>D</button>".$key['snombres']."</td>
-		                        <td class=''>".$key['micro']."</td>
-		                        <td class=''>".$key['piso']."</td>
-		                        <td class=''>".$key['unombre']."</td>
-		                        <td class=''>".$key['cedula']."</td>
-		                        <td class=''>".$key['nombres']."</td>
-		                        <td class=''>".$fec_entre." dia menor</td>
-		                        <td class=''>$eanal</td>
-		                    </tr>";
+							$solicitados_ex = $solicitados_ex + 1;
 						}
 					}
 
                 	
-                }
+                // }
             }
-                if($solicitados_ex == " "){
-                	$solicitados_ex = 0;
-                }                
+                // if($solicitados_ex == " "){
+                // 	$solicitados_ex = 0;
+                // }                
 				// $result = json_encode($array);
                 return $solicitados_ex;
 		}
@@ -429,6 +431,10 @@
 			}else{
 				return 0;
 			}
+		}
+		// guardar expediente en pdf 
+		public function subir_expediente($form_data){
+			return "chao";
 		}
 		// tabla de mostrar usuarios que se logean
 		public function mostrar_usu_login(){

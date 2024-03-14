@@ -43,7 +43,7 @@ class Acciones{
         solicitar_exp += "</div>";
         return solicitar_exp;
 	}
-    modal_expedientes_retrasados(){
+    modal_expedientes_retrasados(num){
         // let solicitar_exp = "<div class='modal fade' id='exampleModal1' tabindex='-1' aria-labelledby='titulo1' aria-hidden='true'>";
 		// solicitar_exp += "<div class='modal-dialog'>";
         // solicitar_exp += "<div class='modal-content'>";
@@ -51,7 +51,7 @@ class Acciones{
         // solicitar_exp += "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>";
         // solicitar_exp += "</div>";
        let solicitar_exp = "<div >";
-        solicitar_exp += "<h1>Hay  expedientes con retraso que no ha sido devueltos</h1>";
+        solicitar_exp += `<i class="fa-solid fa-triangle-exclamation fa-shake"></i><h5> Hay ${num} expedientes con retraso que no ha sido devueltos</h5>`;
         solicitar_exp += "</div>";
         // solicitar_exp += "</div>";
         // solicitar_exp += "</div>";

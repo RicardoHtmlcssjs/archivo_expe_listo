@@ -88,11 +88,10 @@ class Usuarios{
 			url: "model/ajax/ajax_mostrar_exp_mas_3_dias_soli.php",
 			type: "POST",
 			success: function(result){
-				// $("#nom_usu_log_header").html("<i class='px-1 mr-4' id='nom_usu_log_header' name='nom_usu_log_header'><b>"+ result +"</b></i>");
-				// $("#exampleModal1").html("<p>hola</p>");
-				$("#exampleModal2").modal("show");
-				$("#modal2").html(accion.modal_expedientes_retrasados());
-				alert(result);
+				if(result > 0){
+					$("#exampleModal4").modal("show");
+					$("#cant_expe").append(`Hay ${result} expedientes que fueron solicitados y tienen mas de 3 dias de retraso`);
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -119,6 +118,8 @@ class Usuarios{
 
 		$("#cuerpo").html(tabla_personal());
 		$('#datatable_users').DataTable({
+			"scrollY": "100vh",
+    		"scrollCollapse": true,
 			"ajax":{
 				"url": "model/ajax/ajax_mostrar_usu.php",
 				"type": "POST",
@@ -133,6 +134,14 @@ class Usuarios{
 				{"data": "ncol"},
 				{"data": "statra"},
 				{"data": "destno"},
+				{
+					"data": null,
+					className: 'text-center py-0 px-1',
+                    render: function(data, type, row, meta) {
+                        console.log()
+                        return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="mos_modal_exp_pdf(${row.cedula})" id="btn_expe_pdf" name="btn_expe_pdf">`;
+                    }
+				},
 				{
                     "data": null
                     ,
@@ -262,6 +271,22 @@ class Usuarios{
 			}
 		});
 	}
+	// expedientes en pdf subir
+	subir_expediente_pdf(form_data){
+		$.ajax({
+			url: "model/ajax/ajax_subir_expediente.php",
+			type: "POST",
+			data: {
+				form_data: form_data
+			},
+			success: function(result){
+				alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
 	// mostrarobservacion en el campo observacion al resivir expediente
 	editar_observacion(ci){
 		$.ajax({
@@ -279,17 +304,24 @@ class Usuarios{
 		});
 	}
 	// guardar al editar observacion
-	guardar_edit_obs(ci, observacion_nv){
+	guardar_edit_obs(ci, observacion_nv, opc){
 		$.ajax({
 			url: "model/ajax/ajax_guardar_edit_obs.php",
 			type: "POST",
 			data: {
-				ci: ci, observacion_nv: observacion_nv
+				ci: ci, observacion_nv: observacion_nv, opc: opc
 			},
 			success: function(result){
 				$("#exampleModal2").modal("hide");
-				usuario.expedientes_soli_personal(ci);
-				var notification = alertify.notify('La observacion ha sido editada exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+				if(opc == 1){
+					usuario.expedientes_soli_personal(ci);
+					var notification = alertify.notify('La observacion ha sido editada exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+				}else if(opc == 2){
+					usuario.expedi_sn_devolver();
+					var notification = alertify.notify('La observacion ha sido editada exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+				}
+				
+				
 			},
 			error: function(error){
 				console.log(error);

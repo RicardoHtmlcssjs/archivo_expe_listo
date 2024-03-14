@@ -14,6 +14,7 @@ function tabla_personal(){
                         tab_perso += "<th class='text-center tit_c_tab1'>Columna</th>";
                         tab_perso +="<th class='text-center tit_c_tab1'>Status-nomina</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Tipo Nomina</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>Expediente</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Accion</th>";
                     tab_perso += "</tr>";
                 tab_perso += "</thead>";
