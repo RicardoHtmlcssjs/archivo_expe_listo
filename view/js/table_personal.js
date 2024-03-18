@@ -1,7 +1,8 @@
 function tabla_personal(){
 	let tab_perso = "<div class='p-3' style='width: 100%;'>";
         // tab_perso += "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0 cont_col_tab1' style='padding: 0px;'>";
-            tab_perso += "<div id='cont_2_tbl'>";
+            tab_perso += "<div id='cont_2_tbl' class='mb-2'>";
+            tab_perso += "<button class='btn btn-success' id='agregar_expe' name='agregar_expe' onclick='agre_expe_nue();'><i class='fa-solid fas fa-file-upload'></i> Agregar un expediente</button>";
             tab_perso += "</div>";
             tab_perso += "<table style='width: 100%;' id='datatable_users'>";
                 tab_perso += "<thead class='thead_tab1'";
@@ -11,8 +12,7 @@ function tabla_personal(){
                         tab_perso += "<th class='text-center tit_c_tab1'>Cargo</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Archivo</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Archivo</th>";
-                        tab_perso += "<th class='text-center tit_c_tab1'>Fila</th>";
-                        tab_perso += "<th class='text-center tit_c_tab1'>Columna</th>";
+                        tab_perso += "<th class='text-center tit_c_tab1'>F-C</th>";
                         tab_perso +="<th class='text-center tit_c_tab1'>Status-nomina</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Tipo Nomina</th>";
                         tab_perso += "<th class='text-center tit_c_tab1'>Expediente</th>";

@@ -141,14 +141,14 @@
                 </div>
                 <div class="modal-body">
                     <h1 class="titulo_mod_exp">Subir archivo PDF</h1>
-                    <form enctype="multipart/form-data" class="area-arrastrar">
+                    <form method="post"  class="area-arrastrar" id="area-arrastrar">
                         <label for="archivo" class="lb_mod_exp">
                         <input type="file" id="file" name="file" accept=".pdf" class="file" required>
                         </label>
-                        <button type="button" class="btn_mod_exp" id="" name="">Subir archivo</button>
+                        <button type="button" class="btn_mod_exp" id="btn_mod_exp" name="btn_mod_exp">Guardar expediente</button>
+                        <div class="mb-2" id="error_soli_exp_file"></div>
                     </form>
                 </div>
             </div>
             </div>
         </div>
-        <!-- fin modal 5 -->

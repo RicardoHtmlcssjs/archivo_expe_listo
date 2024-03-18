@@ -27,62 +27,28 @@ $("#solicitante").on("keyup",function(){
 });
 // accione que se activara a arrastrar en el modal agregar expediente pdf
 
-$('#btn_mod_exp').on('click', function() {
+$('#btn_mod_exp').on('click', function(e) {
 	if($("#file").val() === ""){
-		alert("vacio");
-		return
-	}
-	
-	const archivo = $("#file")[0].files[0];
-	const extension = archivo.name.split(".").pop().toLowerCase();
-
-	if (extension !== "pdf") {
-	alert("El archivo no es un PDF");
+		$("#error_soli_exp_file").html(accion.mensaje_alerta("danger", "No has seleccionado ningun archivo pdf", ""));
 	}else{
-      //Todas las propiedades del Archivo
-      //El método prop() nos sirve para poder modificar las propiedades nativas de Javascript 
-      //de los elementos de una página, Ejemplo $('#checkbox1').prop("checked", true);
-      var file_data = $('.file').prop('files')[0];
-      var fileName = file_data.fileName;
-      var fileSize = file_data.fileSize;
-
-      console.log(file_data);
-	  console.log(fileName);
-	  console.log(fileSize);
-
-    //   if(file_data != undefined) {
-          var form_data = new FormData();  
-          console.log(form_data)  
-                        
-          form_data.append('file', file_data);
-		  alert(form_data);
-		  saludo = "hola";
-        // usuario.subir_expediente_pdf(form_data);
-		  //   $.ajax({
-        //       type: 'POST',
-        //       url: 'model/ajax/ajax_subir_expediente.php',
-        //       contentType: false,
-        //       processData: false,
-        //       data: {saludo: saludo},
-        //       success:function(response) {
-        //         alert(response);
-		// 		//   if(response == 'success') {
-        //         //       console.log('Archivo subido');
-        //         //       //Llamando mi funcion
-        //         //       mensajeToast();
-        //         //   } else {
-        //         //       console.log('Error al subir Archivo');
-        //         //   }
-        //         //   //Limpio el input type File
-        //         //   $('.file').val('');
-        //       },
-		// 	  error: function(error){
-		// 		alert(error);
-		// 	  }
-        //   });
-    //   }
+		// var parametros = new FormData($("#area-arrastrar")[0]);
+		// alert(parametros);
+		usuario.expediente_pdf();
 	}
   });
+//   arrastrar archivo en este caso pdf
+  const areaArrastrar = document.querySelector(".area-arrastrar");
+  areaArrastrar.addEventListener("drop", function(e) {
+	const archivo = e.dataTransfer.files[0];
+  	const inputFile = document.querySelector("#file");
+	  if (archivo.type === "application/pdf") {
+		inputFile.files = archivo;
+	  } else {
+		$("#file").val("");
+		$("#error_soli_exp_file").html(accion.mensaje_alerta("danger", "El archivo arrastrado no es pdf", ""));
+	  }
+	
+});
 // fin del dragover modal pdf
 
 
@@ -180,6 +146,56 @@ $("#opnb2").on("click", function(){
 $("#opc_adm_1").on("click",()=>{
 	usuario.usus_login();
 });
+// mostrar modal agregar un nuevo expediente
+function agre_expe_nue(){
+	let modal_agre_usu = "<h2 class='text-center' id='id_tit_mod1'>Agregar un expediente</h2>";
+				modal_agre_usu += "<form action='>";
+				modal_agre_usu += "<div class='mb-3 cont_mod1_entregado'>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='cedula' class='form-label'>Ingresa la cedula: </label>";
+				modal_agre_usu += "<div class='d-flex flex-row'><select id='nac' name='nac' class='form-control'><option value='V'>V</option><option value='E'>E</option></select>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event, 1)'></div>";
+				modal_agre_usu += "<div class='text-center' id='buscando_ci' name='buscando_ci'></div>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1 my-2' id='cedula2' name='cedula2' value=''>";
+				modal_agre_usu += "<label for='nombre2' class='form-label' id='lb_cedula2' style='display: none;'>Ingresa el nombre: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='nombre2' name='nombre2' value='' style='display: none;'>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'></div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='crear_nom' class='form-label' id='lb_crear_nom' name='lb_crear_nom'>Nombre: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='cargo' class='form-label' id='lb_cargo' name='lb_cargo'>Cargo: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='cargo' name='cargo' value=''>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='estatus' class='form-label'>Estatus:</label>";
+				modal_agre_usu += `<select class="form-control" id="estatus" name="estatus"></select>`;
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+                modal_agre_usu += "<label for='region' class='form-label'>Region:</label>";
+                modal_agre_usu += "<select class='form-control' id='region' name='region'></select>";
+                modal_agre_usu += "</div>";
+                modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+                modal_agre_usu += "<label for='fila' class='form-label'>Ingresa la fila:</label>";
+                modal_agre_usu += "<input type='number' class='form-control' id='fila' name='fila' maxlength='3'>";
+                modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label class='form_label' for='columna'>Ingresa la columna:</label>";
+				modal_agre_usu += "<input type='number' class='form-control' id='columna' name='columna' maxlength='3'>";
+				// modal_agre_usu += "</div>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='ffv(1)'>Guardar</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='ffv(2)' style='display: none;'>Guardar</button>";
+				modal_agre_usu += "</div><div id='rr'></div>";
+				modal_agre_usu += "</form>";
+				$("#exampleModal2").modal("show");
+				$("#modal2").html(modal_agre_usu);
+				usuario.mostrar_estatus();
+				usuario.mostrar_region();
+};
 // boton arriba de la tabla, agregar nuevo usuario
 function modal_agreagar_usu(){
 	let modal_agre_usu = "<h2 class='text-center' id='id_tit_mod1'>Crear usuario</h2>";
@@ -190,7 +206,7 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "<div class='d-flex flex-row'><select id='nac' name='nac' class='form-control'><option value='V'>V</option><option value='E'>E</option></select>";
 				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1' id='cedula' name='cedula' value='' onkeypress='cedulaBuscar(event, 1)'></div>";
 				modal_agre_usu += "<div class='text-center' id='buscando_ci' name='buscando_ci'></div>";
-				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1 my-2' id='cedula2' name='cedula2' value='' readonly>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1 my-2' id='cedula2' name='cedula2' value=''>";
 				modal_agre_usu += "<label for='nombre2' class='form-label' id='lb_cedula2' style='display: none;'>Ingresa el nombre: </label>";
 				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='nombre2' name='nombre2' value='' style='display: none;'>";
 				modal_agre_usu += "</div>";
@@ -281,7 +297,109 @@ function agregar_nue_usu(num){
 
 	}
 }
+// validar y agregar nuevo expediente
+function ffv(num){
+	if(num == 1){
+		if($("#crear_nom").val() === ""){
+			$("#rr").html(accion.mensaje_alerta("danger", "Campo nombre esta vacio", "view/images/icono_danger.png"));
+			return;
+		}
+	}else if(num == 2){
+		if($("#nombre2").val() === ""){
+			$("#rr").html(accion.mensaje_alerta("danger", "Campo nombre esta vacio", "view/images/icono_danger.png"));
+			return;
+		}
+	}
+	if($("#cedula2").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo cedula esta vacio", "view/images/icono_danger.png"));
+	}else if($("#cargo").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo cargo esta vacio", "view/images/icono_danger.png"));
+	}else if($("#fila").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo fila esta vacio", "view/images/icono_danger.png"));
+	}else if($("#columna").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo columna esta vacio", "view/images/icono_danger.png"));
+	}else{
+		let nom = "";
+		if(num == 1){
+			nom = $("#crear_nom").val();
+		}else if(num == 1){
+			nom = $("#nombre2").val();
+		}
+		usuario.agre_expe($("#cedula2").val(), nom, $("#cargo").val(), $("#estatus").val(), $("#region").val(), $("#fila").val(), $("#columna").val());
+	}
 
+}
+// ediatar un expediente 
+function edit_exp(ci){
+	let modal_agre_usu = "<h2 class='text-center' id='id_tit_mod1'>Editar un expediente</h2>";
+				modal_agre_usu += "<form action='>";
+				modal_agre_usu += "<div class='mb-3 cont_mod1_entregado'>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='cedula2' class='form-label'>Ingresa la cedula: </label>";
+				modal_agre_usu += "<input type='number' class='form-control ml-1 px-1 my-2' id='cedula2' name='cedula2' value=''>";
+				modal_agre_usu += `<input type='number' class='form-control ml-1 px-1 my-2' id='cedula_vieja' name='cedula_vieja' value='${ci}' style="display: none;>"`;
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='crear_nom' class='form-label' id='lb_crear_nom' name='lb_crear_nom'>Nombre: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='crear_nom' name='crear_nom' value=''>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='cargo' class='form-label' id='lb_cargo' name='lb_cargo'>Cargo: </label>";
+				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='cargo' name='cargo' value=''>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label for='estatus' class='form-label'>Estatus:</label>";
+				modal_agre_usu += `<input type="text" class="form-control mb-2" id="status_val" name="status_val" readonly>`;
+				modal_agre_usu += `<select class="form-control" id="estatus" name="estatus" onclick="sel_status()"></select>`;
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+                modal_agre_usu += "<label for='region' class='form-label'>Region:</label>";
+				modal_agre_usu += `<input type="text" class="form-control mb-2" id="region_val" name="region_val" readonly>`;
+                modal_agre_usu += "<select class='form-control' id='region' name='region' onclick='sel_region()'></select>";
+                modal_agre_usu += "</div>";
+                modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+                modal_agre_usu += "<label for='fila' class='form-label'>Ingresa la fila:</label>";
+                modal_agre_usu += "<input type='number' class='form-control' id='fila' name='fila' maxlength='3'>";
+                modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
+				modal_agre_usu += "<label class='form_label' for='columna'>Ingresa la columna:</label>";
+				modal_agre_usu += "<input type='number' class='form-control' id='columna' name='columna' maxlength='3'>";
+				// modal_agre_usu += "</div>";
+				modal_agre_usu += "</div>";
+				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_edi_usu' name='btn_edi_usu' onclick='guar_edit_exp()'>Guardar</button>";
+				modal_agre_usu += "</div><div id='rr'></div>";
+				modal_agre_usu += "</form>";
+				$("#exampleModal2").modal("show");
+				$("#modal2").html(modal_agre_usu);
+				usuario.mostrar_estatus();
+				usuario.mostrar_region();
+				usuario.obtener_reg_edi_exp(ci);
+}
+// SELECIONAR ESTATUS editar expediente
+function sel_status(){
+	$("#status_val").val($("#estatus").val());
+}
+// selecionar region editar expediente
+function sel_region(){
+	$("#region_val").val($("#region").val());
+}
+// validar y guardar valores del modal editar registro
+function guar_edit_exp(){
+	if($("#crear_nom").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo nombre esta vacio", "view/images/icono_danger.png"));
+		return;
+	}else if($("#cedula2").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo cedula esta vacio", "view/images/icono_danger.png"));
+	}else if($("#fila").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo fila esta vacio", "view/images/icono_danger.png"));
+	}else if($("#columna").val() === ""){
+		$("#rr").html(accion.mensaje_alerta("danger", "Campo columna esta vacio", "view/images/icono_danger.png"));
+	}else{
+		$("#rr").html("");
+		usuario.guardar_edit_exp($("#cedula_vieja").val(), $("#cedula2").val(), $("#crear_nom").val(), $("#cargo").val(), $("#status_val").val(), $("#region_val").val(), $("#fila").val(), $("#columna").val());
+	}
+}
 // buscar personal en vsaime al precionar enter en el campo cedula
 function cedulaBuscar(event, num) {
 	if (event.keyCode === 13) {

@@ -126,20 +126,28 @@ class Usuarios{
 				"dataSrc":""
 			},
 			"columns":[
-				{"data": "cedula"},
-				{"data": "nombres"},
-				{"data": null},
-				{"data": "dstatus"},
-				{"data": "cstatus"},
-				{"data": "nfil"},
-				{"data": "ncol"},
+				{"data": null,"orderable": false, "searchable": true,
+					render: function(data, type, row, meta) {
+					return `<button type="button" class="btn btn-primary btn-sm py-0 px-1" onclick="edit_exp(${row.cedula})">E</button> ${row.cedula}`;
+					}
+				},
+				{"data": "nombres",
+				"searchable": true},
+				{"data": "cargo", "searchable": true},
+				{"data": "dstatus", "searchable": false},
+				{"data": "cstatus", "searchable": false},
+				{"data": null,
+					className: 'text-center py-0 px-1',
+					render: function(data, type, row, meta) {
+					return `${row.nfil}-${row.ncol}`;
+				}
+				},
 				{"data": "statra"},
 				{"data": "destno"},
 				{
 					"data": null,
 					className: 'text-center py-0 px-1',
                     render: function(data, type, row, meta) {
-                        console.log()
                         return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="mos_modal_exp_pdf(${row.cedula})" id="btn_expe_pdf" name="btn_expe_pdf">`;
                     }
 				},
@@ -155,7 +163,7 @@ class Usuarios{
                     }
                 }
 			],
-			ordering: true,
+			ordering: false,
 			language: {
 				lengthMenu: "Mostrar _MENU_ registros por pagina",
 				zeroRecords: "Ningun usuario encontrado",
@@ -173,6 +181,54 @@ class Usuarios{
 			}
 		});
 	};
+	// agregar expediente
+	agre_expe(cedula, nombre, cargo, estatus, region, fila, columna){
+		$.ajax({
+			url: "model/ajax/ajax_agre_expe.php",
+			type: "POST",
+			data: {
+				cedula, nombre, cargo,estatus, region, fila, columna
+			},
+			success: function(result){
+				if(result == 0){
+					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
+				}else{
+					// var notification = alertify.notify('Expediente creado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+					// usuario.mostrar_personal();
+					// $("#exampleModal2").modal("hide");
+					alert(result);
+				}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// obetener registro del usuario a editar
+	obtener_reg_edi_exp(ci){
+		$.ajax({
+			url: "model/ajax/ajax_obtener_reg_edi_exp.php",
+			type: "POST",
+			data: {
+				ci
+			},
+			success: function(result){
+				let r = JSON.parse(result);
+				$.each(r, function(index, element){
+					$("#cedula2").val(element.cedula);
+					$("#crear_nom").val(element.nombres);
+					$("#cargo").val(element.cargo);
+					$("#fila").val(element.nfil);
+					$("#columna").val(element.ncol);
+					$("#status_val").val(element.dstatus);
+					$("#region_val").val(element.nombreprpyac);
+				});
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
 	// opcion navbar 1 mostrar los expedientes sin devolber
 	expedi_sn_devolver(){
 		$.ajax({
@@ -198,8 +254,60 @@ class Usuarios{
 			error: function(error){
 				console.log(error);
 			}
-		})
+		});
 
+	}
+	// MOSTRAR STATUS EN EL SELECT DE AGREGAR UN EXPEDIENTE
+	mostrar_estatus(){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_estatus.php",
+			type: "POST",
+			success: function(result){
+				$("#estatus").html(result);
+				// alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// mostrar regiones en los select de agregar un expediente
+	mostrar_region(){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_region.php",
+			type: "POST",
+			success: function(result){
+				$("#region").html(result);
+				// alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// guardar edicion de expediente
+	guardar_edit_exp(cedula_vieja, cedula, nombre, cargo, status, region, fila ,columna){
+		$.ajax({
+			url: "model/ajax/ajax_guardar_edit_exp.php",
+			type: "POST",
+			data: {
+				cedula_vieja, cedula, nombre, cargo, status, region, fila, columna
+			},
+			success: function(result){
+				if(result == 0){
+					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya exise", "view/images/icono_danger.png"));
+				}else if(result == 1){
+					var notification = alertify.notify('El expediente ha sido editado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
+					$("#exampleModal2").modal("hide");
+					usuario.mostrar_personal();
+				}else{
+					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
+				}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
 	}
 	expedientes_soli_personal(ci){
 		$.ajax({
@@ -226,6 +334,32 @@ class Usuarios{
 				console.log(error);
 			}
 		});
+	}
+	// pdf 
+	expediente_pdf(){
+		var parametros = new FormData($("#area-arrastrar")[0]);
+		$.ajax({
+		  type: 'POST',
+		  url: 'model/ajax/ajax_subir_expediente.php',
+		  contentType: false,
+		  processData: false,
+		  data:{parametros}, 
+		  success:function(response) {
+			alert(response);
+			//   if(response == 'success') {
+			//       console.log('Archivo subido');
+			//       //Llamando mi funcion
+			//       mensajeToast();
+			//   } else {
+			//       console.log('Error al subir Archivo');
+			//   }
+			//   //Limpio el input type File
+			//   $('.file').val('');
+		  },
+		  error: function(error){
+			alert(error);
+		  }
+	  });
 	}
 	// clase si falta por entregar el expediente borrar el boton de solicitar expediente
 	expe_espera_recivir(ci){
@@ -273,12 +407,12 @@ class Usuarios{
 		});
 	}
 	// expedientes en pdf subir
-	subir_expediente_pdf(form_data){
+	subir_expediente_pdf(){
 		$.ajax({
 			url: "model/ajax/ajax_subir_expediente.php",
 			type: "POST",
 			data: {
-				form_data: form_data
+				sal: sal
 			},
 			success: function(result){
 				alert(result);

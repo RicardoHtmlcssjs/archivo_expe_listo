@@ -119,7 +119,7 @@
 		public function mostrar_personal(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus");
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, personal.cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus ORDER BY cedula ASC");
 
 			$array = array();
 			foreach ($query as $key) {
@@ -432,9 +432,99 @@
 				return 0;
 			}
 		}
+		// mostrar todos los resultados de status
+		public function mostrar_estatus(){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT idstatus, dstatus FROM tblestatus");
+			$select_status = "";
+			foreach($query as $key){
+				$select_status .= "<option value='".$key["dstatus"]."'>".$key["dstatus"]."</option>";
+			}
+			return $select_status;
+		}
+		// mostrar todos los resultadus de las regiones
+		public function mostrar_region(){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT cdprpyac, nombreprpyac FROM tblprpyac WHERE cdprpyac BETWEEN '050001' AND '050024'");
+			$select_status = "";
+			foreach($query as $key){
+				$select_status .= "<option value='".$key["nombreprpyac"]."'>".$key["nombreprpyac"]."</option>";
+			}
+			return $select_status;
+		}
+		// guar la edicion de un expediente
+		public function guardar_edit_exp($cedula_vieja, $cedula, $nombre, $cargo, $status, $region, $fila, $columna){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT idstatus FROM tblestatus WHERE dstatus = '".$status."'");
+			foreach ($query as $key) {
+				$id_status = $key["idstatus"];
+			}
+			$query2 = $db->execute("SELECT cdprpyac FROM tblprpyac WHERE nombreprpyac = '".$region."'");
+			foreach ($query2 as $key2) {
+				$id_region = $key2["cdprpyac"];
+			}
+			$con = 0;
+			$query3 = $db->execute("SELECT cedula FROM personal");
+			foreach ($query3 as $key3) {
+				if($key3["cedula"] == $cedula){
+					if($key3["cedula"] == $cedula_vieja){
+						
+					}else{
+						$con = $con + 1;
+					}
+				}
+			}
+			if($con > 0){
+				$res = 0;
+			}else{
+				$cc = $db->execute("UPDATE personal SET cedula = $cedula, nombres = '".$nombre."', cdprpyac = '".$id_region."', idstatus = $id_status, nfil = $fila, ncol = $columna, cargo = '".$cargo."' WHERE cedula = $cedula");
+				if($cc){
+					$res = 1;
+				}else{
+					$res = 2;
+				}
+			}
+
+			return $res;
+
+		}
+		// guardar expediente nuevo
+		public function agre_expe($cedula, $nombre, $cargo, $estatus, $region, $fila, $columna){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT cedula FROM personal WHERE cedula = $cedula");
+			$con = 0;
+			foreach ($query as $key) {
+				$con = $con + 1;
+			}
+			if($con > 0){
+				$res = 0;
+			}else{
+				// $db->execute("INSERT INTO personal (cedula, nombres, cdprpyac, idstatus, nfil, ncol, cargo) VALUES ($cedula, '".$nombre."', '".$region."', $estatus, $fila, $columna, '".$cargo."')");
+				$res = 1;
+			}
+			return $cedula . $nombre . $region . $estatus . $fila . $columna . $cargo;
+		}
+		// editar expediente
+		public function obtener_reg_edi_exp($cedula){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblprpyac.nombreprpyac, personal.nfil, personal.ncol, personal.cargo  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE cedula = $cedula");
+			
+			$result = "";
+			$array = array();
+			foreach($query as $key){
+				$array [] = $key;
+			}
+			$result = json_encode($array);
+			return $result;
+		}
 		// guardar expediente en pdf 
-		public function subir_expediente($form_data){
-			return "chao";
+		public function subir_expediente($gg){
+			return $gg;
 		}
 		// tabla de mostrar usuarios que se logean
 		public function mostrar_usu_login(){
