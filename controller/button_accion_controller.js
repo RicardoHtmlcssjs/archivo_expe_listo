@@ -9,6 +9,10 @@ $('#entrar').on("click", function(){
 function hh(ci){
 	usuario.expedientes_soli_personal(ci);
 }
+// opcion de administrador reporte excel expedientes 
+$("#opc_adm_exp").on("click", function(){
+	alert("reporte");
+});
 // mostrara valor tabla de modal 1 solicitar expediente
 function most_mod_agr(ci_per_s){
 	$("#error_soli_exp1").html("");

@@ -192,12 +192,14 @@ class Usuarios{
 			success: function(result){
 				if(result == 0){
 					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
+				}else if(result == 1){
+					usuario.mostrar_personal();
+					$("#exampleModal2").modal("hide");
+					var notification = alertify.notify('Expediente creado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
 				}else{
-					// var notification = alertify.notify('Expediente creado exitosamente', 'success', 5, function(){  console.log('dismissed'); });
-					// usuario.mostrar_personal();
-					// $("#exampleModal2").modal("hide");
-					alert(result);
+					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
 				}
+				alert(result);
 			},
 			error: function(error){
 				console.log(error);

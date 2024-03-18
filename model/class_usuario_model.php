@@ -503,10 +503,23 @@
 			if($con > 0){
 				$res = 0;
 			}else{
-				// $db->execute("INSERT INTO personal (cedula, nombres, cdprpyac, idstatus, nfil, ncol, cargo) VALUES ($cedula, '".$nombre."', '".$region."', $estatus, $fila, $columna, '".$cargo."')");
-				$res = 1;
+				$query2 = $db->execute("SELECT idstatus FROM tblestatus WHERE dstatus = '".$estatus."'");
+				$query3 = $db->execute("SELECT cdprpyac FROM tblprpyac WHERE nombreprpyac = '".$region."'");
+				foreach($query2 as $key2){
+					$id_sta = $key2["idstatus"];
+				}
+				foreach($query3 as $key3){
+					$id_reg = $key3["cdprpyac"];
+				}
+				$c = $db->execute("INSERT INTO personal (cedula, nombres, cdprpyac, idstatus, nfil, ncol, cargo) VALUES ($cedula, '".$nombre."', '".$id_reg."', $id_sta, $fila, $columna, '".$cargo."')");
+				if($c){
+					$res = 1;
+				}else{
+					$res = 2;
+				}
+				
 			}
-			return $cedula . $nombre . $region . $estatus . $fila . $columna . $cargo;
+			return $res;
 		}
 		// editar expediente
 		public function obtener_reg_edi_exp($cedula){
