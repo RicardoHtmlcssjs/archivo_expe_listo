@@ -168,7 +168,8 @@ function agre_expe_nue(){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='cargo' class='form-label' id='lb_cargo' name='lb_cargo'>Cargo: </label>";
-				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='cargo' name='cargo' value=''>";
+				modal_agre_usu += "<input type='text' class='form-control mb-2 px-1' id='buscar_cargo' name='buscar_cargo' value='' onkeypress='cargoBuscar(event, 1)'>";
+				modal_agre_usu += "<select class='form-control mb-2' id='cargo' name='cargo'></select>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='estatus' class='form-label'>Estatus:</label>";
@@ -196,6 +197,7 @@ function agre_expe_nue(){
 				$("#modal2").html(modal_agre_usu);
 				usuario.mostrar_estatus();
 				usuario.mostrar_region();
+				usuario.mostrar_cargo();
 };
 // boton arriba de la tabla, agregar nuevo usuario
 function modal_agreagar_usu(){
@@ -313,8 +315,6 @@ function ffv(num){
 	}
 	if($("#cedula2").val() === ""){
 		$("#rr").html(accion.mensaje_alerta("danger", "Campo cedula esta vacio", "view/images/icono_danger.png"));
-	}else if($("#cargo").val() === ""){
-		$("#rr").html(accion.mensaje_alerta("danger", "Campo cargo esta vacio", "view/images/icono_danger.png"));
 	}else if($("#fila").val() === ""){
 		$("#rr").html(accion.mensaje_alerta("danger", "Campo fila esta vacio", "view/images/icono_danger.png"));
 	}else if($("#columna").val() === ""){
@@ -346,7 +346,9 @@ function edit_exp(ci){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='cargo' class='form-label' id='lb_cargo' name='lb_cargo'>Cargo: </label>";
-				modal_agre_usu += "<input type='text' class='form-control ml-1 px-1' id='cargo' name='cargo' value=''>";
+				modal_agre_usu += "<input type='text' class='form-control mb-2 px-1' id='cargo_val' name='cargo_val' value='' readonly>";
+				modal_agre_usu += "<input type='text' class='form-control mb-2 px-1' id='buscar_cargo' name='buscar_cargo' value='' placeholder='Escribe un cargo' onkeypress='cargoBuscar(event, 2)'>";
+				modal_agre_usu += `<select class="form-control" id="cargo" name="cargo" onclick="obt_car()"></select>`;
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
 				modal_agre_usu += "<label for='estatus' class='form-label'>Estatus:</label>";
@@ -375,7 +377,13 @@ function edit_exp(ci){
 				$("#modal2").html(modal_agre_usu);
 				usuario.mostrar_estatus();
 				usuario.mostrar_region();
+				usuario.mostrar_cargo();
+				// usuario.cargo_act();
 				usuario.obtener_reg_edi_exp(ci);
+}
+// obtener cargo al hacer click en el select de cargos en editar expediente
+function obt_car(){
+	usuario.cargo_act($("#cargo").val());
 }
 // SELECIONAR ESTATUS editar expediente
 function sel_status(){
@@ -398,7 +406,7 @@ function guar_edit_exp(){
 		$("#rr").html(accion.mensaje_alerta("danger", "Campo columna esta vacio", "view/images/icono_danger.png"));
 	}else{
 		$("#rr").html("");
-		usuario.guardar_edit_exp($("#cedula_vieja").val(), $("#cedula2").val(), $("#crear_nom").val(), $("#cargo").val(), $("#status_val").val(), $("#region_val").val(), $("#fila").val(), $("#columna").val());
+		usuario.guardar_edit_exp($("#cedula_vieja").val(), $("#cedula2").val(), $("#crear_nom").val(), $("#cargo_val").val(), $("#status_val").val(), $("#region_val").val(), $("#fila").val(), $("#columna").val());
 	}
 }
 // buscar personal en vsaime al precionar enter en el campo cedula
@@ -413,6 +421,21 @@ function cedulaBuscar(event, num) {
 			usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());	
 		}else{
 			usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());	
+		}
+	}
+}
+// buscar cargo al presionar enter en el campo cargo
+// buscar personal en vsaime al precionar enter en el campo cedula
+function cargoBuscar(event, num) {
+	if (event.keyCode === 13) {
+		$("#btn_agregar_usu").prop('disabled', true);
+		$("#btn_agregar_usu2").prop('disabled', true);
+		$("#buscar_cargo").prop('disabled', true);
+		if (num == 1) {
+			usuario.buscar_cargo($("#buscar_cargo").val(), num);	
+		}else if (num == 2){
+			usuario.buscar_cargo($("#buscar_cargo").val(), num);
+		// 	usuario.buscar_usu_vsaime($("#cedula").val(), $("#cedula"), $("#btn_agregar_usu"), div, $("#nac").val());	
 		}
 	}
 }

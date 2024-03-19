@@ -148,7 +148,7 @@ class Usuarios{
 					"data": null,
 					className: 'text-center py-0 px-1',
                     render: function(data, type, row, meta) {
-                        return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="mos_modal_exp_pdf(${row.cedula})" id="btn_expe_pdf" name="btn_expe_pdf">`;
+                        return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="" id="btn_expe_pdf" name="btn_expe_pdf">`;
                     }
 				},
 				{
@@ -204,7 +204,7 @@ class Usuarios{
 			url: "model/ajax/ajax_agre_expe.php",
 			type: "POST",
 			data: {
-				cedula, nombre, cargo,estatus, region, fila, columna
+				cedula, nombre, cargo, estatus, region, fila, columna
 			},
 			success: function(result){
 				if(result == 0){
@@ -216,7 +216,6 @@ class Usuarios{
 				}else{
 					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
 				}
-				alert(result);
 			},
 			error: function(error){
 				console.log(error);
@@ -236,7 +235,7 @@ class Usuarios{
 				$.each(r, function(index, element){
 					$("#cedula2").val(element.cedula);
 					$("#crear_nom").val(element.nombres);
-					$("#cargo").val(element.cargo);
+					$("#cargo_val").val(element.desc_cargo);
 					$("#fila").val(element.nfil);
 					$("#columna").val(element.ncol);
 					$("#status_val").val(element.dstatus);
@@ -304,6 +303,64 @@ class Usuarios{
 			}
 		});
 	}
+	// mostrar  cargos en el select de agregar expediente
+	mostrar_cargo(){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_cargo.php",
+			type: "POST",
+			success: function(result){
+				$("#cargo").html(result);
+				// alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// ver cargo actual de un personal
+	cargo_act(id_cargo_act){
+		$.ajax({
+			url: "model/ajax/ajax_cargo_act.php",
+			type: "POST",
+			data: {
+				id_cargo_act
+			},
+			success: function(result){
+				$("#cargo_val").val(result);
+				$("#buscar_cargo").prop('disabled', false);
+				// alert(result);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// buscar cargo y mostrarlo en el select
+	buscar_cargo(val_car_bus, num){
+		$.ajax({
+			url: "model/ajax/ajax_buscar_cargo.php",
+			type: "POST",
+			data: {
+				val_car_bus: val_car_bus
+			},
+			success: function(result){
+				if(num == 1){
+					$("#cargo").html(result);
+					$("#btn_agregar_usu").prop('disabled', false);
+					$("#btn_agregar_usu2").prop('disabled', false);
+					$("#buscar_cargo").prop('disabled', false);
+					// $("#cargo").html(result);
+					// alert(result);
+				}else if(num == 2){
+					$("#cargo").html(result);
+				}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+	// 
 	// guardar edicion de expediente
 	guardar_edit_exp(cedula_vieja, cedula, nombre, cargo, status, region, fila ,columna){
 		$.ajax({

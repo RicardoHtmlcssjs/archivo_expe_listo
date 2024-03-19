@@ -120,14 +120,23 @@
 		public function mostrar_personal(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT personal.cedula, personal.nombres, personal.cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus ORDER BY cedula ASC");
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, cargos.desc_cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos  ON personal.cargo = id_cargo ORDER BY cedula ASC");
 
 			$array = array();
 			foreach ($query as $key) {
-				$array[] = $key;
+				// $array[] = $key;
+				$array[]=array("cedula" => "".$key['cedula']."","nombres" => "".$key['nombres']."", "cargo" => "".$key['desc_cargo']."", "dstatus" => "".$key['dstatus']."", "cstatus" => "".$key['cstatus']."", "nfil" => "".$key['nfil']."", "ncol" => "".$key['ncol']."", "statra" => "".$key['statra']."", "destno" => "".$key['destno']."");
 			}
 			$result = json_encode($array);
 			return $result;
+		}
+		public function mostar_cargo_espesifico($id_cargo){
+			parent::conecta();
+			$db = $this->conn;
+			$query2 = $db->execute("SELECT desc_cargo FROM cargos WHERE id_cargo = '".$id_cargo."'");
+				foreach ($query9 as $key9) {
+					$cargoo = $key9["desc_cargo"];
+				}
 		}
 
 		// opcion nabvar expedientes sin devolber mostrar todos expedientes que noha sido devueltos
@@ -455,14 +464,44 @@
 			}
 			return $select_status;
 		}
+		// mostrar todos los cargos
+		public function mostrar_cargo(){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT id_cargo, desc_cargo FROM cargos ORDER BY id_cargo ASC");
+			$select_status = "";
+			foreach($query as $key){
+				$select_status .= "<option value='".$key["id_cargo"]."'>".$key["desc_cargo"]."</option>";
+			}
+			return $select_status;
+		}
+		// buscar cargo y mostrarlo en un selec
+		public function buscar_cargo($val_car_bus){
+			
+			$q2 = parent::consulta("s","SELECT id_cargo, desc_cargo FROM cargos WHERE desc_cargo ILIKE '%".$val_car_bus."%';");
+			$select_car = "";
+			
+			foreach ($q2 as $key2) {
+				$select_car .= "<option value='".$key2["id_cargo"]."'>".$key2["desc_cargo"]."</option>";
+			}
+			return $select_car;
+		}
+		// obtener cargo de un personal ene espesifico ya con el id ya listo
+		public function cargo_act($id_cargo_act){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT desc_cargo FROM cargos WHERE id_cargo = $id_cargo_act");
+			$cargo = "";
+			foreach($query as $key){
+				$cargo = $key["desc_cargo"];
+			}
+			return $cargo;
+		}
 		// guar la edicion de un expediente
 		public function guardar_edit_exp($cedula_vieja, $cedula, $nombre, $cargo, $status, $region, $fila, $columna){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT idstatus FROM tblestatus WHERE dstatus = '".$status."'");
-			foreach ($query as $key) {
-				$id_status = $key["idstatus"];
-			}
+			
 			$query2 = $db->execute("SELECT cdprpyac FROM tblprpyac WHERE nombreprpyac = '".$region."'");
 			foreach ($query2 as $key2) {
 				$id_region = $key2["cdprpyac"];
@@ -481,7 +520,16 @@
 			if($con > 0){
 				$res = 0;
 			}else{
-				$cc = $db->execute("UPDATE personal SET cedula = $cedula, nombres = '".$nombre."', cdprpyac = '".$id_region."', idstatus = $id_status, nfil = $fila, ncol = $columna, cargo = '".$cargo."' WHERE cedula = $cedula");
+				$query4 = $db->execute("SELECT id_cargo FROM cargos WHERE desc_cargo = '".$cargo."'");
+				foreach ($query4 as $key4) {
+					$id_cargo = $key4["id_cargo"];
+				}
+				$query5 = $db->execute("SELECT idstatus FROM tblestatus WHERE dstatus = '".$status."'");
+				foreach ($query5 as $key5) {
+					$id_status = $key5["idstatus"];
+				}
+
+				$cc = $db->execute("UPDATE personal SET cedula = cedula, nombres = 'GIL BORGES ALBERTO', cdprpyac = '050001', idstatus = $id_status, nfil = $fila, ncol = $columna, cargo = $id_cargo WHERE cedula = $cedula_vieja");
 				if($cc){
 					$res = 1;
 				}else{
@@ -512,7 +560,7 @@
 				foreach($query3 as $key3){
 					$id_reg = $key3["cdprpyac"];
 				}
-				$c = $db->execute("INSERT INTO personal (cedula, nombres, cdprpyac, idstatus, nfil, ncol, cargo) VALUES ($cedula, '".$nombre."', '".$id_reg."', $id_sta, $fila, $columna, '".$cargo."')");
+				$c = $db->execute("INSERT INTO personal (cedula, nombres, cdprpyac, idstatus, nfil, ncol, cargo) VALUES ($cedula, '".$nombre."', '".$id_reg."', $id_sta, $fila, $columna, $cargo)");
 				if($c){
 					$res = 1;
 				}else{
@@ -526,7 +574,7 @@
 		public function obtener_reg_edi_exp($cedula){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblprpyac.nombreprpyac, personal.nfil, personal.ncol, personal.cargo  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus WHERE cedula = $cedula");
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, tblestatus.dstatus, tblprpyac.nombreprpyac, personal.nfil, personal.ncol, cargos.desc_cargo  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos ON personal.cargo = cargos.id_cargo WHERE cedula = $cedula");
 			
 			$result = "";
 			$array = array();
