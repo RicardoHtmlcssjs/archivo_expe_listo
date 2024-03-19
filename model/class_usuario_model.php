@@ -1,5 +1,6 @@
 <?php
 	include("lib/conexion.php");
+
 	class Usuario extends Conexion{
 		public function __construct($usuario, $contrasena){
 			$this->usu = $usuario;

@@ -134,7 +134,7 @@ class Usuarios{
 				{"data": "nombres",
 				"searchable": true},
 				{"data": "cargo", "searchable": true},
-				{"data": "dstatus", "searchable": false},
+				{"data": "dstatus", "searchable": true},
 				{"data": "cstatus", "searchable": false},
 				{"data": null,
 					className: 'text-center py-0 px-1',
@@ -142,7 +142,7 @@ class Usuarios{
 					return `${row.nfil}-${row.ncol}`;
 				}
 				},
-				{"data": "statra"},
+				{"data": "statra", "searchable": false},
 				{"data": "destno"},
 				{
 					"data": null,
@@ -180,6 +180,23 @@ class Usuarios{
 				}
 			}
 		});
+
+		//Creamos una fila en el head de la tabla y lo clonamos para cada columna
+		// $('#datatable_users thead tr').clone(true).appendTo( '#datatable_users thead' );
+
+		// $('#datatable_users thead tr:eq(1) th').each( function (i) {
+		// 	var title = $(this).text(); //es el nombre de la columna
+		// 	$(this).html( '<input type="text" placeholder="Search...'+title+'" />' );
+	 
+		// 	$( 'input', this ).on( 'keyup change', function () {
+		// 		if ( table.column(i).search() !== this.value ) {
+		// 			table
+		// 				.column(i)
+		// 				.search( this.value )
+		// 				.draw();
+		// 		}
+		// 	} );
+		// });
 	};
 	// agregar expediente
 	agre_expe(cedula, nombre, cargo, estatus, region, fila, columna){
