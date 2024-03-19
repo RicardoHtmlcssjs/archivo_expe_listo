@@ -1,0 +1,2 @@
+exportar base de datos en postgres:
+pg_dump -U postgres -h localhost expedientes > C:\Users\ricardo\Desktop/backup.sql
