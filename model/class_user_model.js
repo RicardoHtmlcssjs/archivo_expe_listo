@@ -892,7 +892,7 @@ class Usuarios{
 					$("#crear_nom").css("display", "none");
 					$("#lb_crear_nom").css("display", "none");
 					$("#buscando_ci").css("display", "none");
-					$("#cedula2").val("");
+					$("#cedula2").val($("#cedula").val());
 					$("#cedula2").removeAttr("readonly");
 					$("#crear_nom").val("");
 				}else{
