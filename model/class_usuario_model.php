@@ -92,7 +92,7 @@
 					$_SESSION["admin_usu_p"] = $permisos;
 					$_SESSION["nombre_u"] = $nombre;
 					$_SESSION["id_solicita"] = $id_solicita;
-					if($permisos == 2){
+					if($permisos == 2 OR $permisos == 3){
 						return 1.1;
 					}else{
 						return 1;
@@ -341,7 +341,7 @@
 		public function solicitar_exp_analista($val1, $ci_per_s){
 			$q1 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' ORDER BY snombres ASC");
 			$val1 = ucwords($val1);
-			$q2 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' AND snombres LIKE '%$val1%' ORDER BY snombres ASC");
+			$q2 = parent::consulta("s","SELECT idsolicita, snombres FROM solicitante WHERE tipo = 'S' AND activo = 'S' AND snombres ILIKE '%$val1%' ORDER BY snombres ASC");
 			$select_soli = "<select class='form-control' style='text-center' id='analista'>";
 			if(empty($val1)){
 				foreach ($q1 as $key) {
@@ -529,14 +529,13 @@
 					$id_status = $key5["idstatus"];
 				}
 
-				$cc = $db->execute("UPDATE personal SET cedula = cedula, nombres = 'GIL BORGES ALBERTO', cdprpyac = '050001', idstatus = $id_status, nfil = $fila, ncol = $columna, cargo = $id_cargo WHERE cedula = $cedula_vieja");
+				$cc = $db->execute("UPDATE personal SET cedula = cedula, nombres = '".$nombre."', cdprpyac = '".$id_region."', idstatus = $id_status, nfil = $fila, ncol = $columna, cargo = $id_cargo WHERE cedula = $cedula_vieja");
 				if($cc){
 					$res = 1;
 				}else{
 					$res = 2;
 				}
 			}
-
 			return $res;
 
 		}

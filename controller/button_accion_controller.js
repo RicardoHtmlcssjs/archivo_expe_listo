@@ -240,8 +240,8 @@ function modal_agreagar_usu(){
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='modal-footer justify-content-center'>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar1</button>";
-				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar2</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu' name='btn_agregar_usu' onclick='agregar_nue_usu(1)'>Guardar</button>";
+				modal_agre_usu += "<button type='button' class='btn btn-success'  id='btn_agregar_usu2' name='btn_agregar_usu2' onclick='agregar_nue_usu(2)' style='display: none;'>Guardar</button>";
 				modal_agre_usu += "</div><div id='rr'></div>";
 				modal_agre_usu += "</form>";
 				$("#exampleModal2").modal("show");
