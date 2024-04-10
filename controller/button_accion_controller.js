@@ -176,7 +176,7 @@ function agre_expe_nue(){
 				modal_agre_usu += `<select class="form-control" id="estatus" name="estatus"></select>`;
 				modal_agre_usu += "</div>";
 				modal_agre_usu += "<div class='' id='cont_h1_soli'>";
-                modal_agre_usu += "<label for='region' class='form-label'>Region:</label>";
+                modal_agre_usu += "<label for='region' class='form-label'>Ubicacion geografica:</label>";
                 modal_agre_usu += "<select class='form-control' id='region' name='region'></select>";
                 modal_agre_usu += "</div>";
                 modal_agre_usu += "<div class='' id='cont_h1_soli'>";
