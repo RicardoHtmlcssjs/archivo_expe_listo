@@ -9,6 +9,9 @@ class Usuarios{
 				}else if(result == 1.1){
 					usuario.mostrar_personal(result);
 					usuario.mostrar_usuario();
+				}else if(result == 3){
+					usuario.mostrar_usuario();
+					usuario.mostar_trans_exp();
 				}
 			},
 			error: function(error){
@@ -56,6 +59,9 @@ class Usuarios{
 					$("#resp_login").html((accion.mensaje_alerta("danger", "Usuario o contraseña son incorrecta", "view/images/icono_danger.png")));
 				}else if(result == 3){
 					$("#resp_login").html((accion.mensaje_alerta("danger", "El usuario no esta activo, comunicate con el administrador", "view/images/icono_danger.png")));
+				}else if(result == 5){
+					usuario.mostar_trans_exp(result);
+					usuario.mostrar_usuario();
 				}else{
 					alert(result);
 					$("#resp_login").html((accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png")));
@@ -68,6 +74,98 @@ class Usuarios{
 
 		});
 	};
+	// MOSTRAR TRANSACCIONES DE LOS EXPEDIENTES como role de director general y director de linea
+	mostar_trans_exp(){
+		$("#cuerpo").css("width", "80%");
+		$("#navbar-le").removeClass("dsp_no");
+		$("#opc_admin").css("display","none");
+		$("#opnb1").css("display","none");
+		$("#opnb2").css("display","none");
+		$("#btn_cerrar_ss").removeClass("dps_none");
+				$("#navbar-le").addClass("fondo_le");
+		// 		$("#opnb2").removeClass("opnb");
+		// 		$("#opnb_perfil").removeClass("opnb");
+		// 		$("#opc_adm_1").removeClass("opnb");
+		// 		$("#opc_adm_2").removeClass("opnb");
+		// 		$("#opc_adm_3").removeClass("opnb");
+		// 		$("#opc_adm_4").removeClass("opnb");
+		$("#opndir1").addClass("opnb"); 
+
+		$("#cuerpo").html(expedientes_sn_dev1());
+		$('#tbl_exp_sd_1').DataTable({
+		// 	"scrollY": "100vh",
+  //   		"scrollCollapse": true,
+			"ajax":{
+				"url": "model/ajax/ajax_mostrar_trans_exp.php",
+				"type": "POST",
+				"dataSrc":""
+			},
+			"columns":[
+				// {"data": null,"orderable": false, "searchable": true,
+				// 	render: function(data, type, row, meta) {
+				// 	return `<button type="button" class="btn btn-primary btn-sm py-0 px-1" onclick="edit_exp(${row.cedula})">E</button> ${row.cedula}`;
+				// 	}
+				// },
+				// {"data": "nombres",
+				// "searchable": true},
+				// {"data": "cargo", "searchable": true},
+				// {"data": "dstatus", "searchable": true},
+				// {"data": "cstatus", "searchable": false},
+				// {"data": null,
+				// 	className: 'text-center py-0 px-1',
+				// 	render: function(data, type, row, meta) {
+				// 	return `${row.nfil}-${row.ncol}`;
+				// }
+				// },
+				// {"data": "statra", "searchable": false},
+				{"data": "nombre_soli"},
+				{"data": "micro"},
+				{"data": "piso"},
+				{"data": "nombre_uni"},
+				{"data": "cedula"},
+				{"data": "per_nombres"},
+				{"data": "fentrega"},
+				{"data": "fdevolucion", orderable: true },
+				{"data": "observacion"},
+				{"data": "eanalista"},
+				{"data": "ranalista"},
+				// {
+				// 	"data": null,
+				// 	className: 'text-center py-0 px-1',
+    //                 render: function(data, type, row, meta) {
+    //                     return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="" id="btn_expe_pdf" name="btn_expe_pdf">`;
+    //                 }
+				// },
+				// {
+    //                 "data": null
+    //                 ,
+    //                 orderable: false,
+    //                 className: 'text-center py-0 px-1',
+    //                 render: function(data, type, row, meta) {
+    //                     console.log()
+                        
+    //                     return "<button class='btn btn-primary btn-xs' onclick='hh("+ row.cedula +")'>S</button>";
+    //                 }
+    //             }
+			],
+			ordering: false,
+			language: {
+				lengthMenu: "Mostrar _MENU_ registros por pagina",
+				zeroRecords: "Ningun usuario encontrado",
+				info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+				infoEmpty: "Ningun usuario encontrado",
+				infoFiltered: "(filtrados desde _MAX_ registros totales)",
+				search: "Buscar...",
+				loadingRecords: "Cargando...",
+				paginate: {
+					first: "Primero",
+					last: "Ultimo",
+					next: "Siguiente",
+					previous: "Anterior"
+				}
+			}
+		});
+	} 
 	// mostrar nombre usuario en el navbar al lado del btn cerrar secion
 	mostrar_usuario(){ 
 		$.ajax({

@@ -92,8 +92,10 @@
 					$_SESSION["admin_usu_p"] = $permisos;
 					$_SESSION["nombre_u"] = $nombre;
 					$_SESSION["id_solicita"] = $id_solicita;
-					if($permisos == 2 OR $permisos == 3){
+					if($permisos == 2){
 						return 1.1;
+					}elseif($permisos == 3 OR $permisos == 4){
+						return 5;
 					}else{
 						return 1;
 					}
@@ -138,7 +140,28 @@
 					$cargoo = $key9["desc_cargo"];
 				}
 		}
+		// mostrar transaccion de expedientes con el role directore de linea y general
+		public function mostrar_trans_exp(){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula ORDER BY solicitante.idsolicita desc");
+			// session_start();
+			foreach ($query as $key) {
+				$query2 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['eanalista']."");
+				$query3 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['ranalista']."");
+				foreach ($query2 as $key2) {
+					$entregado_por = $key2["snombres"];
+				}
+				foreach ($query3 as $key3) {
+					$recivido_por = $key3["snombres"];
+				}
 
+
+					$array[]=array("nombre_soli" => "".$key['snombres']."","micro" => "".$key['micro']."", "piso" => "".$key["piso"]."", "nombre_uni" => "".$key['unombre']."", "cedula" => "".$key['cedula']."", "per_nombres" => "".$key['nombres']."", "fentrega" => "".$key['fentrega']."", "fdevolucion" => "".$key['fdevolucion']."", "observacion" => "".$key['observacion']."" , "eanalista" => "".$entregado_por."" , "ranalista" => "".$recivido_por."");
+			}
+			$result = json_encode($array);
+			return $result;
+		}
 		// opcion nabvar expedientes sin devolber mostrar todos expedientes que noha sido devueltos
 		public function todos_exp_sin_dev(){
 			parent::conecta();

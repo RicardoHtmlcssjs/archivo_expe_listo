@@ -63,6 +63,13 @@ $("#agre_solicitar_exp").on("click", function(){
 		usuario.expediente_entregado(analis, ci_entregar_exp, observacion);
 		$("#solicitante").val("");
 });
+// tabla de mostrar transacciones expedientes como director
+// $("#opndir1").on("click", funcion(){
+// 	alert();
+// });
+$("#opndir1").on("click", function(){
+	usuario.mostar_trans_exp();
+})
 // modal de devovelver expedientes solicitados - persona
 function modal2_devol_exp_per(ci){
 	$("#exampleModal2").modal("show");
