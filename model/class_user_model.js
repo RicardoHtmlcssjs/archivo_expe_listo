@@ -204,6 +204,7 @@ class Usuarios{
 				if(num == 1){
 					$("#opc_admin").css("display","none");
 				}
+				$("#opndir1").css("display","none");
 				$("#btn_cerrar_ss").removeClass("dps_none");
 				$("#navbar-le").addClass("fondo_le");
 				$("#opnb2").removeClass("opnb");
@@ -442,6 +443,7 @@ class Usuarios{
 				val_car_bus: val_car_bus
 			},
 			success: function(result){
+				alert(result);
 				if(num == 1){
 					$("#cargo").html(result);
 					$("#btn_agregar_usu").prop('disabled', false);
