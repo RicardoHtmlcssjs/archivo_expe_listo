@@ -129,6 +129,7 @@ class Usuarios{
 				{"data": "observacion"},
 				{"data": "eanalista"},
 				{"data": "ranalista"},
+				// {"data": "ranalista"},
 				// {
 				// 	"data": null,
 				// 	className: 'text-center py-0 px-1',
@@ -807,19 +808,19 @@ class Usuarios{
 					$("#cor_act_adm").val(element.correo);
 					$("#nom_act_adm").val(element.sysnombre);
 					if(element.syscedula == 0 || element.syscedula == null){
-						$("#cont_ci_usu_edi").show();
-						$("#cedula_esco").show();
 						$("#btn_acttualizar_usu2").hide();
 						$("#btn_acttualizar_usu").show();
+						$("#cedula").prop('readonly', false);
 					}else{
 						$("#btn_acttualizar_usu").hide();
 						$("#btn_acttualizar_usu2").show();
-						$("#cont_ci_usu_edi").hide();
-						$("#cedula_esco").hide();
+						$("#cedula").prop('readonly', true);
 					}
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
 					$("#adm_act").val(element.desc_permisos);
+					$("#cedula").val(element.syscedula);
+					$("#nombre_usu").val(element.sysnombre)
 				});
 			},
 			error: function(error){

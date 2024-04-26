@@ -64,9 +64,6 @@ $("#agre_solicitar_exp").on("click", function(){
 		$("#solicitante").val("");
 });
 // tabla de mostrar transacciones expedientes como director
-// $("#opndir1").on("click", funcion(){
-// 	alert();
-// });
 $("#opndir1").on("click", function(){
 	usuario.mostar_trans_exp();
 })
@@ -479,6 +476,9 @@ $("#btn_agregar_fe").on("click", function(){
 $("#btn_acttualizar_usu").on("click", function(){
 	if($("#cedula").val() === ""){
 		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "Ingrese una cedula", "view/images/icono_danger.png"));
+		return;
+	}else if($("#cedula").val() == 0 || $("#cedula").val().length < 5){
+		$("#error_soli_exp3").html(accion.mensaje_alerta("danger", "La cedula tiene que tener mas 4 caracteres", "view/images/icono_danger.png"));
 		return;
 	}
 	if($("#cor_act_adm").val() != " "){

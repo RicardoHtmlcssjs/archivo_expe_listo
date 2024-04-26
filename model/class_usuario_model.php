@@ -144,21 +144,28 @@
 		public function mostrar_trans_exp(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula ORDER BY solicitante.idsolicita desc");
-			// session_start();
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula ORDER BY fentrega DESC LIMIT 1000");
+			
 			foreach ($query as $key) {
+				$rec_por = $key['ranalista'];
 				$query2 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['eanalista']."");
 				$query3 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['ranalista']."");
+				// foreach ($query54 as $key54) {
+				// 	$rp = $key54["snombres"];
+				// }
 				foreach ($query2 as $key2) {
 					$entregado_por = $key2["snombres"];
 				}
-				foreach ($query3 as $key3) {
-					$recivido_por = $key3["snombres"];
+				if(empty($rec_por)){
+					$rec= "";
+				}else{
+					foreach ($query3 as $key3) {
+					$rec = $key3["snombres"];
+					}
 				}
-
-
-					$array[]=array("nombre_soli" => "".$key['snombres']."","micro" => "".$key['micro']."", "piso" => "".$key["piso"]."", "nombre_uni" => "".$key['unombre']."", "cedula" => "".$key['cedula']."", "per_nombres" => "".$key['nombres']."", "fentrega" => "".$key['fentrega']."", "fdevolucion" => "".$key['fdevolucion']."", "observacion" => "".$key['observacion']."" , "eanalista" => "".$entregado_por."" , "ranalista" => "".$recivido_por."");
+					$array[]=array("nombre_soli" => "".$key['snombres']."", "micro" => "".$key['micro']."", "piso" => "".$key["piso"]."", "nombre_uni" => "".$key['unombre']."", "cedula" => "".$key['cedula']."", "per_nombres" => "".$key['nombres']."", "fentrega" => "".$key['fentrega']."", "fdevolucion" => "".$key['fdevolucion']."", "observacion" => "".$key['observacion']."", "eanalista" => "".$entregado_por."", "ranalista" => "".$rec."");
 			}
+					// 4166031
 			$result = json_encode($array);
 			return $result;
 		}
