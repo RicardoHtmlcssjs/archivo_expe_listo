@@ -527,6 +527,16 @@
 			}
 			return $cargo;
 		}
+		// mostrar una cedula en espesifica como administrador
+		public function mostrar_cedula($id){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT cedula FROM solicitante WHERE idsolicita = $id");
+			foreach ($query as $key) {
+				$cedula = $key["cedula"];
+			}
+			return $cedula;
+		}
 		// guar la edicion de un expediente
 		public function guardar_edit_exp($cedula_vieja, $cedula, $nombre, $cargo, $status, $region, $fila, $columna){
 			parent::conecta();
@@ -991,11 +1001,17 @@
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad WHERE tipo = 'S' ORDER BY solicitante.idsolicita DESC");
+			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.cedula, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad WHERE tipo = 'S' ORDER BY solicitante.idsolicita DESC");
 			$solicitados_us = "";
 			$array = array();
 			foreach ($query as $key) {
 				$array[] = $key;
+				// if($key['cedula'] == null){
+				// 	$cedula = 0;
+				// }else{
+				// 	$cedula =$key["cedula"]; 
+				// }
+				// $array[]=array("idsolicita" => "".$key['idsolicita']."", "cedula" => "".$cedula."", "snombres" => "".$key['snombres']."", "micro" => "".$key['micro']."", "piso" => "".$key['piso']."", "unombre" => "".$key['unombre']."", "tipo" => "".$key['tipo']."", "activo" => "".$key['activo']."");
 			}
 			$result = json_encode($array);
 			return $result;
@@ -1042,23 +1058,48 @@
 		}
 		// 
 		// agregar analista o empleado
-		public function agre_ana_emo($nombre, $piso, $unidad){
+		public function agre_ana_emo($cedula, $nombre, $piso, $unidad){
 			$conexion = new Conexion();
 			// select * from solicitante order by idsolicita desc
+			$query5 = $conexion->consulta("s","SELECT cedula FROM solicitante");
+				foreach ($query5 as $key5) {
+					if($key5["cedula"] == $cedula){
+						return 2;
+					}
+				}
+			
+
 			$ul_id = $this->id_uin();
 			$ul_id = $ul_id + 1;
 			$id_unidad = $this->mos_id_uni($unidad);
-			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, 'S', 'S')");
+			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo, cedula) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, 'S', 'S', $cedula)");
 			session_start();
 			$id_usu_admin = $_SESSION["id_usu_log"];
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($ul_id, $id_usu_admin, now(), 'Creacion de personal', now())");
 			return 1;
 		}
 		// guardar cambios modal empleados y analistas
-		public function guardar_r_a_e($unidad, $activo, $id_ae){
+		public function guardar_r_a_e($unidad, $activo, $id_ae, $cedula){
 			$conexion = new Conexion();
 			session_start();
 			$id_u = $_SESSION['id_usu_log'];
+
+			if($cedula != 0 || $cedula != ""){
+				$query5 = $conexion->consulta("s","SELECT cedula FROM solicitante WHERE idsolicita = $id_ae");
+				foreach ($query5 as $key5) {
+					$cedula_act = $key5["cedula"];
+				}
+				$query6 = $conexion->consulta("s","SELECT cedula FROM solicitante");
+				foreach ($query6 as $key6) {
+					if($cedula == $key6["cedula"]){
+						if($key6["cedula"] == $cedula_act){
+
+						}else{
+							return 2;
+						}
+					}
+				}
+			}
 
 			$query1 = $conexion->consulta("s","SELECT idunidad FROM tblunidad WHERE unombre = '$unidad'");
 			foreach ($query1 as $key1) {
@@ -1105,7 +1146,14 @@
 				
 
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_ae, $id_u, now(), '".$descipcion."', now())");
-			$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			
+
+			
+			if($cedula == 0 or $cedula == ""){
+				$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			}else{
+				$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, cedula = $cedula, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			}
 
 
 			return $descipcion;

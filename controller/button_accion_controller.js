@@ -536,7 +536,11 @@ $("#opc_adm_3").on("click", ()=>{
 function modal_mod_ana_e(id){
 	let modal_mod_ana_e = "<h2 class='text-center' id='id_tit_mod1'>Modificar analistas y empleados</h2>"; 
 	modal_mod_ana_e += "<form action='>";
-	modal_mod_ana_e += "<div class='mb-3 cont_mod1_entregado'>";
+	// modal_mod_ana_e += "<div class='mb-3 cont_mod1_entregado'>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='cedula' class='form-label'>Cedula: </label>";
+	modal_mod_ana_e += "<input type='number' class='form-control mb-2' id='cedula' name='cedula'>";
+	modal_mod_ana_e += "</div>";
 	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
 	modal_mod_ana_e += "<label for='unidad_ana_e' class='form-label'>Unidad: </label>";
 	modal_mod_ana_e += "<input type='text' class='form-control mb-2' id='unidad_ana_e' name='unidad_ana_e' disabled='true'>";
@@ -562,6 +566,7 @@ function modal_mod_ana_e(id){
 	modal_mod_ana_e += "</form>";
 	$("#modal2").html(modal_mod_ana_e);
 	usuario.agre_act_tip(id);
+	usuario.mostar_cedula(id);
 	$("#exampleModal2").modal("show");
 };
 
@@ -626,6 +631,10 @@ function mos_mod_agre_ana_emp(){
 	let modal_mod_ana_e = "<h2 class='text-center' id='id_tit_mod1'>Agregar personal</h2>";
 	modal_mod_ana_e += "<form action='>";
 	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
+	modal_mod_ana_e += "<label for='cedula' class='form-label'>Cedula </label>";
+	modal_mod_ana_e += "<input type='number' class='form-control' placeholder='Ingresa la cedula' id='cedula' name='cedula'>";
+	modal_mod_ana_e += "</div>";
+	modal_mod_ana_e += "<div class='mb-3' id='cont_h1_soli'>";
 	modal_mod_ana_e += "<label for='nombre' class='form-label'>Nombre </label>";
 	modal_mod_ana_e += "<input type='text' class='form-control' placeholder='Ingresa el nombre' id='nombre' name='nombre'>";
 	modal_mod_ana_e += "</div>";
@@ -648,13 +657,14 @@ function mos_mod_agre_ana_emp(){
 }
 // btn agregar un analista o empleado
 function btn_agre_ana(){
+	let cedula = $("#cedula").val();
 	let nombre = $("#nombre").val();
 	let piso = $("#piso").val();
 	let unidad = $("#id_unidad").val();
-	if(nombre === "" || piso === "" ){
+	if(nombre === "" || piso === "" || cedula === ""){
 		$("#rr").html(accion.mensaje_alerta("danger", "Algun campo esta vacio", "view/images/icono_danger.png"));
 	}else{
-		usuario.agre_ana_emp(nombre, piso, unidad);
+		usuario.agre_ana_emp(cedula, nombre, piso, unidad);
 	}
 }
 

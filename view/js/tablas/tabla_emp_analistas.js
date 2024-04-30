@@ -6,6 +6,7 @@ function expedientes_sn_dev(){
             tab_exp_sin_dev += "<table id='tbl_exp_sd' style='width: 100%;'>";
                 tab_exp_sin_dev += "<thead class='thead_tab1'";
                     tab_exp_sin_dev += "<tr>";
+                        tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Cedula</th>";
                         tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Nombre</th>";
                         tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Micro</th>";
                         tab_exp_sin_dev += "<th class='text-center tit_c_tab1'>Piso</th>";
