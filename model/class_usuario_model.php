@@ -122,12 +122,22 @@
 		public function mostrar_personal(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT personal.cedula, personal.nombres, cargos.desc_cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos  ON personal.cargo = id_cargo ORDER BY cedula ASC");
+			// $query = $db->execute("SELECT personal.cedula, personal.nombres, cargos.desc_cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos  ON personal.cargo = id_cargo ORDER BY cedula ASC");
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, personal.cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal LEFT JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac LEFT JOIN tblestatus ON personal.idstatus = tblestatus.idstatus  ORDER BY cedula ASC");
 
 			$array = array();
 			foreach ($query as $key) {
-				// $array[] = $key;
-				$array[]=array("cedula" => "".$key['cedula']."","nombres" => "".$key['nombres']."", "cargo" => "".$key['desc_cargo']."", "dstatus" => "".$key['dstatus']."", "cstatus" => "".$key['cstatus']."", "nfil" => "".$key['nfil']."", "ncol" => "".$key['ncol']."", "statra" => "".$key['statra']."", "destno" => "".$key['destno']."");
+				$desc_cargo = $key['cargo'];
+				if($desc_cargo == null){
+					$desc_cargo = "";
+				}else{
+					$query2 = $db->execute("SELECT desc_cargo FROM cargos WHERE id_cargo = ".$key['cargo']."");
+					foreach ($query2 as $key2) {
+					$desc_cargo = $key2["desc_cargo"];
+				}
+				}
+				
+				$array[]=array("cedula" => "".$key['cedula']."","nombres" => "".$key['nombres']."", "cargo" => "".$desc_cargo."", "dstatus" => "".$key['dstatus']."", "cstatus" => "".$key['cstatus']."", "nfil" => "".$key['nfil']."", "ncol" => "".$key['ncol']."", "statra" => "".$key['statra']."", "destno" => "".$key['destno']."");
 			}
 			$result = json_encode($array);
 			return $result;
