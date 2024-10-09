@@ -1,7 +1,0 @@
-actualizacion para el sistema de archivos de expediente para el lunes 15/04/2024
-- en la seccion de usuarios enrando como administrador, agregarle un boton para mostrar las transacciones de los expedientes realizadas por cada usuario
--que el usuario pueda cambiar su correo
--poner preloader a cada formulario de modal
--actualizar la base de datos, con la de access
--crear role director de linea y director de general que nada mas podra ver todas las transacciones de los expedientes solicitados
--agregar 3 usuarios con el role nuevo

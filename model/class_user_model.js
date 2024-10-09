@@ -129,6 +129,7 @@ class Usuarios{
 				{"data": "observacion"},
 				{"data": "eanalista"},
 				{"data": "ranalista"},
+				// {"data": "ranalista"},
 				// {
 				// 	"data": null,
 				// 	className: 'text-center py-0 px-1',
@@ -814,19 +815,19 @@ class Usuarios{
 					$("#cor_act_adm").val(element.correo);
 					$("#nom_act_adm").val(element.sysnombre);
 					if(element.syscedula == 0 || element.syscedula == null){
-						$("#cont_ci_usu_edi").show();
-						$("#cedula_esco").show();
 						$("#btn_acttualizar_usu2").hide();
 						$("#btn_acttualizar_usu").show();
+						$("#cedula").prop('readonly', false);
 					}else{
 						$("#btn_acttualizar_usu").hide();
 						$("#btn_acttualizar_usu2").show();
-						$("#cont_ci_usu_edi").hide();
-						$("#cedula_esco").hide();
+						$("#cedula").prop('readonly', true);
 					}
 					$("#act_act").val(element.desc_activo);
 					$("#adm_fec").val(element.sysfechal);
 					$("#adm_act").val(element.desc_permisos);
+					$("#cedula").val(element.syscedula);
+					$("#nombre_usu").val(element.sysnombre)
 				});
 			},
 			error: function(error){
@@ -834,6 +835,28 @@ class Usuarios{
 			}
 		});
 	}
+	// mostrar cedula al editar un solicitante como administrador
+	mostar_cedula(id){
+		$.ajax({
+			url: "model/ajax/ajax_mostrar_cedula.php",
+			type: "POST",
+			data: {
+				id: id
+			},
+			success: function(result){
+				$("#cedula").val(result);
+				if(result == 0 || result === ""){
+					$("#cedula").prop('readonly', false);
+				}else{
+					$("#cedula").prop('readonly', true);
+				}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	}
+
 	// limpiar inp tablas usuarios administrador
 	limpiar2(inp){
 			$("#inp").val("");
@@ -1053,6 +1076,7 @@ class Usuarios{
 				"dataSrc": ""
 			},
 			"columns":[
+				{"data": "cedula"},
 				{"data": "snombres"},
 				{"data": "micro"},
 				{"data": "piso"},
@@ -1101,17 +1125,24 @@ class Usuarios{
 		});
 	}
 	// agrega analista o empleado
-	agre_ana_emp(nombre, piso, unidad){
+	agre_ana_emp(cedula, nombre, piso, unidad){
 		$.ajax({
 			url: "model/ajax/ajax_agre_ana_emp.php",
 			type: "POST",
 			data:{
-				nombre: nombre, piso: piso, unidad: unidad
+				cedula: cedula, nombre: nombre, piso: piso, unidad: unidad
 			},
 			success: function(result){
-				$("#exampleModal2").modal("hide");
-				usuario.mos_tabla_emp_ana();
-				var notification = alertify.notify('El personal solicitante ha sido creado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
+				if(result == 1){
+					$("#exampleModal2").modal("hide");
+					usuario.mos_tabla_emp_ana();
+					var notification = alertify.notify('El personal solicitante ha sido creado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
+				}else if(result == 2){
+					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
+				}else{
+					$("#rr").html(accion.mensaje_alerta("danger", "Ha ocurrido un error", "view/images/icono_danger.png"));
+				}
+				
 			},
 			error: function(error){
 				console.log(error);
@@ -1170,20 +1201,30 @@ class Usuarios{
 		let unidad = $("#unidad_ana_e").val();
 		let activo = $("#val_activo").val();
 		let id_ae = $("#id_ana_emp").val();
-		this.guardar_r_a_e(unidad, activo, id_ae);
+		let cedula = $("#cedula").val();
+		if(cedula === ""){
+			$("#resp_login").html(accion.mensaje_alerta("danger", "El campo cedula esta vacio", "view/images/icono_danger.png"));
+		}else{
+			this.guardar_r_a_e(unidad, activo, id_ae, cedula);
+		}
 	}
 	// guardar cambio en el modal analista y empleados
-	guardar_r_a_e(unidad, activo, id_ae){
+	guardar_r_a_e(unidad, activo, id_ae, cedula){
 		$.ajax({
 			url: "model/ajax/ajax_guardar_r_a_e.php",
 			type: "POST",
 			data: {
-				unidad: unidad, activo: activo, id_ae: id_ae
+				unidad: unidad, activo: activo, id_ae: id_ae, cedula: cedula
 			},
 			success: function(result){
-				$("#exampleModal2").modal("hide");
-				usuario.mos_tabla_emp_ana();
-				var notification = alertify.notify('El personal solicitante ha sido actualizado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
+				if(result == 2){
+					$("#rr").html(accion.mensaje_alerta("danger", "La cedula ya existe", "view/images/icono_danger.png"));
+				}else{
+					$("#exampleModal2").modal("hide");
+					usuario.mos_tabla_emp_ana();
+					var notification = alertify.notify('El personal solicitante ha sido actualizado exitosamente.', 'success', 5, function(){  console.log('dismissed'); });
+				}
+				
 			},
 			error: function(error){
 				console.log(error);

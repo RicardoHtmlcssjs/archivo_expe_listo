@@ -122,18 +122,28 @@
 		public function mostrar_personal(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT personal.cedula, personal.nombres, cargos.desc_cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos  ON personal.cargo = id_cargo ORDER BY cedula ASC");
+			// $query = $db->execute("SELECT personal.cedula, personal.nombres, cargos.desc_cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal INNER JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac INNER JOIN tblestatus ON personal.idstatus = tblestatus.idstatus LEFT JOIN cargos  ON personal.cargo = id_cargo ORDER BY cedula ASC");
+			$query = $db->execute("SELECT personal.cedula, personal.nombres, personal.cargo, tblestatus.dstatus, tblestatus.cstatus, personal.nfil, personal.ncol, personal.statra, personal.destno  FROM personal LEFT JOIN tblprpyac ON personal.cdprpyac = tblprpyac.cdprpyac LEFT JOIN tblestatus ON personal.idstatus = tblestatus.idstatus  ORDER BY cedula ASC");
 
 			$array = array();
 			foreach ($query as $key) {
-				// $array[] = $key;
+				$desc_cargo = $key['cargo'];
+				if($desc_cargo == null){
+					$desc_cargo = "";
+				}else{
+					$query2 = $db->execute("SELECT desc_cargo FROM cargos WHERE id_cargo = ".$key['cargo']."");
+					foreach ($query2 as $key2) {
+					$desc_cargo = $key2["desc_cargo"];
+				}
+				}
+				
 				$query2 = $db->execute("SELECT * FROM expedientes_img WHERE fk_cedula = ".$key['cedula']."");
 				$num = 0;
 				foreach ($query2 as $key2) {
 					$num = $num + 1;
 				}
 
-				$array[]=array("cedula" => "".$key['cedula']."","nombres" => "".$key['nombres']."", "cargo" => "".$key['desc_cargo']."", "dstatus" => "".$key['dstatus']."", "cstatus" => "".$key['cstatus']."", "nfil" => "".$key['nfil']."", "ncol" => "".$key['ncol']."", "statra" => "".$key['statra']."", "destno" => "".$key['destno']."", "num" => "".$num."");
+				$array[]=array("cedula" => "".$key['cedula']."","nombres" => "".$key['nombres']."", "cargo" => "".$desc_cargo."", "dstatus" => "".$key['dstatus']."", "cstatus" => "".$key['cstatus']."", "nfil" => "".$key['nfil']."", "ncol" => "".$key['ncol']."", "statra" => "".$key['statra']."", "destno" => "".$key['destno']."", "num" => "".$num."");
 			}
 			$result = json_encode($array);
 			return $result;
@@ -150,21 +160,28 @@
 		public function mostrar_trans_exp(){
 			parent::conecta();
 			$db = $this->conn;
-			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula ORDER BY solicitante.idsolicita desc");
-			// session_start();
+			$query = $db->execute("SELECT solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, controle.cedula, controle.id_controle, personal.nombres, controle.fentrega, controle.fdevolucion, controle.observacion, controle.eanalista, controle.ranalista FROM controle INNER JOIN solicitante ON controle.id_solicita = solicitante.idsolicita INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad INNER JOIN personal ON controle.cedula = personal.cedula ORDER BY fentrega DESC LIMIT 1000");
+			
 			foreach ($query as $key) {
+				$rec_por = $key['ranalista'];
 				$query2 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['eanalista']."");
 				$query3 = $db->execute("SELECT snombres FROM solicitante WHERE idsolicita = ".$key['ranalista']."");
+				// foreach ($query54 as $key54) {
+				// 	$rp = $key54["snombres"];
+				// }
 				foreach ($query2 as $key2) {
 					$entregado_por = $key2["snombres"];
 				}
-				foreach ($query3 as $key3) {
-					$recivido_por = $key3["snombres"];
+				if(empty($rec_por)){
+					$rec= "";
+				}else{
+					foreach ($query3 as $key3) {
+					$rec = $key3["snombres"];
+					}
 				}
-
-
-					$array[]=array("nombre_soli" => "".$key['snombres']."","micro" => "".$key['micro']."", "piso" => "".$key["piso"]."", "nombre_uni" => "".$key['unombre']."", "cedula" => "".$key['cedula']."", "per_nombres" => "".$key['nombres']."", "fentrega" => "".$key['fentrega']."", "fdevolucion" => "".$key['fdevolucion']."", "observacion" => "".$key['observacion']."" , "eanalista" => "".$entregado_por."" , "ranalista" => "".$recivido_por."");
+					$array[]=array("nombre_soli" => "".$key['snombres']."", "micro" => "".$key['micro']."", "piso" => "".$key["piso"]."", "nombre_uni" => "".$key['unombre']."", "cedula" => "".$key['cedula']."", "per_nombres" => "".$key['nombres']."", "fentrega" => "".$key['fentrega']."", "fdevolucion" => "".$key['fdevolucion']."", "observacion" => "".$key['observacion']."", "eanalista" => "".$entregado_por."", "ranalista" => "".$rec."");
 			}
+					// 4166031
 			$result = json_encode($array);
 			return $result;
 		}
@@ -525,6 +542,16 @@
 				$cargo = $key["desc_cargo"];
 			}
 			return $cargo;
+		}
+		// mostrar una cedula en espesifica como administrador
+		public function mostrar_cedula($id){
+			parent::conecta();
+			$db = $this->conn;
+			$query = $db->execute("SELECT cedula FROM solicitante WHERE idsolicita = $id");
+			foreach ($query as $key) {
+				$cedula = $key["cedula"];
+			}
+			return $cedula;
 		}
 		// guar la edicion de un expediente
 		public function guardar_edit_exp($cedula_vieja, $cedula, $nombre, $cargo, $status, $region, $fila, $columna){
@@ -992,11 +1019,17 @@
 		// mostrar tabla empleados y analistas
 		public function mos_tabla_emp_ana(){
 			$conexion = new Conexion();
-			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad WHERE tipo = 'S' ORDER BY solicitante.idsolicita DESC");
+			$query = $conexion->consulta("s","SELECT solicitante.idsolicita, solicitante.cedula, solicitante.snombres, solicitante.micro, solicitante.piso, tblunidad.unombre, solicitante.tipo, solicitante.activo FROM solicitante INNER JOIN tblunidad ON solicitante.idunidad = tblunidad.idunidad WHERE tipo = 'S' ORDER BY solicitante.idsolicita DESC");
 			$solicitados_us = "";
 			$array = array();
 			foreach ($query as $key) {
 				$array[] = $key;
+				// if($key['cedula'] == null){
+				// 	$cedula = 0;
+				// }else{
+				// 	$cedula =$key["cedula"]; 
+				// }
+				// $array[]=array("idsolicita" => "".$key['idsolicita']."", "cedula" => "".$cedula."", "snombres" => "".$key['snombres']."", "micro" => "".$key['micro']."", "piso" => "".$key['piso']."", "unombre" => "".$key['unombre']."", "tipo" => "".$key['tipo']."", "activo" => "".$key['activo']."");
 			}
 			$result = json_encode($array);
 			return $result;
@@ -1043,23 +1076,48 @@
 		}
 		// 
 		// agregar analista o empleado
-		public function agre_ana_emo($nombre, $piso, $unidad){
+		public function agre_ana_emo($cedula, $nombre, $piso, $unidad){
 			$conexion = new Conexion();
 			// select * from solicitante order by idsolicita desc
+			$query5 = $conexion->consulta("s","SELECT cedula FROM solicitante");
+				foreach ($query5 as $key5) {
+					if($key5["cedula"] == $cedula){
+						return 2;
+					}
+				}
+			
+
 			$ul_id = $this->id_uin();
 			$ul_id = $ul_id + 1;
 			$id_unidad = $this->mos_id_uni($unidad);
-			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, 'S', 'S')");
+			$query1 = $conexion->consulta("s","INSERT INTO solicitante (idsolicita, snombres, micro, piso, idunidad, tipo, activo, cedula) VALUES ($ul_id, '".$nombre."', 0, $piso, $id_unidad, 'S', 'S', $cedula)");
 			session_start();
 			$id_usu_admin = $_SESSION["id_usu_log"];
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($ul_id, $id_usu_admin, now(), 'Creacion de personal', now())");
 			return 1;
 		}
 		// guardar cambios modal empleados y analistas
-		public function guardar_r_a_e($unidad, $activo, $id_ae){
+		public function guardar_r_a_e($unidad, $activo, $id_ae, $cedula){
 			$conexion = new Conexion();
 			session_start();
 			$id_u = $_SESSION['id_usu_log'];
+
+			if($cedula != 0 || $cedula != ""){
+				$query5 = $conexion->consulta("s","SELECT cedula FROM solicitante WHERE idsolicita = $id_ae");
+				foreach ($query5 as $key5) {
+					$cedula_act = $key5["cedula"];
+				}
+				$query6 = $conexion->consulta("s","SELECT cedula FROM solicitante");
+				foreach ($query6 as $key6) {
+					if($cedula == $key6["cedula"]){
+						if($key6["cedula"] == $cedula_act){
+
+						}else{
+							return 2;
+						}
+					}
+				}
+			}
 
 			$query1 = $conexion->consulta("s","SELECT idunidad FROM tblunidad WHERE unombre = '$unidad'");
 			foreach ($query1 as $key1) {
@@ -1106,7 +1164,14 @@
 				
 
 			$query3 = $conexion->consulta("s","INSERT INTO transaccion_soli (id_s_tran, id_u_adm, fecha_tran, desc_tran, hora_tran) VALUES ($id_ae, $id_u, now(), '".$descipcion."', now())");
-			$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			
+
+			
+			if($cedula == 0 or $cedula == ""){
+				$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			}else{
+				$query2 = $conexion->consulta("s","UPDATE solicitante SET idunidad = $id_unidad, cedula = $cedula, tipo = '".$ac_tipo."', activo = '".$activo."' WHERE idsolicita = $id_ae");
+			}
 
 
 			return $descipcion;
