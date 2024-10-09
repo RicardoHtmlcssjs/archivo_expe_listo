@@ -234,20 +234,27 @@ class Usuarios{
 				"searchable": true},
 				{"data": "cargo", "searchable": true},
 				{"data": "dstatus", "searchable": true},
-				{"data": "cstatus", "searchable": false},
+				// {"data": "cstatus", "searchable": false},
 				{"data": null,
 					className: 'text-center py-0 px-1',
 					render: function(data, type, row, meta) {
 					return `${row.nfil}-${row.ncol}`;
 				}
 				},
-				{"data": "statra", "searchable": false},
+				// {"data": "statra", "searchable": false},
 				{"data": "destno"},
 				{
 					"data": null,
 					className: 'text-center py-0 px-1',
                     render: function(data, type, row, meta) {
-                        return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="" id="btn_expe_pdf" name="btn_expe_pdf">`;
+                        return `${row.num}`;
+                    }
+				},
+				{
+					"data": null,
+					className: 'text-center py-0 px-1',
+                    render: function(data, type, row, meta) {
+                        return `<img src='./view/images/icono_pdf.png' width='45px' style="cursor: pointer; border-radius: 5px;" class="btn_subir_exp" onclick="mos_modal_img_exp(${row.cedula})" id="btn_expe_pdf" name="btn_expe_pdf"><button class='btn btn-primary btn-xs' onclick="mostrar_expedientes_img(${row.cedula})">Ver</button>`;
                     }
 				},
 				{
@@ -1298,6 +1305,36 @@ class Usuarios{
 					next: "Siguiente",
 					previous: "Anterior"
 				}
+			}
+		});
+	}
+	mostrar_expedientes_img(cedula){
+		$.ajax({
+			url: "model/ajax/mostrar_expedientes_img.php",
+			type: "POST",
+			data: {
+				cedula: cedula
+			},
+			success: function(result){
+				let r = JSON.parse(result);
+				let num = 0;
+				$.each(r, function(index, element){
+					num = num + 1;
+					var nuevoDiv = $('<div>').attr('id', `exp_img${num}`);
+					nuevoDiv.addClass("mb-2");
+					var parrafo = $('<p>').text(`${element.nombre}`);
+					var enlace = $('<a>').attr('href', `${element.ruta_exp_img}`).text('Ver imagen');
+					enlace.attr('target', '_blank');
+					enlace.addClass("btn btn-primary");
+					nuevoDiv.append(parrafo, enlace);
+					// $('#contenedor-padre').append(divAnidado);
+
+					// Insertar el div anidado dentro del div padre
+					$('#resultado_exp_todos').append(nuevoDiv);
+				});
+			},
+			error: function(error){
+				console.log(error);
 			}
 		});
 	}

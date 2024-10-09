@@ -132,7 +132,7 @@
             </div>
         </div>
         <!-- fin modal agregar -->
-        <!-- modal 5 de subir expediente en pdf  -->
+        <!-- modal 5 de subir expediente en img  -->
         <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="titulo2" aria-hidden="true">
             <div class="modal-dialog modal-lg">
             <div class="modal-content" >
@@ -140,14 +140,41 @@
                     <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
                 </div>
                 <div class="modal-body">
-                    <h1 class="titulo_mod_exp">Subir archivo PDF</h1>
-                    <form method="post"  class="area-arrastrar" id="area-arrastrar">
-                        <label for="archivo" class="lb_mod_exp">
-                        <input type="file" id="file" name="file" accept=".pdf" class="file" required>
-                        </label>
-                        <button type="button" class="btn_mod_exp" id="btn_mod_exp" name="btn_mod_exp">Guardar expediente</button>
-                        <div class="mb-2" id="error_soli_exp_file"></div>
-                    </form>
+                    <h1 class="titulo_mod_exp">Subir imagen del expediente</h1>
+                    <div class="principal">
+                        <form action="" id="form_subir">
+                            <div class="form-1-2">
+                                <label for="Archivo a subir"></label>
+                                <input type="file" name="archivo" id="archivo" required>
+                            </div>
+                            <div class="barra">
+                                <div class="barra_azul" id="barra_estado">
+                                    <span id="barra_span"></span>
+                                </div>
+                            </div>
+                            <div class="acciones mt-2 mb-0">
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <!-- <input type="submit" class="btn" value="enviar"> -->
+                                <!-- <input type="button" class="cancel" id="cancel" value="cancelar"> -->
+                            </div>
+                            <input type="hidden" id="cedula_exp" name="cedula_exp" value="">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- modal 6 de ver cantidad de img de expedientes por cada personal -->
+        <div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="titulo2" aria-hidden="true">
+            <div class="modal-dialog modal1">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <!-- <h5 class="modal-title" id="titulo1">Solicitar expediente</h5> -->
+                    <button type="button" class="btn-close bg-success btn_cerrar_mod1" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="text-center">Expedientes</h1>
+                    <div id="resultado_exp_todos"></div>
                 </div>
             </div>
             </div>

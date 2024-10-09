@@ -1,0 +1,9 @@
+subir.php -  nuevo
+button_accion_controller.js - modificado
+class_user_model.js  - modificado
+main.css  -  nuevo
+main.js  -  nuevo
+table_personal  -  modificado
+footer.html  -  modificado+
+head.html  -  modificado
+modal_agregar.html  -  modificado

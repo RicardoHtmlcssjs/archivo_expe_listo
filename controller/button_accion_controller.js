@@ -26,31 +26,6 @@ $("#solicitante").on("keyup",function(){
 		$("#error_soli_exp1").html("");
 	}
 });
-// accione que se activara a arrastrar en el modal agregar expediente pdf
-
-$('#btn_mod_exp').on('click', function(e) {
-	if($("#file").val() === ""){
-		$("#error_soli_exp_file").html(accion.mensaje_alerta("danger", "No has seleccionado ningun archivo pdf", ""));
-	}else{
-		// var parametros = new FormData($("#area-arrastrar")[0]);
-		// alert(parametros);
-		usuario.expediente_pdf();
-	}
-  });
-//   arrastrar archivo en este caso pdf
-  const areaArrastrar = document.querySelector(".area-arrastrar");
-  areaArrastrar.addEventListener("drop", function(e) {
-	const archivo = e.dataTransfer.files[0];
-  	const inputFile = document.querySelector("#file");
-	  if (archivo.type === "application/pdf") {
-		inputFile.files = archivo;
-	  } else {
-		$("#file").val("");
-		$("#error_soli_exp_file").html(accion.mensaje_alerta("danger", "El archivo arrastrado no es pdf", ""));
-	  }
-	
-});
-// fin del dragover modal pdf
 
 
 // btn guardar solicitud de expediente
@@ -662,3 +637,19 @@ function btn_agre_ana(){
 $("#opc_adm_4").on("click", ()=>{
 	usuario.mos_tabla_tran_emp_ana();
 });
+
+// mostrar modal de subir expediente
+function mos_modal_img_exp(cedula){
+	$("#exampleModal5").modal("show");
+	$("#archivo").val("");
+	$("#barra_estado").removeClass("barra_verde");
+	$("#barra_estado").width(0);
+	$("#barra_span").html("");
+	$("#cedula_exp").val(cedula);
+}
+// MOSTRAR TODOS LOS EXPEIENTES DE UN PERSONAL EN ESPESIFICO
+function mostrar_expedientes_img(cedula){
+	$("#exampleModal6").modal("show");
+	$("#resultado_exp_todos").html("");
+	usuario.mostrar_expedientes_img(cedula);
+}
